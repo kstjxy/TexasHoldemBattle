@@ -18,15 +18,19 @@ public class Player
     public int coin = 0; 
     public bool isFold = false;
     public bool isAllIn = false;
-    public PlayerRole role;
-    public List<Card> playerCardList;
+    public PlayerRole role = PlayerRole.outOfGame;
+    public List<Card> playerCardList = new List<Card>();
     public int state = -1; //no action
 
     public Player(string playerName)
     {
         this.playerName = playerName;
-        this.playerCardList = new List<Card>();
     }
 
-    
+    public void AddPlayerCards(Card a, Card b)
+    {
+        playerCardList = new List<Card>();
+        playerCardList.Add(a);
+        playerCardList.Add(b);
+    }
 }
