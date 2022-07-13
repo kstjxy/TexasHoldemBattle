@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class PlayerManager
 {
+    private static PlayerManager _instance;
+    public static PlayerManager instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = new PlayerManager();
+            return _instance;
+        }
+    }
+
     public List<Player> allPlayers = new List<Player>();
     public List<Player> seatedPlayers = new List<Player>();
     public List<Player> activePlayers = new List<Player>();
