@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Animators")]
+    public Animator pausePanelAnimator;
+
     [Header("UI Components_InteractElements")]
     public Button pauseButton;
     public Button continueButton;
@@ -41,6 +44,7 @@ public class UIManager : MonoBehaviour
     //unfinished
     void Pause_ButtonClicked()
     {
+        pausePanelAnimator.Play("Paused", 0, 0);
         Time.timeScale = 0;
         //一些关于暂停提示的操作
     }
@@ -48,12 +52,15 @@ public class UIManager : MonoBehaviour
     void Continue_ButtonClicked()
     {
         Time.timeScale = 1;
+        pausePanelAnimator.Play("Continue", 0, 0);
         //一些关于暂停显示退出屏幕的操作
     }
     //unfinished
     void Restart_ButtonClicked()
     {
         //进行一些清空进度回归初始化的操作
+        if (Time.timeScale <= 0)
+            return;
         InitialPanelManager.instance.CallInitialPanel();
     }
     //unfinished
