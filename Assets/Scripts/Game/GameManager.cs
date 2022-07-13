@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,9 +15,9 @@ public class GameManager : MonoBehaviour
     //游戏进程
     public enum GameState
     {
-        init,       //初始化，确定庄家 大盲小盲
-        roundinit,  //
-        preflop,    //
+        init,       //整个游戏初始化
+        roundinit,  //每局游戏初始化，确定庄家 大盲小盲
+        preflop,    
         flop,
         turn,
         river,
@@ -41,9 +42,11 @@ public class GameManager : MonoBehaviour
     public static List<int> playingNum = new List<int>();       //还在玩的玩家的序号
     public static List<int> lostNum = new List<int>();          //已淘汰玩家的序号
     public static int buton;                                    //庄家序号
-    public static int totalRound;                               //总局数
+    public static int setRound;                                 //设定总局数
     public static int initMoney;                                //
     public static int betMonet;                                 //
+    public static int curRound;                                 //当前局数
+    public Timer time;                                          //用于调节速度
 
     public void Init()//初始化
     {
@@ -53,6 +56,24 @@ public class GameManager : MonoBehaviour
         //总局数
         //加注次数
         currentState = GameState.init;
+        curRound = 0;
+
+    }
+    public void RoundInit()//初始化
+    {
+        //确定玩家列表
+        //赌注大小
+        //初始钱数
+        //总局数
+        //加注次数
+    }
+    public void RoundInit()//初始化
+    {
+        //确定玩家列表
+        //赌注大小
+        //初始钱数
+        //总局数
+        //加注次数
     }
     public void RoundInit()//初始化
     {
@@ -71,12 +92,38 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-
+        if 
         switch (currentState)
         {
             case GameState.init:
                 RoundInit();
-
+                break;
+            case GameState.roundinit:
+                Preflop();
+                break;
+            case GameState.preflop:
+                Flop();
+                break;
+            case GameState.flop:
+                Turn();
+                break;
+            case GameState.turn:
+                River();
+                break;
+            case GameState.river:
+                Calc();
+                break;
+            case GameState.calc:
+                curRound++;
+                if (curRound == setRound)
+                {
+                    Gameover();
+                    break;
+                }
+                 
+                RoundInit();
+                break;
         }
+        // throw new UnityException("GameState Error" + currentState)
     }
 }
