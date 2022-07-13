@@ -24,15 +24,19 @@ public class GameManager : MonoBehaviour
         gameover    //设定的所有局结束
     }
     public GameState currentState = GameState.init; //0
-    //进程转换  ask
+                                                    //进程转换  ask
+    /*
     public static int GameStatus()
     {
+        
         int gamestate = GlobalVar.gameStatusCounter;
         if (gamestate < 7)
         {
 
         }
-    }
+        
+}
+    */
 
     //全局变量
     public static List<Player> playerList = new List<Player>(); //玩家列表 PlayerObject
@@ -76,6 +80,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.init:
                 RoundInit();
+                break;
 
         }
     }
