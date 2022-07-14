@@ -17,28 +17,42 @@ public class GameManager : MonoBehaviour
         loading,    //游戏未开始
         setting,    //设置界面，调整游戏规则
         init,       //初始化，切换界面，玩家入座
-        roundinit,  //每一局开始的INIT，确定PLAYER ROLES，发牌
-        preflop,
-        flop,
-        turn,
-        river,
-        result,      //一局游戏结束显示结果，调整筹码和排行
+        roundinit,  //每一局开始的INIT，确定PLAYER ROLES
+        preflop,    //发给玩家两张牌 第一轮下注
+        flop,       //公开卡池三张牌 第二轮下注
+        turn,       //公开卡池第四张牌 第三轮下注
+        river,      //公开卡池第四张牌 第四轮下注
+        result,     //一局游戏结束显示结果，调整筹码和排行
         gameover    //设定的所有局结束
     }
-    public GameState currentState = GameState.loading; //0
-                                                    //进程转换  ask
-    /*
-    public static int GameStatus()
+    
+    public static GameState GameStatus()
     {
-        
-        int gamestate = GlobalVar.gameStatusCounter;
-        if (gamestate < 7)
+        switch (GolbalVar.gameStatusCounter)
         {
-
+            case -3:
+                return GameState.loading;
+            case -2:
+                return GameState.setting;
+            case -1:
+                return GameState.init;
+            case 0:
+                return GameState.roundinit;
+            case 1:
+                return GameState.preflop;
+            case 2:
+                return GameState.flop;
+            case 3:
+                return GameState.turn;
+            case 4:
+                return GameState.river;
+            case 5:
+                return GameState.result;
+            case 6:
+                return GameState.gameover;
         }
-        
-}
-    */
+        throw new UnityException("GameStatus error");
+    }
 
     //全局变量
     public static List<Player> playerList = new List<Player>(); //玩家列表 PlayerObject
@@ -58,7 +72,6 @@ public class GameManager : MonoBehaviour
         //初始钱数
         //总局数
         //加注次数
-        currentState = GameState.loading;
     }
     public void RoundInit()//初始化
     {
@@ -78,12 +91,5 @@ public class GameManager : MonoBehaviour
     void Update()
     {   
 
-        switch (currentState)
-        {
-            case GameState.init:
-                RoundInit();
-                break;
-
-        }
     }
 }

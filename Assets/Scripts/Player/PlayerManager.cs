@@ -93,10 +93,10 @@ public class PlayerManager
         }
 
         activePlayers[btn].role = Player.PlayerRole.button;
-        activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
+        activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
         if (totalSeatNum >= 3)
         {
-            activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.smallBlind;
+            activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.bigBlind;
         }
 
         SortPlayers();
@@ -104,7 +104,7 @@ public class PlayerManager
 
     public void SortPlayers()
     {
-        for(int i = 0; i<=curBtnSeat; i++)
+        for(int i = 0; i<curBtnSeat; i++)
         {
             Player p = activePlayers[i];
             activePlayers.Remove(p);
