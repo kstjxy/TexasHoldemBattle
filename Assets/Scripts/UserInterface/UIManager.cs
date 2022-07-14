@@ -47,10 +47,6 @@ public class UIManager : MonoBehaviour
         positions = new List<Vector2>() { new Vector2(-240, 165), new Vector2(-400, 80), new Vector2(-400, -40), new Vector2(-240, -140), new Vector2(140, -140), new Vector2(300, -40), new Vector2(300, 80), new Vector2(140, 165) };
     }
 
-    private void Start()
-    {
-        
-    }
     //unfinished
     void Pause_ButtonClicked()
     {
@@ -72,6 +68,11 @@ public class UIManager : MonoBehaviour
         if (Time.timeScale <= 0)
             return;
         InitialPanelManager.instance.CallInitialPanel();
+        GameManager.instance.Restart();
+        for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
+        {
+            Destroy(PlayerManager.instance.seatedPlayers[i].playerObject.gameObject);
+        }
         logText.text = "LOG:";
     }
     //unfinished
@@ -130,7 +131,7 @@ public class UIManager : MonoBehaviour
         RectTransform poRT = po.GetComponent<RectTransform>();
         poRT.anchoredPosition = positions[p.seatNum];
         poRT.localScale = new Vector3(1, 1, 1);
-
+        po.GetComponent<PlayerObject>().InitializeThePlayer(p);
         return po.GetComponent<PlayerObject>();
     }
 }

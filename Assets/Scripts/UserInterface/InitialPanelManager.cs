@@ -42,9 +42,9 @@ public class InitialPanelManager : MonoBehaviour
 
             for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
             {
-                UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);
+                PlayerManager.instance.seatedPlayers[i].playerObject = UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);
             }
-
+            GameManager.instance.Setting();
             panelAnimator.Play("GameStarted");//使用动画让Panel退出画面
         }
     }
@@ -62,8 +62,16 @@ public class InitialPanelManager : MonoBehaviour
 
     public void CallInitialPanel()
     {
+        ResetAllTheButtons();
         panelAnimator.Play("StartInitializing");
     }
 
+    void ResetAllTheButtons()
+    {
+        for (int i = 0; i < panelRect.childCount; i++)
+        {
+            panelRect.GetChild(i).GetComponent<PlayerSelectButton>().RefreshButtonUI();
+        }
+    }
 
 }
