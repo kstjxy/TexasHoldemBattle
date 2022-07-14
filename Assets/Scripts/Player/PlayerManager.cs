@@ -20,6 +20,7 @@ public class PlayerManager
     public List<Player> activePlayers = new List<Player>();
     public int totalSeatNum;
     int curBtnSeat = 0;
+    PlayerObject playerObject;
 
     public void InitPlayers(List<string> nameList)
     {
