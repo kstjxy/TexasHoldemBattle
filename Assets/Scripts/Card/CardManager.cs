@@ -245,20 +245,9 @@ public class CardManager : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// 发规定数量的牌到桌面上，并显示
-    /// </summary>
-    /// <param name="num">牌的数量</param>
-    public void DealACardToTable(int num)
+    public void Restart()
     {
-        //在这个方法中要做到：更新公共牌列表（GameManager.instance），显示新增的牌（UIManager.instance）
+        GolbalVar.publicCards.Clear();
+        InitialCardsList();
     }
-
-
-    public void DealCardsToAPlayer()
-    {
-        //在这个方法中要做到：更新玩家牌列表（用方法PlayerObject.player.AddPlayerCards()），显示玩家的牌（用方法PlayerObject.ShowCards()）
-    }
-
 }
