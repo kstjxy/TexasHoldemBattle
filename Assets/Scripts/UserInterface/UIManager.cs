@@ -26,7 +26,8 @@ public class UIManager : MonoBehaviour
 
     [Header("PositionsForSeatInRect")]
     public RectTransform tableRect;
-    public List<Vector2> positions;
+
+    List<Vector2> positions;
 
     //单例模式
     public static UIManager instance;
@@ -43,6 +44,7 @@ public class UIManager : MonoBehaviour
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
+        positions = new List<Vector2>() { new Vector2(-240, 165), new Vector2(-400, 80), new Vector2(-400, -40), new Vector2(-240, -140), new Vector2(140, -140), new Vector2(300, -40), new Vector2(300, 80), new Vector2(140, 165) };
     }
 
     private void Start()
@@ -70,6 +72,7 @@ public class UIManager : MonoBehaviour
         if (Time.timeScale <= 0)
             return;
         InitialPanelManager.instance.CallInitialPanel();
+        logText.text = "LOG:";
     }
     //unfinished
     void Speed_OnSliderValueChanged(float value)
@@ -111,19 +114,23 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 让玩家信息面板显示在合适的坐标点，上座
+    /// 让玩家信息面板显示在合适的坐标点，上座，并返回 PlayerObject
     /// </summary>
-    /// <param name="po">玩家 PlayerObject </param>
-    /// <param name="seatCount">座位号，从0~7一共八个座位</param>
-    public void SetPlayerOnSeat(PlayerObject po , int seatCount)
+    /// <param name="p"></param>
+    /// <returns>PlayerObject 本身</returns>
+    public PlayerObject SetPlayerOnSeat(Player p)
     {
-        if (seatCount < 0 || seatCount > 7)
+        GameObject po = Instantiate(Resources.Load<GameObject>("Prefabs/Player_Prefab"));
+
+        if (p.seatNum < 0 || p.seatNum > 7)
         {
-            PrintLog("有人未上座！！");
-            return;
+            PrintLog("有人未上座！！错误的座位号："+p.seatNum);
         }
         po.transform.SetParent(tableRect);
         RectTransform poRT = po.GetComponent<RectTransform>();
-        poRT.anchoredPosition = positions[seatCount];
+        poRT.anchoredPosition = positions[p.seatNum];
+        poRT.localScale = new Vector3(1, 1, 1);
+
+        return po.GetComponent<PlayerObject>();
     }
 }
