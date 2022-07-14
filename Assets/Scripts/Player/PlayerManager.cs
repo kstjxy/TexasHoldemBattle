@@ -19,7 +19,6 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();
     public List<Player> activePlayers = new List<Player>();
     public int totalSeatNum;
-    int curBtnSeat = 0;
     PlayerObject playerObject;
 
     public void InitPlayers(List<string> nameList)
@@ -56,7 +55,6 @@ public class PlayerManager
                 }
             }
         }
-        SetPlayersRole(curBtnSeat);
         return true;
     }
 
@@ -78,8 +76,8 @@ public class PlayerManager
                 }
             }
         }
-        curBtnSeat = (curBtnSeat + 1) % totalSeatNum;
-        SetPlayersRole(curBtnSeat);
+        GolbalVar.curBtnSeat = (GolbalVar.curBtnSeat + 1) % totalSeatNum;
+        SetPlayersRole(GolbalVar.curBtnSeat);
     }
 
     public void SetPlayersRole(int btn)
@@ -105,7 +103,7 @@ public class PlayerManager
 
     public void SortPlayers()
     {
-        for(int i = 0; i<curBtnSeat; i++)
+        for(int i = 0; i<GolbalVar.curBtnSeat; i++)
         {
             Player p = activePlayers[i];
             activePlayers.Remove(p);
