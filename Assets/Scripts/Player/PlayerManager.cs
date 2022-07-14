@@ -19,7 +19,6 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();
     public List<Player> activePlayers = new List<Player>();
     public int totalSeatNum;
-    PlayerObject playerObject;
 
     public void InitPlayers(List<string> nameList)
     {

@@ -90,6 +90,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Restart()
+    {
+        GolbalVar.gameStatusCounter = -2;
+    }
+
     public void Init()
     {
         

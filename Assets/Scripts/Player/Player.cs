@@ -24,7 +24,8 @@ public class Player
     public PlayerRole role = PlayerRole.outOfGame;
     public List<Card> playerCardList = new List<Card>();
     public int state = -1; //no action
-    public List<Card> finalCards = new List<Card>(); 
+    public List<Card> finalCards = new List<Card>();
+    public PlayerObject playerObject;
 
     public Player(string playerName)
     {
