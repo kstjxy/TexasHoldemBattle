@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
         result,     //一局游戏结束显示结果，调整筹码和排行
         gameover    //设定的所有局结束
     }
+
+    public static float timer = 0;
     
     public static GameState GameStatus()
     {
@@ -97,32 +99,37 @@ public class GameManager : MonoBehaviour
 
     public void Init()
     {
+        foreach (Player p in PlayerManager.instance.activePlayers)
+        {
+            p.coin = GolbalVar.initCoin;
+        }
         
     }
 
     public void RoundInit()
     {
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
+        CardManager.instance.InitialCardsList();
     }
 
     public void Preflop()
     {
-
+        CardManager.instance.AssignCardsToPlayers(PlayerManager.instance.activePlayers);
     }
 
     public void Flop()
     {
-
+        CardManager.instance.AssignCardsToTable(3);
     }
 
     public void Turn()
     {
-
+        CardManager.instance.AssignCardsToTable(1);
     }
 
     public void River()
     {
-
+        CardManager.instance.AssignCardsToTable(1);
     }
 
     public void Result()
@@ -136,19 +143,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
-    //全局变量
-    public static List<Player> playerList = new List<Player>(); //玩家列表 PlayerObject
-    public static List<Card> cardList = new List<Card>();       //公共牌
-    public static List<int> allNum = new List<int>();           //所有玩家的序号
-    public static List<int> playingNum = new List<int>();       //还在玩的玩家的序号
-    public static List<int> lostNum = new List<int>();          //已淘汰玩家的序号
-    public static int buton;                                    //庄家序号
-    public static int totalRound;                               //总局数
-    public static int initMoney;                                //
-    public static int betMonet;                                 //
-
-
     public void Start()
     {
         Debug.Log("游戏开始......");
@@ -159,6 +153,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {   
-
+        if (GolbalVar.curRoundNum > GolbalVar.totalRoundNum)
+        {
+            GameOver();
+        }
+        if (timer > 2 * GolbalVar.speedFactor)
+        {
+            GameUpdate();
+            if (GolbalVar.gameStatusCounter>-2 && GolbalVar.gameStatusCounter <5)
+            {
+                GolbalVar.gameStatusCounter++;
+            }
+            timer = 0;
+        }
     }
 }

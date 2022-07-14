@@ -16,12 +16,10 @@ public class CardManager : MonoBehaviour
             Destroy(this);
         else
             instance = this;
-
-        InitialCardsList();
     }
 
     //º”‘ÿ≈∆∂— ‘⁄
-    private void InitialCardsList()
+    public void InitialCardsList()
     {
         cards.Clear();
         for (int i = 2; i < 15; i++)
@@ -41,9 +39,12 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void AssignCardsToTable()
+    public void AssignCardsToTable(int num)
     {
-        GolbalVar.publicCards.Add(AssignRandomCard());
+        for (int i = 0; i < num; i++)
+        {
+            GolbalVar.publicCards.Add(AssignRandomCard());
+        }
     }
 
     public Card AssignRandomCard()
