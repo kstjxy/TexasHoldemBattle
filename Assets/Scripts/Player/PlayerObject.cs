@@ -23,7 +23,7 @@ public class PlayerObject : MonoBehaviour
     {
         player = p;
         nameText.text = player.playerName;
-        coinsText.text = player.coin.ToString();
+        coinsText.text = GolbalVar.initCoin.ToString();
     }
 
     /// <summary>
@@ -33,6 +33,16 @@ public class PlayerObject : MonoBehaviour
     {
         card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
         card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
+    }
+
+    public void UpdateCoinsCount(int change)
+    {
+        if (change + player.coin < 0)
+            return;
+        else
+            player.coin += change;
+
+        coinsText.text = player.coin.ToString();
     }
 
     /// <summary>

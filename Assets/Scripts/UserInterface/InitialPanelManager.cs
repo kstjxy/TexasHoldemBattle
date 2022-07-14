@@ -40,6 +40,11 @@ public class InitialPanelManager : MonoBehaviour
             UIManager.instance.PrintLog("游戏最大次数：<color=#C9FFDD>" + maximumGames.text + "</color>");
             UIManager.instance.PrintLog("每轮加注限制：<color=#C9FFF9>" + raisisLimit.text + "</color>\n游戏开始！");
 
+            GolbalVar.initCoin = int.Parse(InitialChips.text);
+            GolbalVar.minBetCoin = int.Parse(smallBlindInjection.text);
+            GolbalVar.totalRoundNum = int.Parse(maximumGames.text);
+            GolbalVar.maxBetCount = int.Parse(raisisLimit.text);
+
             for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
             {
                 PlayerManager.instance.seatedPlayers[i].playerObject = UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);

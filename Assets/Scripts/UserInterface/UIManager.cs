@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     public List<Image> communityCards;
 
     [Header("UI Components_Texts")]
-    public Text chipPoolText;
+    public Text coinPoolText;
     public Text gamesCountText;
     public Text speedValueText;
     public Text logText;
@@ -141,5 +141,28 @@ public class UIManager : MonoBehaviour
         poRT.localScale = new Vector3(1, 1, 1);
         po.GetComponent<PlayerObject>().InitializeThePlayer(p);
         return po.GetComponent<PlayerObject>();
+    }
+
+    /// <summary>
+    /// 更新奖池
+    /// </summary>
+    /// <param name="change">奖池变动清情况，为负数则代表全部被玩家赢走</param>
+    public void UpdateCoinsPool(int change)
+    {
+
+        if (change < 0)
+            GolbalVar.bot = 0;
+        else
+            GolbalVar.bot += change;
+
+        coinPoolText.text = GolbalVar.bot.ToString();
+    }
+
+    /// <summary>
+    /// 直接读取更新当前场数
+    /// </summary>
+    public void UpdateGameRounds()
+    {
+        gamesCountText.text = "GAMES: " + GolbalVar.curRoundNum + "/" + GolbalVar.totalRoundNum;
     }
 }
