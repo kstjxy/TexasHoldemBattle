@@ -19,6 +19,7 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();
     public List<Player> activePlayers = new List<Player>();
     public int totalSeatNum;
+    int curBtnSeat = 0;
 
     public void InitPlayers(List<string> nameList)
     {
@@ -29,38 +30,102 @@ public class PlayerManager
         }
     }
 
-    public void SeatedPlayer(Player p, int seatNum)
+    public bool SeatPlayers()
     {
-        p.seatNum = seatNum;
-        seatedPlayers.Add(p);
+        seatedPlayers = new List<Player>();
+        activePlayers = new List<Player>();
+        totalSeatNum = 0;
+        foreach (Player p in allPlayers)
+        {
+            if (p.isInGame)
+            {
+                seatedPlayers.Add(p);
+                p.seatNum = totalSeatNum;
+                totalSeatNum++;
+                if (totalSeatNum > 8)
+                {
+                    Debug.Log("玩家人数超过上限8人，请更改选择");
+                    foreach(Player pl in seatedPlayers)
+                    {
+                        pl.seatNum = -1;
+                    }
+                    seatedPlayers.Clear();
+                    p.isInGame = false;
+                    return false;
+                }
+            }
+        }
+        SetPlayersRole(curBtnSeat);
+        return true;
     }
 
-    public void UnseatedPlayer(Player p)
+    public void RearrangePlayers()
     {
-        p.seatNum = -1;
-        seatedPlayers.Remove(p);
+
+    }
+
+    public void NewRound()
+    {
+        foreach (Player p in seatedPlayers)
+        {
+            if (p.coin <= 0)
+            {
+                p.OutOfGame();
+                totalSeatNum--;
+                activePlayers.Remove(p);
+            } else
+            {
+                p.ResetNewRound();
+                if (!activePlayers.Contains(p))
+                {
+                    activePlayers.Add(p);
+                }
+            }
+        }
+        curBtnSeat = (curBtnSeat + 1) % totalSeatNum;
+        SetPlayersRole(curBtnSeat);
     }
 
     public void SetPlayersRole(int btn)
     {
-        int bb = (btn + 1) % totalSeatNum;
-        int sb = (btn + 2) % totalSeatNum;
+        activePlayers.Sort((a, b) => {
+            return a.seatNum - b.seatNum;
+        });
+        
+        foreach (Player p in activePlayers)
+        {
+            p.role = Player.PlayerRole.normal;
+        }
+
+        activePlayers[btn].role = Player.PlayerRole.button;
+        activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
+        if (totalSeatNum >= 3)
+        {
+            activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.smallBlind;
+        }
+
+        SortPlayers();
+    }
+
+    public void SortPlayers()
+    {
+        for(int i = 0; i<=curBtnSeat; i++)
+        {
+            Player p = activePlayers[i];
+            activePlayers.Remove(p);
+            activePlayers.Add(p);
+        }
+    }
+
+    public Player FindPlayer(int seatNum)
+    {
         foreach(Player p in seatedPlayers)
         {
-            int curSeat = p.seatNum;
-            if (curSeat == btn)
+            if (p.seatNum == seatNum)
             {
-                p.role = Player.PlayerRole.button;
-            } else if (curSeat == bb)
-            {
-                p.role = Player.PlayerRole.bigBlind;
-            } else if (curSeat == sb)
-            {
-                p.role = Player.PlayerRole.smallBlind;
-            } else
-            {
-                p.role = Player.PlayerRole.normal;
+                return p;
             }
         }
+        return null;
     }
 }

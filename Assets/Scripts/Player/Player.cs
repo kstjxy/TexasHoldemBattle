@@ -17,7 +17,8 @@ public class Player
 
     public string playerName;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1
-    public int coin = 0; 
+    public int coin = 0;
+    public bool isInGame = false;
     public bool isFold = false;
     public bool isAllIn = false;
     public PlayerRole role = PlayerRole.outOfGame;
@@ -35,5 +36,22 @@ public class Player
         playerCardList = new List<Card>();
         playerCardList.Add(a);
         playerCardList.Add(b);
+    }
+
+    public void OutOfGame()
+    {
+        isInGame = false;
+        coin = 0;
+        role = PlayerRole.outOfGame;
+        ResetNewRound();
+    }
+
+    public void ResetNewRound()
+    {
+        isFold = false;
+        isAllIn = false;
+        state = -1;
+        playerCardList = new List<Card>();
+        finalCards = new List<Card>();
     }
 }
