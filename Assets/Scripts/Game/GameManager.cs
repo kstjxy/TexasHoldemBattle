@@ -14,10 +14,9 @@ public class GameManager : MonoBehaviour
     //游戏进程
     public enum GameState
     {
-        loading,    //游戏未开始
         setting,    //设置界面，调整游戏规则
         init,       //初始化，切换界面，玩家入座
-        roundinit,  //每一局开始的INIT，确定PLAYER ROLES
+        roundInit,  //每一局开始的INIT，确定PLAYER ROLES
         preflop,    //发给玩家两张牌 第一轮下注
         flop,       //公开卡池三张牌 第二轮下注
         turn,       //公开卡池第四张牌 第三轮下注
@@ -30,14 +29,12 @@ public class GameManager : MonoBehaviour
     {
         switch (GolbalVar.gameStatusCounter)
         {
-            case -3:
-                return GameState.loading;
             case -2:
                 return GameState.setting;
             case -1:
                 return GameState.init;
             case 0:
-                return GameState.roundinit;
+                return GameState.roundInit;
             case 1:
                 return GameState.preflop;
             case 2:
@@ -54,6 +51,87 @@ public class GameManager : MonoBehaviour
         throw new UnityException("GameStatus error");
     }
 
+    public void GameUpdate()
+    {
+        switch(GolbalVar.gameStatusCounter)
+        {
+            case -1:
+                Init();
+                break;
+            case 0:
+                RoundInit();
+                break;
+            case 1:
+                Preflop();
+                break;
+            case 2:
+                Flop();
+                break;
+            case 3:
+                Turn();
+                break;
+            case 4:
+                River();
+                break;
+            case 5:
+                Result();
+                break;
+            case 6:
+                GameOver();
+                break;
+        }
+    }
+
+    public void Setting()
+    {
+        if (PlayerManager.instance.SeatPlayers())
+        {
+            GolbalVar.gameStatusCounter++;
+        }
+    }
+
+    public void Init()
+    {
+        
+    }
+
+    public void RoundInit()
+    {
+        PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
+    }
+
+    public void Preflop()
+    {
+
+    }
+
+    public void Flop()
+    {
+
+    }
+
+    public void Turn()
+    {
+
+    }
+
+    public void River()
+    {
+
+    }
+
+    public void Result()
+    {
+
+    }
+
+    public void GameOver()
+    {
+
+    }
+
+
+
     //全局变量
     public static List<Player> playerList = new List<Player>(); //玩家列表 PlayerObject
     public static List<Card> cardList = new List<Card>();       //公共牌
@@ -65,30 +143,16 @@ public class GameManager : MonoBehaviour
     public static int initMoney;                                //
     public static int betMonet;                                 //
 
-    public void Loading()//初始化
+
+    public void Start()
     {
-        //确定玩家列表
-        //赌注大小
-        //初始钱数
-        //总局数
-        //加注次数
-    }
-    public void RoundInit()//初始化
-    {
-        //确定玩家列表
-        //赌注大小
-        //初始钱数
-        //总局数
-        //加注次数
-    }
-    // Start is called before the first frame update
-    void Begin()
-    {	
-        
+        Debug.Log("游戏开始......");
+ //       PlayerManager.instance.InitPlayers();
+        GolbalVar.gameStatusCounter = -2;
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {   
 
     }
