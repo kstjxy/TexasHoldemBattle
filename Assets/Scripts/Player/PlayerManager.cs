@@ -41,26 +41,31 @@ public class PlayerManager
                 seatedPlayers.Add(p);
                 p.seatNum = totalSeatNum;
                 totalSeatNum++;
-                if (totalSeatNum > 8 || totalSeatNum <2)
+                if (totalSeatNum > 8)
                 {
-                    if (totalSeatNum >8)
-                    {
-                        Debug.Log("玩家人数超过上限8人，请更改选择");
-                    } else
-                    {
-                        Debug.Log("玩家人数未达到2人，请更改选择");
-                    }
-                    foreach(Player pl in seatedPlayers)
-                    {
-                        pl.seatNum = -1;
-                    }
-                    seatedPlayers.Clear();
-                    p.isInGame = false;
+                    Debug.Log("玩家人数超过上限8人，请更改选择");
+                    ResetSeat();
                     return false;
                 }
             }
         }
+        if (totalSeatNum < 2)
+        {
+            Debug.Log("玩家人数未达到2人，请更改选择");
+            ResetSeat();
+            return false;
+        }
         return true;
+    }
+
+    public void ResetSeat()
+    {
+        foreach (Player pl in seatedPlayers)
+        {
+            pl.seatNum = -1;
+            pl.isInGame = false;
+        }
+        seatedPlayers.Clear();
     }
 
     public void NewRound()
