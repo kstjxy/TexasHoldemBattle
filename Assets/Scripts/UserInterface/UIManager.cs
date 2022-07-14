@@ -69,10 +69,18 @@ public class UIManager : MonoBehaviour
             return;
         InitialPanelManager.instance.CallInitialPanel();
         GameManager.instance.Restart();
+        CardManager.instance.Restart();
+        //删除所有牌桌上的AI
         for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
         {
             Destroy(PlayerManager.instance.seatedPlayers[i].playerObject.gameObject);
         }
+        //清空桌面的公共牌
+        for (int i = 0; i < communityCards.Count; i++)
+        {
+            communityCards[i].sprite = Resources.Load<Sprite>("Cards/emptyPlace");
+        }
+        //清空LOG
         logText.text = "LOG:";
     }
     //unfinished
