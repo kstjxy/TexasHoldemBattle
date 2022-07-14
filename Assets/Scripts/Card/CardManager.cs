@@ -9,8 +9,6 @@ public class CardManager : MonoBehaviour
     public static CardManager instance;
     //ลฦื้
     private List<Card> cards;
-    public List<Card> tableCards;
-    public List<Card> publicCards;
 
     private void Awake()
     {
@@ -45,10 +43,7 @@ public class CardManager : MonoBehaviour
 
     public void AssignCardsToTable()
     {
-        for(int i = 0; i<5; i++)
-        {
-            tableCards.Add(AssignRandomCard());
-        }
+        GolbalVar.publicCards.Add(AssignRandomCard());
     }
 
     public Card AssignRandomCard()

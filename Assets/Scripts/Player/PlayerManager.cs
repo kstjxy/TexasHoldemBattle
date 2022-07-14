@@ -59,11 +59,6 @@ public class PlayerManager
         return true;
     }
 
-    public void RearrangePlayers()
-    {
-
-    }
-
     public void NewRound()
     {
         foreach (Player p in seatedPlayers)

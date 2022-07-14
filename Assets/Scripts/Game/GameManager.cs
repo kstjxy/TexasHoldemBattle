@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         //初始钱数
         //总局数
         //加注次数
-        currentState = GameState.init;
+        currentState = GameState.loading;
     }
     public void RoundInit()//初始化
     {
