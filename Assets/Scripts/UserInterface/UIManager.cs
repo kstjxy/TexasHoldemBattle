@@ -14,15 +14,18 @@ public class UIManager : MonoBehaviour
     public Button restartButton;
     public Slider speedValueSlider;
 
-    [Header("CommunityCard_Image")]
+    [Header("CommunityCards_Image")]
     public List<Image> communityCards;
 
     [Header("UI Components_Texts")]
+    public Text chipPoolText;
+    public Text gamesCountText;
     public Text speedValueText;
     public Text logText;
     public List<Text> rankingList;
 
     [Header("PositionsForSeatInRect")]
+    public RectTransform tableRect;
     public List<Vector2> positions;
 
     //单例模式
@@ -41,19 +44,24 @@ public class UIManager : MonoBehaviour
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
     }
+
+    private void Start()
+    {
+        
+    }
     //unfinished
     void Pause_ButtonClicked()
     {
         pausePanelAnimator.Play("Paused", 0, 0);
         Time.timeScale = 0;
-        //一些关于暂停提示的操作
     }
     //unfinished
     void Continue_ButtonClicked()
     {
+        if (Time.timeScale > 0)
+            return;
         Time.timeScale = 1;
         pausePanelAnimator.Play("Continue", 0, 0);
-        //一些关于暂停显示退出屏幕的操作
     }
     //unfinished
     void Restart_ButtonClicked()
@@ -100,5 +108,22 @@ public class UIManager : MonoBehaviour
         if (cardPlace < 0 || cardPlace > 4)
             return;
         communityCards[cardPlace].sprite = card.GetSpriteSurface();
+    }
+
+    /// <summary>
+    /// 让玩家信息面板显示在合适的坐标点，上座
+    /// </summary>
+    /// <param name="po">玩家 PlayerObject </param>
+    /// <param name="seatCount">座位号，从0~7一共八个座位</param>
+    public void SetPlayerOnSeat(PlayerObject po , int seatCount)
+    {
+        if (seatCount < 0 || seatCount > 7)
+        {
+            PrintLog("有人未上座！！");
+            return;
+        }
+        po.transform.SetParent(tableRect);
+        RectTransform poRT = po.GetComponent<RectTransform>();
+        poRT.anchoredPosition = positions[seatCount];
     }
 }
