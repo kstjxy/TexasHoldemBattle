@@ -11,6 +11,7 @@ public class PlayerObject : MonoBehaviour
     [Header("PlayerPanelElements")]
     public Text nameText;
     public Text coinsText;
+    public Image avatarImage;
     public Image card1Image;
     public Image card2Image;
 
@@ -18,17 +19,44 @@ public class PlayerObject : MonoBehaviour
     /// 对PlayerObject进行初始化
     /// </summary>
     /// <param name="p">与之关联的Player本身</param>
-    /// <param name="coins">初始筹码数量</param>
-    public void InitializeThePlayer(Player p, int coins)
-    { 
-    
+    public void InitializeThePlayer(Player p)
+    {
+        player = p;
+        nameText.text = player.playerName;
+        coinsText.text = player.coin.ToString();
     }
 
     /// <summary>
-    /// 请注意：调用该方法时，player已经调用过.AddPlayerCards()
+    /// 直接根据 PlayerCardList 来显示卡牌。请注意：调用该方法时，player已经调用过.AddPlayerCards()
     /// </summary>
     public void ShowCards()
-    { 
-    
+    {
+        card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
+        card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
     }
+
+    /// <summary>
+    /// 更改头像为：行动中
+    /// </summary>
+    public void HightLightAction_AvatarChange()
+    {
+        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_actioning");
+    }
+
+    /// <summary>
+    /// 更改头像为：等待中
+    /// </summary>
+    public void BackToWaiting_AvatarChange()
+    {
+        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_wating");
+    }
+
+    /// <summary>
+    /// 更改头像为：离开游戏！
+    /// </summary>
+    public void QuitTheGame_AvatarChange()
+    {
+        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_empty");
+    }
+
 }
