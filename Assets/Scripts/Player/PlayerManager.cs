@@ -19,6 +19,7 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();     //被选中入座玩家列表，包括FOLD和已经破产的
     public List<Player> activePlayers = new List<Player>();     //当前还在本局游戏中的玩家列表
     public int totalSeatNum;    //当前回合一共入座的玩家数，包括已经FOLD的不包括已经破产的
+    public int nowPlayerIndex;  //当前下注玩家序号
 
     /// <summary>
     /// 初始化所有玩家
