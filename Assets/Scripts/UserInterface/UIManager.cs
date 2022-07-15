@@ -155,11 +155,11 @@ public class UIManager : MonoBehaviour
     {
 
         if (change < 0)
-            GolbalVar.bot = 0;
+            GolbalVar.pot = 0;
         else
-            GolbalVar.bot += change;
+            GolbalVar.pot += change;
 
-        coinPoolText.text = GolbalVar.bot.ToString();
+        coinPoolText.text = GolbalVar.pot.ToString();
     }
 
     /// <summary>
