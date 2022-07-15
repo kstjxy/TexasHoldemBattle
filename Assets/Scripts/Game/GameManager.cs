@@ -120,8 +120,11 @@ public class GameManager : MonoBehaviour
     public void Flop()
     {
         CardManager.instance.AssignCardsToTable(3);
+        for(int i=0; i<3; i++)
+        {
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+        }
     }
-
     public void Turn()
     {
         CardManager.instance.AssignCardsToTable(1);
