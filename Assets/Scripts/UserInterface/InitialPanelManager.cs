@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class InitialPanelManager : MonoBehaviour
 {
+    [Header("Anim")]
     public Animator panelAnimator;
+    public Text startErrorLog;
 
     [Header("RectTransform")]
     public RectTransform panelRect;
@@ -50,6 +52,7 @@ public class InitialPanelManager : MonoBehaviour
                 PlayerManager.instance.seatedPlayers[i].playerObject = UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);
             }
             GameManager.instance.Setting();
+            UIManager.instance.UpdateGameRounds();
             panelAnimator.Play("GameStarted");//使用动画让Panel退出画面
         }
     }
@@ -65,10 +68,23 @@ public class InitialPanelManager : MonoBehaviour
         go.GetComponent<PlayerSelectButton>().InitializeSelectButton(p);
     }
 
+    /// <summary>
+    /// 在Restart的时候调用，将初始设置窗口叫回来
+    /// </summary>
     public void CallInitialPanel()
     {
         ResetAllTheButtons();
         panelAnimator.Play("StartInitializing");
+    }
+
+    /// <summary>
+    /// 在开始的时候出现人数选择问题弹出提示
+    /// </summary>
+    /// <param name="log"></param>
+    public void CallStartErrorLog(string log)
+    {
+        startErrorLog.text = log;
+        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
     }
 
     void ResetAllTheButtons()

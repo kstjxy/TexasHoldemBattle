@@ -114,22 +114,27 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
-        CardManager.instance.AssignCardsToPlayers(PlayerManager.instance.activePlayers);
+        CardManager.instance.AssignCardsToPlayers();
     }
 
     public void Flop()
     {
         CardManager.instance.AssignCardsToTable(3);
+        for(int i=0; i<3; i++)
+        {
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+        }
     }
-
     public void Turn()
     {
         CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
     }
 
     public void River()
     {
         CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
     }
 
     public void Result()
@@ -142,7 +147,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    
     public void Start()
     {
         Debug.Log("ÓÎÏ·¿ªÊ¼......");

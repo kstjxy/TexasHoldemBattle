@@ -83,11 +83,9 @@ public class UIManager : MonoBehaviour
         //清空LOG
         logText.text = "LOG:";
     }
-    //unfinished
     void Speed_OnSliderValueChanged(float value)
     {
-        //设置实际速度（其实是减小AI调用的时间间隔）
-        //显示速度
+        GolbalVar.speedFactor = value;
         speedValueText.text = value.ToString();
     }
 
@@ -125,7 +123,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 让玩家信息面板显示在合适的坐标点，上座，并返回 PlayerObject
     /// </summary>
-    /// <param name="p"></param>
+    /// <param name="p">Player</param>
     /// <returns>PlayerObject 本身</returns>
     public PlayerObject SetPlayerOnSeat(Player p)
     {

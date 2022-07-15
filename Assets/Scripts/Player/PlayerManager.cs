@@ -15,12 +15,15 @@ public class PlayerManager
         }
     }
 
-    public List<Player> allPlayers = new List<Player>();
-    public List<Player> seatedPlayers = new List<Player>();
-    public List<Player> activePlayers = new List<Player>();
-    public int totalSeatNum;
-    public int nowPlayerIndex = 0; //当前的执行的玩家
+    public List<Player> allPlayers = new List<Player>();        //所有玩家的列表
+    public List<Player> seatedPlayers = new List<Player>();     //被选中入座玩家列表，包括FOLD和已经破产的
+    public List<Player> activePlayers = new List<Player>();     //当前还在本局游戏中的玩家列表
+    public int totalSeatNum;    //当前回合一共入座的玩家数，包括已经FOLD的不包括已经破产的
 
+    /// <summary>
+    /// 初始化所有玩家
+    /// </summary>
+    /// <param name="nameList">玩家的名字列表</param>
     public void InitPlayers(List<string> nameList)
     {
         foreach (string name in nameList)
@@ -42,31 +45,28 @@ public class PlayerManager
                 seatedPlayers.Add(p);
                 p.seatNum = totalSeatNum;
                 totalSeatNum++;
-                if (totalSeatNum > 8)
-                {
-                    Debug.Log("玩家人数超过上限8人，请更改选择");
-                    ResetSeat();
-                    return false;
-                }
             }
         }
-        if (totalSeatNum < 2)
+        if (totalSeatNum < 2 || totalSeatNum > 8)
         {
-            Debug.Log("玩家人数未达到2人，请更改选择");
-            ResetSeat();
+            if (totalSeatNum < 2)
+            {
+                Debug.Log("玩家人数未达到2人，请更改选择");
+                InitialPanelManager.instance.CallStartErrorLog("<2,886");
+            } else
+            {
+                Debug.Log("玩家人数超过上限8人，请更改选择");
+                InitialPanelManager.instance.CallStartErrorLog(">8,886");
+            }
+            foreach (Player pl in seatedPlayers)
+            {
+                pl.seatNum = -1;
+                pl.isInGame = false;
+            }
+            seatedPlayers.Clear();
             return false;
         }
         return true;
-    }
-
-    public void ResetSeat()
-    {
-        foreach (Player pl in seatedPlayers)
-        {
-            pl.seatNum = -1;
-            pl.isInGame = false;
-        }
-        seatedPlayers.Clear();
     }
 
     public void NewRound()
