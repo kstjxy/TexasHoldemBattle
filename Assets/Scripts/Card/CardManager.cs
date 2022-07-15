@@ -8,7 +8,7 @@ public class CardManager : MonoBehaviour
     //单例模式
     public static CardManager instance;
     //牌组
-    private List<Card> cards;
+    private List<Card> cards = new List<Card>();
 
     private void Awake()
     {
@@ -18,10 +18,14 @@ public class CardManager : MonoBehaviour
             instance = this;
     }
 
-    //加载牌堆 在
+    /// <summary>
+    /// Initialize the card List of 4*13 Cards
+    /// </summary>
     public void InitialCardsList()
     {
         cards.Clear();
+        if (GolbalVar.publicCards == null)
+            GolbalVar.publicCards = new List<Card>();
         for (int i = 2; i < 15; i++)
         {
             cards.Add(new Card(CardSuit.club, i));
@@ -248,7 +252,10 @@ public class CardManager : MonoBehaviour
 
     public void Restart()
     {
-        GolbalVar.publicCards.Clear();
+        if (GolbalVar.publicCards == null)
+            GolbalVar.publicCards = new List<Card>();
+        else
+            GolbalVar.publicCards.Clear();
         InitialCardsList();
     }
 }

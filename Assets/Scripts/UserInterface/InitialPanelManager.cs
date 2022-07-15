@@ -50,6 +50,7 @@ public class InitialPanelManager : MonoBehaviour
                 PlayerManager.instance.seatedPlayers[i].playerObject = UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);
             }
             GameManager.instance.Setting();
+            UIManager.instance.UpdateGameRounds();
             panelAnimator.Play("GameStarted");//使用动画让Panel退出画面
         }
     }
