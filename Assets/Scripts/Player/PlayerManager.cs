@@ -171,11 +171,11 @@ public class PlayerManager
             nowPlayerIndex = 0;
         if (nowPlayerIndex == 0)
         {
-            Debug.Log("新一轮下注开始")
+            Debug.Log("新一轮下注开始");
         }
         if (CalcFoldNum(pList) == pList.Count-1 && pList[playerIndex].isFold==false)
         {
-            Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权")：
+            Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
             return 0;
         }
 
