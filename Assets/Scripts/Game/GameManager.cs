@@ -114,12 +114,16 @@ public class GameManager: MonoBehaviour
         PlayerManager.instance.NewRound();
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
         UIManager.instance.PrintLog("位置分配完毕！");
-        UIManager.instance.PrintLog("【"+ PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
-        UIManager.instance.PrintLog("【"+ PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
-        if(PlayerManager.instance.activePlayers.Count >= 3)
+        if (PlayerManager.instance.activePlayers.Count >= 3)
         {
-            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
+            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
+        } else
+        {
+            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为庄家和小盲位");
         }
+        UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+
         CardManager.instance.InitialCardsList();
     }
 

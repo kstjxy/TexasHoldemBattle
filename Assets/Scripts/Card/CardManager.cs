@@ -154,6 +154,11 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 是否为顺子
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public bool IsStright(List<Card> cList)
     {
         for(int i=1; i<cList.Count; i++)
@@ -166,6 +171,11 @@ public class CardManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 最多的相同数字牌有几个
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int MaxSameNum(List<Card> cList)
     {
         int max = 1;
@@ -187,6 +197,11 @@ public class CardManager : MonoBehaviour
         return max;
     }
 
+    /// <summary>
+    /// 是否为同花
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public bool IsFlush(List<Card> cList)
     {
         CardSuit curS = cList[0].cardSuit;
@@ -200,6 +215,11 @@ public class CardManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 中途数值变了几次
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int ValueChangeNum(List<Card> cList)
     {
         int valueChange = 0;
@@ -213,6 +233,11 @@ public class CardManager : MonoBehaviour
         return valueChange;
     }
 
+    /// <summary>
+    /// 牌面总值
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int totalCardValue(List<Card> cList)
     {
         int totalValue = 0;
