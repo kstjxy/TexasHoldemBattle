@@ -19,6 +19,7 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();
     public List<Player> activePlayers = new List<Player>();
     public int totalSeatNum;
+    public int nowPlayerIndex = 0; //当前的执行的玩家
 
     public void InitPlayers(List<string> nameList)
     {
@@ -131,5 +132,38 @@ public class PlayerManager
             }
         }
         return null;
+    }
+    public int CalcFoldNum(List<Plyer> pList)
+    {
+        int num = 0;
+        foreach(Player p in pList)
+        {
+            if (p.isFold == true)
+                num++;
+        }
+        return num;
+    }
+    private void BetAction(Plyer p)
+    {
+        switch 
+    }
+    //返回值说明
+    //-1 仅剩一名玩家，游戏结束
+    //
+    public int PlayerBet(List<Player> pList, int playerIndex)
+    {
+        bool thisPlayerIsFold = false;
+        if (nowPlayerIndex == pList.Count)
+            nowPlayerIndex = 0;
+        if (nowPlayerIndex == 0)
+        {
+            Debug.Log("新一轮下注开始")
+        }
+        if (CalcFoldNum(pList) == pList.Count-1 && pList[playerIndex].isFold==false)
+        {
+            Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权")：
+            return -1;
+        }
+
     }
 }
