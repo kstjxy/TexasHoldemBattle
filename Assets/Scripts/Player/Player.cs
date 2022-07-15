@@ -32,6 +32,11 @@ public class Player
         this.playerName = playerName;
     }
 
+    /// <summary>
+    /// 给玩家的个人卡池添加两张卡牌
+    /// </summary>
+    /// <param name="a">第一张牌</param>
+    /// <param name="b">第二张牌</param>
     public void AddPlayerCards(Card a, Card b)
     {
         playerCardList = new List<Card>();
@@ -39,6 +44,9 @@ public class Player
         playerCardList.Add(b);
     }
 
+    /// <summary>
+    /// 将玩家移出游戏
+    /// </summary>
     public void OutOfGame()
     {
         isInGame = false;
@@ -47,6 +55,9 @@ public class Player
         ResetNewRound();
     }
 
+    /// <summary>
+    /// 新一轮游戏重置玩家
+    /// </summary>
     public void ResetNewRound()
     {
         isFold = false;
