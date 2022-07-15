@@ -91,8 +91,8 @@ public class UIManager : MonoBehaviour
     }
     void Speed_OnSliderValueChanged(float value)
     {
-        GolbalVar.speedFactor = value + 0.01f;
-        speedValueText.text = value.ToString();
+        GolbalVar.speedFactor = value;
+        speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
     }
 
     /// <summary>
