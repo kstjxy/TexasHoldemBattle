@@ -19,6 +19,7 @@ public class PlayerManager
     public List<Player> seatedPlayers = new List<Player>();     //被选中入座玩家列表，包括FOLD和已经破产的
     public List<Player> activePlayers = new List<Player>();     //当前还在本局游戏中的玩家列表
     public int totalSeatNum;    //当前回合一共入座的玩家数，包括已经FOLD的不包括已经破产的
+    public int nowPlayerIndex;  //当前下注玩家序号
 
     /// <summary>
     /// 初始化所有玩家
@@ -136,5 +137,48 @@ public class PlayerManager
             }
         }
         return null;
+    }
+    public int CalcFoldNum(List<Player> pList)
+    {
+        int num = 0;
+        foreach(Player p in pList)
+        {
+            if (p.isFold == true)
+                num++;
+        }
+        return num;
+    }
+    private void BetAction(Player p)
+    {
+        switch (p.state){
+            case 0:
+                //小盲注
+                if (p.role == Player.PlayerRole.smallBlind)
+                {
+
+                }
+                break;
+
+        }
+    }
+    //返回值说明
+    //0 仅剩一名玩家，游戏结束
+    //
+    public int PlayerBet(List<Player> pList, int playerIndex)
+    {
+        bool thisPlayerIsFold = false;
+        if (nowPlayerIndex == pList.Count)
+            nowPlayerIndex = 0;
+        if (nowPlayerIndex == 0)
+        {
+            Debug.Log("新一轮下注开始")
+        }
+        if (CalcFoldNum(pList) == pList.Count-1 && pList[playerIndex].isFold==false)
+        {
+            Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权")：
+            return 0;
+        }
+
+        return 1;
     }
 }
