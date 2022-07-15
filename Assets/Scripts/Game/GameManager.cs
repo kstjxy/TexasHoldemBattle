@@ -128,11 +128,13 @@ public class GameManager : MonoBehaviour
     public void Turn()
     {
         CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
     }
 
     public void River()
     {
         CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
     }
 
     public void Result()
