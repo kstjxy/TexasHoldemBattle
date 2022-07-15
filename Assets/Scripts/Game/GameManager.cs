@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
+
         PlayerManager.instance.NewRound();
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
         CardManager.instance.InitialCardsList();
@@ -115,27 +116,35 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
+        UIManager.instance.PrintLog("当前为【前翻牌圈】");
         CardManager.instance.AssignCardsToPlayers();
+        UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
     }
 
     public void Flop()
     {
+        UIManager.instance.PrintLog("当前为【翻牌圈】");
         CardManager.instance.AssignCardsToTable(3);
         for(int i=0; i<3; i++)
         {
             UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
         }
+        UIManager.instance.PrintLog("公共卡池发出前三张牌");
     }
     public void Turn()
     {
+        UIManager.instance.PrintLog("当前为【转牌圈】");
         CardManager.instance.AssignCardsToTable(1);
         UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+        UIManager.instance.PrintLog("公共卡池发出第四张牌");
     }
 
     public void River()
     {
+        UIManager.instance.PrintLog("当前为【河牌圈】");
         CardManager.instance.AssignCardsToTable(1);
         UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+        UIManager.instance.PrintLog("公共卡池发出最后一张牌");
     }
 
     public void Result()

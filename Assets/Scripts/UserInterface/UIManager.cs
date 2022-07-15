@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
     public Text gamesCountText;
     public Text speedValueText;
     public Text logText;
+    public Text countDownText;
     public List<Text> rankingList;
 
     [Header("PositionsForSeatInRect")]
@@ -47,6 +48,11 @@ public class UIManager : MonoBehaviour
         positions = new List<Vector2>() { new Vector2(-240, 165), new Vector2(-400, 80), new Vector2(-400, -40), new Vector2(-240, -140), new Vector2(140, -140), new Vector2(300, -40), new Vector2(300, 80), new Vector2(140, 165) };
     }
 
+    private void Update()
+    {
+        if (GolbalVar.gameStatusCounter > -2)
+            countDownText.text = "COUNTDOWN: " + (2 * GolbalVar.speedFactor - GameManager.timer).ToString();
+    }
     //unfinished
     void Pause_ButtonClicked()
     {
@@ -86,7 +92,7 @@ public class UIManager : MonoBehaviour
     void Speed_OnSliderValueChanged(float value)
     {
         GolbalVar.speedFactor = value;
-        speedValueText.text = value.ToString();
+        speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
     }
 
     /// <summary>

@@ -225,7 +225,7 @@ public class PlayerManager
     //
     public int PlayerBet(List<Player> pList, int playerIndex)
     {
-        bool thisPlayerIsFold = false;
+        //bool thisPlayerIsFold = false;
         if (nowPlayerIndex == pList.Count)
             nowPlayerIndex = 0;
         if (nowPlayerIndex == 0)

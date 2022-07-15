@@ -38,7 +38,19 @@ public class Card
             this.value = vl;
     }
 
-    //从Resources中读取本卡牌对应的素材图片
+    /// <summary>
+    /// 返回牌面数值和花色的信息
+    /// </summary>
+    /// <returns>牌面数值和花色的信息</returns>
+    public string PrintCard()
+    {
+        return "";
+    }
+
+    /// <summary>
+    /// 从Resources中读取本卡牌对应的素材图片
+    /// </summary>
+    /// <returns>相应的卡牌图片</returns>
     public Sprite GetSpriteSurface()
     {
         string valueString;
@@ -66,8 +78,8 @@ public class Card
 }
 public enum CardSuit
 { 
-    club,
-    spade,
-    diamon,
-    heart
+    club,       //梅花
+    spade,      //黑桃
+    diamon,     //方块
+    heart       //红心
 }

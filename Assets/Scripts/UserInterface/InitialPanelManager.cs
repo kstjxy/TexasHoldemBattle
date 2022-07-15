@@ -46,6 +46,7 @@ public class InitialPanelManager : MonoBehaviour
             GolbalVar.minBetCoin = int.Parse(smallBlindInjection.text);
             GolbalVar.totalRoundNum = int.Parse(maximumGames.text);
             GolbalVar.maxBetCount = int.Parse(raisisLimit.text);
+            GolbalVar.speedFactor = UIManager.instance.speedValueSlider.value;
 
             for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
             {
