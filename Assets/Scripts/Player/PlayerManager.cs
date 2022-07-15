@@ -115,12 +115,17 @@ public class PlayerManager
             p.role = Player.PlayerRole.normal;
         }
 
-        activePlayers[btn].role = Player.PlayerRole.button;
-        activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
         if (activePlayers.Count >= 3)
         {
+            activePlayers[btn].role = Player.PlayerRole.button;
+            activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
             activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.bigBlind;
+        } else
+        {
+            activePlayers[(btn) % totalSeatNum].role = Player.PlayerRole.smallBlind;
+            activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
         }
+        
 
         SortPlayers();
     }
