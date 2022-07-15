@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     public void Init()
     {
-        foreach (Player p in PlayerManager.instance.activePlayers)
+        foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
             p.coin = GolbalVar.initCoin;
         }
@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
+        PlayerManager.instance.NewRound();
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
         CardManager.instance.InitialCardsList();
     }

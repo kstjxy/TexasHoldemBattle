@@ -33,6 +33,10 @@ public class PlayerManager
         }
     }
 
+    /// <summary>
+    /// 判断选择玩家的数量是否符合规范并且赋予座位号
+    /// </summary>
+    /// <returns>如果玩家数符合要求则RETURN TRUE并进入下一个游戏阶段,否则是FALSE</returns>
     public bool SeatPlayers()
     {
         seatedPlayers = new List<Player>();
