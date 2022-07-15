@@ -2081,7 +2081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding: {x: 0, y: 2.5, z: 0, w: -2.5}
-  m_Softness: {x: 5, y: 5}
+  m_Softness: {x: 0, y: 0}
 --- !u!114 &640037793
 MonoBehaviour:
   m_ObjectHideFlags: 0
