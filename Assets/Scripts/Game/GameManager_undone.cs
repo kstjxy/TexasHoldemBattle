@@ -132,7 +132,7 @@ public class GameManager_undone: MonoBehaviour
     public void Preflop()//≥ı ºªØ
     {
         int betRound = 0;
-        int betp = 0;
+        //int betp = 0;
         currentState = GameState.preflop;
         //∑¢≈∆
         CardManager.instance.AssignCardsToPlayers();

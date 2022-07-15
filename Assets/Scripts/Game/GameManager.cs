@@ -108,7 +108,7 @@ public class GameManager: MonoBehaviour
 
     public void RoundInit()
     {
-        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum +"】轮");
+        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum+1 +"】轮");
         PlayerManager.instance.NewRound();
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
         UIManager.instance.PrintLog("位置分配完毕！");
@@ -133,7 +133,8 @@ public class GameManager: MonoBehaviour
         {
             UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
         }
-        UIManager.instance.PrintLog("公共卡池发出前三张牌");
+        UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard()+"】【"+ 
+            GolbalVar.publicCards[1].PrintCard()+"】【"+ GolbalVar.publicCards[2].PrintCard()+"】");
     }
     public void Turn()
     {
