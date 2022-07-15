@@ -74,6 +74,9 @@ public class PlayerManager
         return true;
     }
 
+    /// <summary>
+    /// 每一轮新游戏开始前判定玩家的财富值修改ACTIVE PLAYERS
+    /// </summary>
     public void NewRound()
     {
         foreach (Player p in seatedPlayers)
@@ -96,6 +99,10 @@ public class PlayerManager
         SetPlayersRole(GolbalVar.curBtnSeat);
     }
 
+    /// <summary>
+    /// 给所有在当局游戏中的玩家设置ROLE
+    /// </summary>
+    /// <param name="btn">庄家的座位号</param>
     public void SetPlayersRole(int btn)
     {
         activePlayers.Sort((a, b) => {
@@ -117,6 +124,9 @@ public class PlayerManager
         SortPlayers();
     }
 
+    /// <summary>
+    /// 通过PLAY ROLE来修改活跃玩家的行动顺序，小盲大盲在最前面，庄家在最后
+    /// </summary>
     public void SortPlayers()
     {
         for(int i = 0; i<GolbalVar.curBtnSeat; i++)
