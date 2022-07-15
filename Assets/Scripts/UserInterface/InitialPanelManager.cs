@@ -87,7 +87,10 @@ public class InitialPanelManager : MonoBehaviour
         startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
     }
 
-    void ResetAllTheButtons()
+    /// <summary>
+    /// 刷新所有Button的UI
+    /// </summary>
+    public void ResetAllTheButtons()
     {
         for (int i = 0; i < panelRect.childCount; i++)
         {
