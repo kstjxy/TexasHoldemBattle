@@ -133,7 +133,7 @@ public class PlayerManager
         }
         return null;
     }
-    public int CalcFoldNum(List<Plyer> pList)
+    public int CalcFoldNum(List<Player> pList)
     {
         int num = 0;
         foreach(Player p in pList)
@@ -143,12 +143,21 @@ public class PlayerManager
         }
         return num;
     }
-    private void BetAction(Plyer p)
+    private void BetAction(Player p)
     {
-        switch 
+        switch (p.state){
+            case 0:
+                //小盲注
+                if (p.role == Player.PlayerRole.smallBlind)
+                {
+
+                }
+                break;
+
+        }
     }
     //返回值说明
-    //-1 仅剩一名玩家，游戏结束
+    //0 仅剩一名玩家，游戏结束
     //
     public int PlayerBet(List<Player> pList, int playerIndex)
     {
@@ -162,8 +171,9 @@ public class PlayerManager
         if (CalcFoldNum(pList) == pList.Count-1 && pList[playerIndex].isFold==false)
         {
             Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权")：
-            return -1;
+            return 0;
         }
 
+        return 1;
     }
 }
