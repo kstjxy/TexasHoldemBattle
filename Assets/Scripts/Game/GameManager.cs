@@ -163,6 +163,7 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+        timer += Time.deltaTime;
         if (timer > 2 * GolbalVar.speedFactor)
         {
             GameUpdate();
