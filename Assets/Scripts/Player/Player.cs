@@ -18,6 +18,7 @@ public class Player
     public string playerName;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1
     public int coin = 0;
+    public int betCoin = 0;
     public bool isInGame = false;
     public bool isFold = false;
     public bool isAllIn = false;

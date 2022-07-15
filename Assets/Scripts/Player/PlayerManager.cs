@@ -161,12 +161,60 @@ public class PlayerManager
     }
     private void BetAction(Player p)
     {
-        switch (p.state){
-            case 0:
+        switch (p.state)
+        {
+            case 0://preflolp阶段处理小盲，大盲
                 //小盲注
                 if (p.role == Player.PlayerRole.smallBlind)
                 {
+                    p.betCoin = GolbalVar.minBetCoin;
+                    p.coin -= p.betCoin;
+                    GolbalVar.maxBetCoin = p.betCoin;
+                    GolbalVar.pot += p.betCoin;
+                    string strbet = p.playerName + "选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    Debug.Log(strbet);
+                    UIManager.instance.PrintLog(strbet);
+                }
+                else if (p.role == Player.PlayerRole.bigBlind)
+                {
+                    p.betCoin = 2 * GolbalVar.minBetCoin;
+                    p.coin -= p.betCoin;
+                    GolbalVar.maxBetCoin = p.betCoin;
+                    string strbet = p.playerName + "选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    Debug.Log(strbet);
+                    UIManager.instance.PrintLog(strbet);
+                }
+                break;
 
+            case 1://跟注
+                //剩余金额能否跟注
+                if (p.coin + p.betCoin >= GolbalVar.maxBetCoin) //够钱
+                {
+                    string strbet;
+                    if (p.betCoin == GolbalVar.maxBetCoin)  //已经是
+                    {
+                        strbet = p.playerName + "选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    }
+                    else
+                    {
+                        p.coin -= GolbalVar.maxBetCoin - p.betCoin;
+                        GolbalVar.pot += GolbalVar.maxBetCoin - p.betCoin;
+                        p.betCoin = GolbalVar.maxBetCoin;
+                        strbet = p.playerName + "选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+
+                    }
+                                    
+                    Debug.Log(strbet);
+                    UIManager.instance.PrintLog(strbet);
+                }
+                else if (p.role == Player.PlayerRole.bigBlind)
+                {
+                    p.betCoin = 2 * GolbalVar.minBetCoin;
+                    p.coin -= p.betCoin;
+                    GolbalVar.maxBetCoin = p.betCoin;
+                    string strbet = p.playerName + "选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    Debug.Log(strbet);
+                    UIManager.instance.PrintLog(strbet);
                 }
                 break;
 
