@@ -69,6 +69,7 @@ public class PlayerManager
                 pl.isInGame = false;
             }
             seatedPlayers.Clear();
+            InitialPanelManager.instance.ResetAllTheButtons();
             return false;
         }
         return true;
