@@ -1,14 +1,14 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Card
 {
-    //¿¨ÅÆ»¨É«
+    //å¡ç‰ŒèŠ±è‰²
     public CardSuit cardSuit;
-    //¿¨Ãæ´óĞ¡ from 2 to 13(K) 14(A)
+    //å¡é¢å¤§å° from 2 to 13(K) 14(A)
     private int value;
-    #region Get Set ÏŞÖÆ
+    #region Get Set é™åˆ¶
     public int Value
     {
         get
@@ -39,22 +39,47 @@ public class Card
     }
 
     /// <summary>
-    /// ·µ»ØÅÆÃæÊıÖµºÍ»¨É«µÄĞÅÏ¢
+    /// è¿”å›ç‰Œé¢æ•°å€¼å’ŒèŠ±è‰²çš„ä¿¡æ¯
     /// </summary>
-    /// <returns>ÅÆÃæÊıÖµºÍ»¨É«µÄĞÅÏ¢</returns>
+    /// <returns>ç‰Œé¢æ•°å€¼å’ŒèŠ±è‰²çš„ä¿¡æ¯</returns>
     public string PrintCard()
     {
-        return "";
+        string cardInfo = "";
+        switch (cardSuit)
+        {
+            case CardSuit.club:
+                cardInfo = "â™£" + "  " + GetValueString();
+                break;
+            case CardSuit.spade:
+                cardInfo = "â™ " + "  " + GetValueString();
+                break;
+            case CardSuit.diamon:
+                cardInfo = "<color=#FF3000>â™¦" + " " + GetValueString()+ "</color>";
+                break;
+            case CardSuit.heart:
+                cardInfo = "<color=#FF3000>â™¥" + " " + GetValueString() + "</color>";
+                break;
+        }
+        return cardInfo;
     }
 
     /// <summary>
-    /// ´ÓResourcesÖĞ¶ÁÈ¡±¾¿¨ÅÆ¶ÔÓ¦µÄËØ²ÄÍ¼Æ¬
+    /// ä»Resourcesä¸­è¯»å–æœ¬å¡ç‰Œå¯¹åº”çš„ç´ æå›¾ç‰‡
     /// </summary>
-    /// <returns>ÏàÓ¦µÄ¿¨ÅÆÍ¼Æ¬</returns>
+    /// <returns>ç›¸åº”çš„å¡ç‰Œå›¾ç‰‡</returns>
     public Sprite GetSpriteSurface()
     {
+        return Resources.Load<Sprite>("Cards/" + cardSuit.ToString() + "s/" + cardSuit.ToString() + "_" + GetValueString());
+    }
+
+    /// <summary>
+    /// æ ¹æ®å¡é¢æ•°å­—è¿”å›æ­£ç¡®çš„å­—ç¬¦ï¼ˆAJQKæˆ–è€…æ•°å­—ï¼‰
+    /// </summary>
+    /// <returns>å¡é¢å­—ç¬¦ä¸²</returns>
+    public string GetValueString()
+    {
         string valueString;
-        switch (value) 
+        switch (value)
         {
             case 14:
                 valueString = "A";
@@ -72,14 +97,13 @@ public class Card
                 valueString = value.ToString();
                 break;
         }
-        return Resources.Load<Sprite>("Cards/" + cardSuit.ToString() + "s/" + cardSuit.ToString() + "_" + valueString);
+        return valueString;
     }
-    
 }
 public enum CardSuit
 { 
-    club,       //Ã·»¨
-    spade,      //ºÚÌÒ
-    diamon,     //·½¿é
-    heart       //ºìĞÄ
+    club,       //æ¢…èŠ±
+    spade,      //é»‘æ¡ƒ
+    diamon,     //æ–¹å—
+    heart       //çº¢å¿ƒ
 }
