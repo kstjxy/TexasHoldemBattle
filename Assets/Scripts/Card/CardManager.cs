@@ -43,6 +43,7 @@ public class CardManager : MonoBehaviour
         foreach(Player p in PlayerManager.instance.activePlayers)
         {
             p.AddPlayerCards(AssignRandomCard(), AssignRandomCard());
+            p.playerObject.ShowCards();
         }
     }
 
