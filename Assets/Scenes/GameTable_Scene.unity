@@ -4213,7 +4213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelAnimator: {fileID: 1141499399}
-  startErrorLog: {fileID: 0}
+  startErrorLog: {fileID: 1376531630}
   panelRect: {fileID: 1510094312}
   InitialChips: {fileID: 2083639644}
   smallBlindInjection: {fileID: 952492477}
@@ -5257,7 +5257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -750.3278, y: -376.9178}
+  m_AnchoredPosition: {x: 381, y: -376.9178}
   m_SizeDelta: {x: 264.6014, y: 59.8652}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1376531630

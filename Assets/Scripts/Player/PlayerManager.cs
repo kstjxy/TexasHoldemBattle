@@ -44,6 +44,7 @@ public class PlayerManager
                 if (totalSeatNum > 8)
                 {
                     Debug.Log("玩家人数超过上限8人，请更改选择");
+                    InitialPanelManager.instance.CallStartErrorLog(">8,886");
                     ResetSeat();
                     return false;
                 }
@@ -52,6 +53,7 @@ public class PlayerManager
         if (totalSeatNum < 2)
         {
             Debug.Log("玩家人数未达到2人，请更改选择");
+            InitialPanelManager.instance.CallStartErrorLog("<2,886");
             ResetSeat();
             return false;
         }
