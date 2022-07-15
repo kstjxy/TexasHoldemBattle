@@ -35,14 +35,21 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void AssignCardsToPlayers(List<Player> playerList)
+    /// <summary>
+    /// 在preflop阶段给当前在游戏中的玩家一人发两张牌 仅玩家自已可见
+    /// </summary>
+    public void AssignCardsToPlayers()
     {
-        foreach(Player p in playerList)
+        foreach(Player p in PlayerManager.instance.activePlayers)
         {
             p.AddPlayerCards(AssignRandomCard(), AssignRandomCard());
         }
     }
 
+    /// <summary>
+    /// 给公共卡池发牌
+    /// </summary>
+    /// <param name="num">在公共卡池的发牌数量</param>
     public void AssignCardsToTable(int num)
     {
         for (int i = 0; i < num; i++)
@@ -51,6 +58,10 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 随机从剩余牌堆中选出一张牌
+    /// </summary>
+    /// <returns>从剩余牌堆中抽出的牌</returns>
     public Card AssignRandomCard()
     {
         if (cards.Count <= 0)
@@ -63,7 +74,12 @@ public class CardManager : MonoBehaviour
         return rndCard;
     }
 
-    //从最终翻牌的全部玩家中寻找冠军，可以是一个或多个平局
+
+    /// <summary>
+    /// 从最终翻牌的全部玩家中寻找冠军，可以是一个或多个平局
+    /// </summary>
+    /// <param name="pList">当局中的剩余玩家LIST</param>
+    /// <returns>牌力最大的/当局冠军玩家LIST</returns>
     public List<Player> FindWinner(List<Player> pList)
     {
         List<Player> wList = new List<Player>();
@@ -99,7 +115,13 @@ public class CardManager : MonoBehaviour
         return wList;
     }
 
-    //比较两组牌的牌力，如果c1大则return -1, c2大则return 1, 如果相同则return 0
+
+    /// <summary>
+    /// 比较两组牌的牌力
+    /// </summary>
+    /// <param name="c1">第一组的五张牌</param>
+    /// <param name="c2">第二组的五张牌</param>
+    /// <returns>如果c1大则return -1, c2大则return 1, 如果相同则return 0</returns>
     public int CompareCards(List<Card> c1, List<Card> c2)
     {
         int result1 = MatchCase(c1);

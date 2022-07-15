@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
-        CardManager.instance.AssignCardsToPlayers(PlayerManager.instance.activePlayers);
+        CardManager.instance.AssignCardsToPlayers();
     }
 
     public void Flop()
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    
     public void Start()
     {
         Debug.Log("ÓÎÏ·¿ªÊ¼......");
