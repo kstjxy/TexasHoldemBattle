@@ -95,6 +95,7 @@ public class GameManager: MonoBehaviour
     public void Restart()
     {
         GolbalVar.gameStatusCounter = -2;
+        GolbalVar.curRoundNum = 0;
     }
 
     public void Init()
@@ -108,13 +109,17 @@ public class GameManager: MonoBehaviour
 
     public void RoundInit()
     {
-        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum+1 +"】轮");
+        GolbalVar.curRoundNum++;
+        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum +"】轮");
         PlayerManager.instance.NewRound();
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
         UIManager.instance.PrintLog("位置分配完毕！");
         UIManager.instance.PrintLog("【"+ PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
         UIManager.instance.PrintLog("【"+ PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
-        UIManager.instance.PrintLog("【"+ PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+        if(PlayerManager.instance.activePlayers.Count >= 3)
+        {
+            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+        }
         CardManager.instance.InitialCardsList();
     }
 
@@ -123,6 +128,11 @@ public class GameManager: MonoBehaviour
         UIManager.instance.PrintLog("当前为【前翻牌圈】");
         CardManager.instance.AssignCardsToPlayers();
         UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+        for (int i=0; i<PlayerManager.instance.activePlayers.Count; i++)
+        {
+            Player p = PlayerManager.instance.activePlayers[i];
+            UIManager.instance.PrintLog("【"+ p.playerName+"】的手牌为：【"+p.playerCardList[0].PrintCard()+"】【"+p.playerCardList[1].PrintCard()+"】");
+        }
     }
 
     public void Flop()
@@ -141,7 +151,7 @@ public class GameManager: MonoBehaviour
         UIManager.instance.PrintLog("当前为【转牌圈】");
         CardManager.instance.AssignCardsToTable(1);
         UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
-        UIManager.instance.PrintLog("公共卡池发出第四张牌");
+        UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard()+"】");
     }
 
     public void River()
@@ -149,7 +159,7 @@ public class GameManager: MonoBehaviour
         UIManager.instance.PrintLog("当前为【河牌圈】");
         CardManager.instance.AssignCardsToTable(1);
         UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
-        UIManager.instance.PrintLog("公共卡池发出最后一张牌");
+        UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】");
     }
 
     public void Result()

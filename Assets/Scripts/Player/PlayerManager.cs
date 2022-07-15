@@ -117,7 +117,7 @@ public class PlayerManager
 
         activePlayers[btn].role = Player.PlayerRole.button;
         activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
-        if (totalSeatNum >= 3)
+        if (activePlayers.Count >= 3)
         {
             activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.bigBlind;
         }

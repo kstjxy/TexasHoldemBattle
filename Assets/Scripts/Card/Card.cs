@@ -48,16 +48,16 @@ public class Card
         switch (cardSuit)
         {
             case CardSuit.club:
-                cardInfo = "♣" + "  " + GetValueString();
+                cardInfo = "♣" + " " + GetValueString();
                 break;
             case CardSuit.spade:
-                cardInfo = "♠" + "  " + GetValueString();
+                cardInfo = "♠" + " " + GetValueString();
                 break;
             case CardSuit.diamon:
-                cardInfo = "<color=#FF3000>♦" + " " + GetValueString()+ "</color>";
+                cardInfo = "<color=#FFA19F>♦" + " " + GetValueString()+ "</color>";
                 break;
             case CardSuit.heart:
-                cardInfo = "<color=#FF3000>♥" + " " + GetValueString() + "</color>";
+                cardInfo = "<color=#FFA19F>♥" + " " + GetValueString() + "</color>";
                 break;
         }
         return cardInfo;
