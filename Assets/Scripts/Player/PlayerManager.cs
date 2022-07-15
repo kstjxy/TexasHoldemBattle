@@ -124,6 +124,19 @@ public class PlayerManager
 
         SortPlayers();
     }
+    public bool ActivePlayers()
+    {
+        activePlayers = new List<Player>();
+        totalSeatNum = 0;
+        foreach (Player p in seatedPlayers)
+        {
+            if (!p.isFold)
+            {
+                activePlayers.Add(p);
+            }
+        }
+        return true;
+    }
 
     /// <summary>
     /// 通过PLAY ROLE来修改活跃玩家的行动顺序，小盲大盲在最前面，庄家在最后
@@ -159,7 +172,7 @@ public class PlayerManager
         }
         return num;
     }
-    private void BetAction(Player p)
+    public void BetAction(Player p)
     {
         switch (p.state)
         {

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager_undone: MonoBehaviour
 {
     // 单例
-    public static GameManager instance;
+    public static GameManager_undone instance;
     void Awake()
     {
         instance = this;
@@ -27,11 +27,12 @@ public class GameManager : MonoBehaviour
     //进程转换  ask
     public static int GameStatus()
     {
-        int gamestate = GlobalVar.gameStatusCounter;
+        int gamestate = GolbalVar.gameStatusCounter;
         if (gamestate < 7)
         {
 
         }
+        return 1;
     }
 
     //全局变量
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
     public float gapset = 5;                                        //时间间隔
     public float ratioTime = 0;                                     //拖动条参数
     public float gaptime = 5;                                       //真正的时间间隔 
-    public bool started = 0;                                        //游戏开始标志                
+    public bool started = false;                                        //游戏开始标志                
     public static string debugLogStr;
     public static string DebugLogStr
     {
@@ -67,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void Init()//初始化
     {
-        Debug.log("\t\t初始化ing\t\t");
+        Debug.Log("\t\t初始化ing\t\t");
         //赌注大小
         betMoney = 10;
         //初始钱数
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviour
         currentState = GameState.init;
         curRound = 0;
         buttonNum = 1;
-        betcount = 3；
+        betcount = 3;
         //从UI？获取玩家姓名列表（未完成）
         namelist.Add("001");
         namelist.Add("002");
@@ -88,7 +89,7 @@ public class GameManager : MonoBehaviour
         namelist.Add("005");
         namelist.Add("006");
         //确定玩家列表
-        PlayerManager.instance.IniPlayers(namelist);
+        PlayerManager.instance.InitPlayers(namelist);
         //参加的玩家，编号从1开始
         int tmpNo = 1;
         foreach (Player p in PlayerManager.instance.allPlayers)
@@ -96,13 +97,14 @@ public class GameManager : MonoBehaviour
             //可以加一个玩不玩的判断（）
             p.isInGame = true;
             p.coin = initMoney;
+            p.seatNum = tmpNo++;
         }
 
 
     }
     public void SetGap(float ratio)
     {
-        gaptime = (float(1.01) - ratio) * gapset;
+        gaptime = (float)((1.01 - ratio) * gapset);
     }
     public void RoundInit()//初始化
     {
@@ -133,15 +135,15 @@ public class GameManager : MonoBehaviour
         int betp = 0;
         currentState = GameState.preflop;
         //发牌
-        CardManager.instance.AssignCardsToPlayers(playManager.instance.activePlayers);
+        CardManager.instance.AssignCardsToPlayers();
 
         //更改player的betmoney
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            if (p.PlayeRole == Player.PlayeRole.bigBlind)
-                p.betMoney = 2 * betMoney;
-            else if (p.PlayeRole == Player.PlayeRole.smallBlind)
-                p.betMoney = betMoney;
+            if (p.role == Player.PlayerRole.bigBlind)
+                p.betCoin = 2 * betMoney;
+            else if (p.role == Player.PlayerRole.smallBlind)
+                p.betCoin= betMoney;
         }
         //更改赌金池
         betTotal = 3 * betMoney;
@@ -153,14 +155,15 @@ public class GameManager : MonoBehaviour
             if (first)
             {
                 int m = Random.Range(0, 3);
-                betp = p.move(m, betRound);
+                p.state = m;
+                PlayerManager.instance.BetAction(p);
             }
 
-            if (p.PlayeRole == Player.PlayeRole.bigBlind)
+            if (p.role == Player.PlayerRole.bigBlind)
                 first = true;
         }
         //
-        PlayerManager.instance.ActivePlayer();//undone
+        PlayerManager.instance.ActivePlayers();//undone
     }
     public void Flop()//初始化
     {
@@ -169,7 +172,7 @@ public class GameManager : MonoBehaviour
         //AI操作
         //
 
-        PlayerManager.instance.ActivePlayer();
+        PlayerManager.instance.ActivePlayers();
     }
     public void Turn()//初始化
     {
@@ -178,7 +181,7 @@ public class GameManager : MonoBehaviour
         //AI操作
         //
 
-        PlayerManager.instance.ActivePlayer();
+        PlayerManager.instance.ActivePlayers();
     }
     public void River()//初始化
     {
@@ -187,7 +190,7 @@ public class GameManager : MonoBehaviour
         //AI操作
         //
 
-        PlayerManager.instance.ActivePlayer();
+        PlayerManager.instance.ActivePlayers();
     }
     public void Calc()//初始化
     {
@@ -197,11 +200,11 @@ public class GameManager : MonoBehaviour
         winPlayers = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
         foreach (Player p in winPlayers)
         {
-            p += betTotal / winPlayers.Count;
+            p.coin += betTotal / winPlayers.Count;
         }
         foreach (Player p in seatedPlayers)
         {
-            p -= p.betMoney;
+            p.coin -= p.betCoin;
         }
         
     }
