@@ -39,6 +39,15 @@ public class Card
     }
 
     /// <summary>
+    /// 返回牌面数值和花色的信息
+    /// </summary>
+    /// <returns>牌面数值和花色的信息</returns>
+    public string PrintCard()
+    {
+        return "";
+    }
+
+    /// <summary>
     /// 从Resources中读取本卡牌对应的素材图片
     /// </summary>
     /// <returns>相应的卡牌图片</returns>
