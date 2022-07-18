@@ -77,6 +77,11 @@ public class Player
         finalCards = new List<Card>();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="playerNum"></param>
+    /// <param name="actionNum"></param>
     public void AddActionRecord(int playerNum, int actionNum)
     {
         if (playerNum == seatNum)//如果是自己的行动，不需要记录
