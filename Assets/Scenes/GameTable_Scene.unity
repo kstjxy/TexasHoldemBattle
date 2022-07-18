@@ -3442,6 +3442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 849509219}
   - component: {fileID: 849509218}
+  - component: {fileID: 849509220}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3461,6 +3462,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b1d3fb87f7a4134189640bf516d4542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curPlayerSeat: 0
+  curPlayer:
+    playerName: 
+    seatNum: 0
+    coin: 0
+    betCoin: 0
+    isInGame: 0
+    isFold: 0
+    isAllIn: 0
+    role: 0
+    state: 0
+    playerObject: {fileID: 0}
+  playersInAction: 0
 --- !u!4 &849509219
 Transform:
   m_ObjectHideFlags: 0
@@ -3476,6 +3490,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &849509220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849509217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed23beb1682eb54097c92085d37db06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &857685137
 GameObject:
   m_ObjectHideFlags: 0
