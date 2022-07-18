@@ -107,10 +107,10 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 更新排行榜内容，接收一个已经排好序的playerList
     /// </summary>
-    /// <param name="playerList">已排序的列表</param>
-    /// <param name="rank">实际排名列表</param>
-    public void UpdateRankingList(List<Player> playerList, List<int> rank)
+    public void UpdateRankingList()
     {
+        List<Player> playerList = GameManager.instance.GetRankedPlayers();
+        List<int> rank = GameManager.instance.GetPlayerRank(playerList);
         if (rank.Count != playerList.Count)
         {
             Debug.Log("List items Count Error");

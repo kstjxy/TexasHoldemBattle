@@ -104,6 +104,7 @@ public class GameManager: MonoBehaviour
         {
             p.coin = GolbalVar.initCoin;
         }
+        UIManager.instance.UpdateRankingList();
         
     }
 
@@ -176,7 +177,58 @@ public class GameManager: MonoBehaviour
 
     }
 
-    
+    /// <summary>
+    /// 将玩家通过coin的数值进行排序
+    /// </summary>
+    /// <returns>通过coin大小经过排序的玩家list</returns>
+    public List<Player> GetRankedPlayers()
+    {
+        List<Player> pList = new List<Player>();
+        foreach(Player p in PlayerManager.instance.seatedPlayers)
+        {
+            pList.Add(p);
+        }
+        pList.Sort((a, b) => {
+            return b.coin - a.coin;
+        });
+        return pList;
+    }
+ 
+    /// <summary>
+    /// 将玩家进行排名，相同数量coin拥有者名次相等
+    /// </summary>
+    /// <param name="pList">已经排序完毕的玩家list</param>
+    /// <returns>玩家的排名列表</returns>
+    public List<int> GetPlayerRank (List<Player> pList)
+    {
+        List<int> rankNum = new List<int>();
+        int curRank = 1;
+        int cumm = 0;
+        int prevCumm = 0;
+        rankNum.Add(curRank);
+        for (int i = 1; i < pList.Count; i++)
+        {
+            if (pList[i - 1].coin != pList[i].coin)
+            {
+                curRank++;
+                prevCumm = cumm;
+                cumm = 0;
+            }
+            else
+            {
+                cumm++;
+            }
+            if (prevCumm != 0)
+            {
+                curRank += prevCumm;
+                prevCumm = 0;
+            }
+            rankNum.Add(curRank);
+        }
+        return rankNum;
+    }
+
+
     public void Start()
     {
         Debug.Log("游戏开始......");
