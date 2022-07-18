@@ -53,21 +53,21 @@ public class UIManager : MonoBehaviour
         if (GolbalVar.gameStatusCounter > -2)
             countDownText.text = "COUNTDOWN: " + (2 * GolbalVar.speedFactor - GameManager.timer).ToString();
     }
-    //unfinished
-    void Pause_ButtonClicked()
+
+    public void Pause_ButtonClicked()
     {
         pausePanelAnimator.Play("Paused", 0, 0);
         Time.timeScale = 0;
     }
-    //unfinished
-    void Continue_ButtonClicked()
+
+    public void Continue_ButtonClicked()
     {
         if (Time.timeScale > 0)
             return;
         Time.timeScale = 1;
         pausePanelAnimator.Play("Continue", 0, 0);
     }
-    //unfinished
+
     void Restart_ButtonClicked()
     {
         //进行一些清空进度回归初始化的操作

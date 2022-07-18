@@ -182,64 +182,121 @@ public class PlayerManager
         string strbet;
         switch (p.state)
         {
-            case 0://preflolp阶段处理小盲，大盲
-                //小盲注
-                if (p.role == Player.PlayerRole.smallBlind)
+            case -1://preflolp阶段处理小盲，大盲
                 {
-                    p.betCoin = GolbalVar.minBetCoin;
-                    p.coin -= p.betCoin;
-                    GolbalVar.maxBetCoin = p.betCoin;
-                    GolbalVar.pot += p.betCoin;
-                    strbet = p.playerName + "选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                    Debug.Log(strbet);
-                    UIManager.instance.PrintLog(strbet);
+                    //小盲注
+                    if (p.role == Player.PlayerRole.smallBlind)
+                    {
+                        p.betCoin = GolbalVar.minBetCoin;
+                        p.coin -= p.betCoin;
+                        GolbalVar.maxBetCoin = p.betCoin;
+                        GolbalVar.pot += p.betCoin;
+                        strbet = p.playerName + "选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        Debug.Log(strbet);
+                        UIManager.instance.PrintLog(strbet);
+                    }
+                    else if (p.role == Player.PlayerRole.bigBlind)
+                    {
+                        p.betCoin = 2 * GolbalVar.minBetCoin;
+                        p.coin -= p.betCoin;
+                        GolbalVar.maxBetCoin = p.betCoin;
+                        strbet = p.playerName + "选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        Debug.Log(strbet);
+                        UIManager.instance.PrintLog(strbet);
+                    }
+                    break;
                 }
-                else if (p.role == Player.PlayerRole.bigBlind)
-                {
-                    p.betCoin = 2 * GolbalVar.minBetCoin;
-                    p.coin -= p.betCoin;
-                    GolbalVar.maxBetCoin = p.betCoin;
-                    strbet = p.playerName + "选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                    Debug.Log(strbet);
-                    UIManager.instance.PrintLog(strbet);
-                }
-                break;
-
+                
             case 1://跟注
-                //剩余金额能否跟注
-                if (p.coin + p.betCoin >= GolbalVar.maxBetCoin) //够钱
                 {
-                    if (p.betCoin == GolbalVar.maxBetCoin)  //已经是跟注了 即为过牌
+                    //剩余金额能否跟注
+                    if (p.coin + p.betCoin >= GolbalVar.maxBetCoin) //够钱
                     {
-                        strbet = p.playerName + "选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                    }
-                    else //跟注
-                    {
-                        p.coin -= GolbalVar.maxBetCoin - p.betCoin;
-                        GolbalVar.pot += GolbalVar.maxBetCoin - p.betCoin;
-                        p.betCoin = GolbalVar.maxBetCoin;
-                        strbet = p.playerName + "选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        if (p.betCoin == GolbalVar.maxBetCoin)  //已经是跟注了 即为过牌
+                        {
+                            strbet = p.playerName + "选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        }
+                        else //跟注
+                        {
+                            p.coin -= GolbalVar.maxBetCoin - p.betCoin;
+                            GolbalVar.pot += GolbalVar.maxBetCoin - p.betCoin;
+                            p.betCoin = GolbalVar.maxBetCoin;
+                            strbet = p.playerName + "选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
 
+                        }
+
+                        Debug.Log(strbet);
+                        UIManager.instance.PrintLog(strbet);
                     }
-                                    
+                    else //钱不够 还要跟注 此时为allin
+                    {
+                        p.state = 4;
+                        BetAction(p);
+                    }
+                    break;
+                }
+                
+            case 2://加注
+                {
+                    //判断操作是否合法
+                    if (GolbalVar.curBetCount > GolbalVar.maxBetCount)
+                    {
+                        strbet = "本回合加注次数已达" + GolbalVar.maxBetCount + "次，" + p.playerName + "本次操作非法，默认为跟注";
+                        p.state = 1;
+                        BetAction(p);
+                    }
+                    else
+                    {
+                        //判断钱够不够
+                        if (p.coin + p.betCoin - GolbalVar.maxBetCoin + 2 * GolbalVar.minBetCoin > 0)
+                        {
+                            p.coin -= 2 * GolbalVar.minBetCoin;
+                            p.betCoin += 2 * GolbalVar.minBetCoin;
+                            GolbalVar.pot += 2 * GolbalVar.minBetCoin;
+                            strbet = p.playerName + "选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            Debug.Log(strbet);
+                            UIManager.instance.PrintLog(strbet);
+                        }
+                        else
+                        {
+                            p.state = 4;
+                            BetAction(p);
+                        }
+                    }
+                    break;
+                }
+                
+            case 3://弃牌
+                {
+                    p.isFold = true;
+                    strbet = p.playerName + "选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
+                    break;
                 }
-                else //钱不够 还要跟注 此时为allin
+               
+            case 4://ALL IN
                 {
-                    strbet = p.playerName + "由于剩余金额不足跟注，选择【ALL IN】，当前剩余金额为0"  + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    p.betCoin = p.betCoin + p.coin;
+                    p.isAllIn = true;                    
+                    GolbalVar.pot += p.coin;
+                    p.coin = 0;
+                    strbet = p.playerName + "选择【ALL IN】，当前剩余金额为" + p.coin;
+                    if (p.betCoin < GolbalVar.maxBetCoin)
+                    {
+                        strbet += "由于当前玩家的ALL IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
+                    }
+                    else
+                    {
+                        GolbalVar.maxBetCoin = p.betCoin;  
+                    }
+                    strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot; ;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
+
+                    break;
                 }
-                break;
-
-            case 2://判断操作是否合法
-                if (GolbalVar.curBetCount > GolbalVar.maxBetCount)
-                {
-
-                }
-                break;
-
+                
         }
     }
     //返回值说明
