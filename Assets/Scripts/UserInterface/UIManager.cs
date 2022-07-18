@@ -173,7 +173,7 @@ public class UIManager : MonoBehaviour
     /// 更新奖池
     /// </summary>
     /// <param name="change">奖池变动清情况，为负数则代表全部被玩家赢走</param>
-    public void UpdateCoinsPool(int change)
+    /*public void UpdateCoinsPool(int change)
     {
 
         if (change < 0)
@@ -181,6 +181,15 @@ public class UIManager : MonoBehaviour
         else
             GolbalVar.pot += change;
 
+        coinPoolText.text = GolbalVar.pot.ToString();
+    }*/
+    //已弃用
+
+    /// <summary>
+    /// 更新奖池
+    /// </summary>
+    public void UpdateCoinsPool()
+    {
         coinPoolText.text = GolbalVar.pot.ToString();
     }
 
