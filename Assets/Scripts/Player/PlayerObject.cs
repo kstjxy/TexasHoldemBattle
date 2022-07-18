@@ -33,6 +33,8 @@ public class PlayerObject : MonoBehaviour
     {
         card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
         card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
+        StartCoroutine(UIManager.instance.FlopAnim(card1Image.GetComponent<RectTransform>()));
+        StartCoroutine(UIManager.instance.FlopAnim(card2Image.GetComponent<RectTransform>()));
     }
 
     public void UpdateCoinsCount(int change)
