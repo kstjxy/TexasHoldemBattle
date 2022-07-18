@@ -19,6 +19,11 @@ public class RecordManager : MonoBehaviour
             instance = this;
     }
 
+    /// <summary>
+    /// 调用事件发起“广播”
+    /// </summary>
+    /// <param name="playerNum">行动的玩家序号</param>
+    /// <param name="actionNum">玩家的行动类型</param>
     public void CallActionRecord(int playerNum,int actionNum)
     {
         if (ActionRecords != null)
