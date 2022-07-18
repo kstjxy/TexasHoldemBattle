@@ -37,6 +37,11 @@ public class PlayerObject : MonoBehaviour
         StartCoroutine(UIManager.instance.FlopAnim(card2Image.GetComponent<RectTransform>()));
     }
 
+    /// <summary>
+    /// 更新筹码数量，输入正数增加筹码，负数减少，
+    /// 输入0则是单纯刷新当前筹码显示。
+    /// </summary>
+    /// <param name="change"></param>
     public void UpdateCoinsCount(int change)
     {
         if (change + player.coin < 0)

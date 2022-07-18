@@ -107,12 +107,18 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 更新排行榜内容，接收一个已经排好序的playerList
     /// </summary>
-    /// <param name="playerList">已经排好序的列表</param>
-    public void UpdateRankingList(List<Player> playerList)
+    /// <param name="playerList">已排序的列表</param>
+    /// <param name="rank">实际排名列表</param>
+    public void UpdateRankingList(List<Player> playerList, List<int> rank)
     {
+        if (rank.Count != playerList.Count)
+        {
+            Debug.Log("List items Count Error");
+            return;
+        }
         for (int i = 0; i < 8 && i < playerList.Count; i++)
         {
-            rankingList[i].text = playerList[i].coin.ToString() + ":" + playerList[i].playerName;
+            rankingList[i].text = rank[i].ToString() + ". " + playerList[i].coin.ToString() + ":" + playerList[i].playerName;
         }
     }
 
