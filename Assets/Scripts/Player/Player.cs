@@ -98,7 +98,7 @@ public class Player
         }
         if (actionPlayerIndex < 0 || actionPlayerIndex >= 8 || thisPlayerIndex < 0)
         {
-            Debug.Log("SeatNum Data Error!!");
+            Debug.Log("SeatNum Data Error!!   a:"+actionPlayerIndex+"   t:"+thisPlayerIndex);
             return;
         }
 
@@ -109,12 +109,12 @@ public class Player
         }
         else if (actionPlayerIndex < thisPlayerIndex)//是自己之前的玩家进行行动，加入 this_period
         {
-            Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum+"    this");
+            //Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum+"    this");
             this.this_period.Add(new int[2] { playerSeatNum, actionNum });
         }
         else//是自己之后的玩家进行行动，加入 last_period
         {
-            Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum + "    last");
+            //Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum + "    last");
             this.last_period.Add(new int[2] { playerSeatNum, actionNum });
         }
 

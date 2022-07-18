@@ -48,7 +48,7 @@ public class PlayerObject : MonoBehaviour
             return;
         else
             player.coin += change;
-
+        UIManager.instance.UpdateCoinsPool(-change);//玩家赢钱奖池减少，玩家赌钱奖池增多
         coinsText.text = player.coin.ToString();
     }
 
