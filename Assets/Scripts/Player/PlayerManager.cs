@@ -18,6 +18,7 @@ public class PlayerManager
     public List<Player> allPlayers = new List<Player>();        //所有玩家的列表
     public List<Player> seatedPlayers = new List<Player>();     //被选中入座玩家列表，包括FOLD和已经破产的
     public List<Player> activePlayers = new List<Player>();     //当前还在本局游戏中的玩家列表
+    public List<Player> okPlayers = new List<Player>();         //本轮满足条件的玩家
     public int totalSeatNum;    //当前回合一共入座的玩家数，包括已经FOLD的不包括已经破产的
     public int nowPlayerIndex;  //当前下注玩家序号
 
@@ -82,7 +83,7 @@ public class PlayerManager
     {
         foreach (Player p in seatedPlayers)
         {
-            if (p.coin <= 0)
+            if (p.coin <= 2*GolbalVar.minBetCoin)
             {
                 p.OutOfGame();
                 totalSeatNum--;
@@ -155,7 +156,6 @@ public class PlayerManager
             activePlayers.Add(p);
         }
     }
-
     public Player FindPlayer(int seatNum)
     {
         foreach(Player p in seatedPlayers)
@@ -177,12 +177,19 @@ public class PlayerManager
         }
         return num;
     }
+
+    //玩家的具体操作
+    //-1 初始化大盲小盲
+    // 1 跟注 或 过牌
+    // 2 加注
+    // 3 弃牌
+    // 4 ALL IN
     public void BetAction(Player p)
     {
         string strbet;
         switch (p.state)
         {
-            case -1://preflolp阶段处理小盲，大盲
+            case 0://preflolp阶段处理小盲，大盲
                 {
                     //小盲注
                     if (p.role == Player.PlayerRole.smallBlind)
@@ -290,33 +297,95 @@ public class PlayerManager
                     {
                         GolbalVar.maxBetCoin = p.betCoin;  
                     }
-                    strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot; ;
+                    strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
 
                     break;
-                }
-                
+                }                
         }
     }
+    
+    //用于测试的随机行动
+    public int RandomAction()
+    {
+        Random.InitState((int)System.DateTime.Now.Ticks);
+        int ranNum = Random.Range(1, 101);
+        //60% 跟注 或 过
+        if (ranNum <= 60) return 1;
+        //15% 加注
+        if (ranNum <= 75) return 2;
+        //20% 弃牌
+        if (ranNum <= 95) return 3;
+        //5% ALL IN
+        return 4;
+
+    }
+    public void Bet(Player p)
+    {
+        if (p.state == -1)
+            p.state = 0;
+        else
+            p.state = RandomAction();
+        BetAction(p);
+    }
     //返回值说明
-    //0 仅剩一名玩家，游戏结束
-    //
+    //-1    
+    //0     仅剩一名玩家，游戏结束
+    //1
     public int PlayerBet(List<Player> pList, int playerIndex)
     {
-        //bool thisPlayerIsFold = false;
+        string strbet;
+        if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
+        {
+            strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
+            return -1;
+        }
+
+
         if (nowPlayerIndex == pList.Count)
             nowPlayerIndex = 0;
         if (nowPlayerIndex == 0)
         {
             Debug.Log("新一轮下注开始");
+            UIManager.instance.PrintLog("新一轮下注开始");
         }
-        if (CalcFoldNum(pList) == pList.Count-1 && pList[playerIndex].isFold==false)
+
+        if (nowPlayerIndex == playerIndex)
         {
-            Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
-            return 0;
+            nowPlayerIndex++;
+            if (CalcFoldNum(pList) == pList.Count - 1 && pList[playerIndex].isFold == false)
+            {
+                nowPlayerIndex = 0;
+                strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
+                UIManager.instance.PrintLog("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
+                return 0;
+            }
+            Bet(pList[playerIndex]);
+        }
+        //
+        if (nowPlayerIndex >= pList.Count)
+        {
+            strbet = "底池：" + GolbalVar.pot + "最大下注金额：" + GolbalVar.maxBetCoin;
+            Debug.Log(strbet);
+            UIManager.instance.PrintLog(strbet);
+        }
+
+        okPlayers.Clear();
+        foreach(Player p in pList)
+            if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+                okPlayers.Add(p);
+        if(okPlayers.Count == pList.Count)
+        {
+            strbet = "第" + GolbalVar.curRoundNum + "回合结束";
+            Debug.Log(strbet);
+            UIManager.instance.PrintLog(strbet);
+            nowPlayerIndex = 0;
         }
 
         return 1;
     }
+
+    
 }

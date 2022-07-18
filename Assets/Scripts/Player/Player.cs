@@ -72,6 +72,7 @@ public class Player
         isFold = false;
         isAllIn = false;
         state = -1;
+        betCoin = 0;
         playerCardList = new List<Card>();
         finalCards = new List<Card>();
     }
