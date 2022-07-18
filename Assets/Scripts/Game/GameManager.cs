@@ -26,6 +26,9 @@ public class GameManager: MonoBehaviour
     }
 
     public static float timer = 0;
+    public int curPlayerSeat = 0;
+    public Player curPlayer = null;
+    public bool playersInAction = false;
     
     public static GameState GameStatus()
     {
@@ -105,7 +108,7 @@ public class GameManager: MonoBehaviour
             p.coin = GolbalVar.initCoin;
         }
         UIManager.instance.UpdateRankingList();
-        
+        GolbalVar.gameStatusCounter++;
     }
 
     public void RoundInit()
@@ -125,46 +128,103 @@ public class GameManager: MonoBehaviour
         }
         UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
 
+        curPlayerSeat = 0;
+        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
         CardManager.instance.InitialCardsList();
+        GolbalVar.gameStatusCounter++;
+
     }
 
     public void Preflop()
     {
-        UIManager.instance.PrintLog("当前为【前翻牌圈】");
-        CardManager.instance.AssignCardsToPlayers();
-        UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
-        for (int i=0; i<PlayerManager.instance.activePlayers.Count; i++)
+        if (!playersInAction)
         {
-            Player p = PlayerManager.instance.activePlayers[i];
-            UIManager.instance.PrintLog("【"+ p.playerName+"】的手牌为：【"+p.playerCardList[0].PrintCard()+"】【"+p.playerCardList[1].PrintCard()+"】");
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("当前为【前翻牌圈】");
+                CardManager.instance.AssignCardsToPlayers();
+                UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+            } else
+            {
+                ReadyForNextState();
+            }
+            
+        } else
+        {
+            UpdateCurPlayer();
+            UIManager.instance.PrintLog("【" + curPlayer.playerName + "】的手牌为：【" + curPlayer.playerCardList[0].PrintCard() + "】【" + curPlayer.playerCardList[1].PrintCard() + "】");
         }
     }
 
     public void Flop()
     {
-        UIManager.instance.PrintLog("当前为【翻牌圈】");
-        CardManager.instance.AssignCardsToTable(3);
-        for(int i=0; i<3; i++)
+        if (!playersInAction)
         {
-            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("当前为【翻牌圈】");
+                CardManager.instance.AssignCardsToTable(3);
+                for (int i = 0; i < 3; i++)
+                {
+                    UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+                }
+                UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
+                    GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
+            } else
+            {
+                ReadyForNextState();
+            }
+        } else
+        {
+            UpdateCurPlayer();
         }
-        UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard()+"】【"+ 
-            GolbalVar.publicCards[1].PrintCard()+"】【"+ GolbalVar.publicCards[2].PrintCard()+"】");
     }
     public void Turn()
     {
-        UIManager.instance.PrintLog("当前为【转牌圈】");
-        CardManager.instance.AssignCardsToTable(1);
-        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
-        UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard()+"】");
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("当前为【转牌圈】");
+                CardManager.instance.AssignCardsToTable(1);
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+                UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
+            }
+            else
+            {
+                ReadyForNextState();
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+        }
     }
 
     public void River()
     {
-        UIManager.instance.PrintLog("当前为【河牌圈】");
-        CardManager.instance.AssignCardsToTable(1);
-        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
-        UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】");
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("当前为【河牌圈】");
+                CardManager.instance.AssignCardsToTable(1);
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+                UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】"); ;
+            }
+            else
+            {
+                ReadyForNextState();
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+        }
     }
 
     public void Result()
@@ -228,6 +288,25 @@ public class GameManager: MonoBehaviour
         return rankNum;
     }
 
+    public void UpdateCurPlayer()
+    {
+        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
+        curPlayerSeat++;
+        curPlayer.playerObject.HightLightAction_AvatarChange();
+        if (curPlayerSeat == PlayerManager.instance.activePlayers.Count)
+        {
+            playersInAction = false;
+        }
+    }
+
+    public void ReadyForNextState()
+    {
+        curPlayerSeat = 0;
+        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        GolbalVar.gameStatusCounter++;
+    }
+
 
     public void Start()
     {
@@ -247,10 +326,6 @@ public class GameManager: MonoBehaviour
         if (timer > 2 * GolbalVar.speedFactor)
         {
             GameUpdate();
-            if (GolbalVar.gameStatusCounter>-2 && GolbalVar.gameStatusCounter <5)
-            {
-                GolbalVar.gameStatusCounter++;
-            }
             timer = 0;
         }
     }
