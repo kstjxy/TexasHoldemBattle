@@ -229,7 +229,22 @@ public class GameManager: MonoBehaviour
 
     public void Result()
     {
-
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
+            }
+            else
+            {
+                ReadyForNextState();
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+        }
     }
 
     public void GameOver()
