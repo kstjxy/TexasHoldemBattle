@@ -104,14 +104,22 @@ public class UIManager : MonoBehaviour
         logText.text = logText.text + "\n" + log;
     }
 
-    //unfinished
     /// <summary>
-    /// 更新排行榜内容，直接读取来自 GameManager 的玩家列表来排名
+    /// 更新排行榜内容，接收一个已经排好序的playerList
     /// </summary>
     public void UpdateRankingList()
     {
-        //读取玩家列表进行排序
-        Debug.Log("Ranking List Updated!!  具体流程暂时还没写噢");
+        List<Player> playerList = GameManager.instance.GetRankedPlayers();
+        List<int> rank = GameManager.instance.GetPlayerRank(playerList);
+        if (rank.Count != playerList.Count)
+        {
+            Debug.Log("List items Count Error");
+            return;
+        }
+        for (int i = 0; i < 8 && i < playerList.Count; i++)
+        {
+            rankingList[i].text = rank[i].ToString() + ". " + playerList[i].coin.ToString() + ":" + playerList[i].playerName;
+        }
     }
 
     /// <summary>
@@ -124,6 +132,20 @@ public class UIManager : MonoBehaviour
         if (cardPlace < 0 || cardPlace > 4)
             return;
         communityCards[cardPlace].sprite = card.GetSpriteSurface();
+        StartCoroutine(FlopAnim(communityCards[cardPlace].GetComponent<RectTransform>()));
+    }
+
+    public IEnumerator FlopAnim(RectTransform cardImage)
+    {
+        float originalWidth = cardImage.rect.width;
+        float originalHeight = cardImage.rect.height;
+        cardImage.sizeDelta = new Vector2(0, cardImage.rect.height);
+        while (cardImage.rect.width < originalWidth)
+        {
+            cardImage.sizeDelta = new Vector2(cardImage.rect.width+0.5f, originalHeight);
+            yield return null;
+        }
+        cardImage.sizeDelta = new Vector2(originalWidth, originalHeight);
     }
 
     /// <summary>
