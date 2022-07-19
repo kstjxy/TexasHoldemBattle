@@ -15,6 +15,15 @@ public class Player
         outOfGame       //不在此轮游戏中
     }
 
+    public enum Action
+    {
+        IDLE = 0,
+        CALL = 1,
+        RAISE = 2,
+        FOLD = 3,
+        ALL_IN = 4
+    }
+
     public BaseAI ai;
     public string playerName;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1

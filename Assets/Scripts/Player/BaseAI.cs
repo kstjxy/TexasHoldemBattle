@@ -6,9 +6,9 @@ public class BaseAI
 {
     public string name = "my Name";
 
-    public virtual void BetAction()
+    public Player.Action BetAction()
     {
-        
+        return Player.Action.IDLE;
     }
 
     public virtual List<Card> FinalSelection()
