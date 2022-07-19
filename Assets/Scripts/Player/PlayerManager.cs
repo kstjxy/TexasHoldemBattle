@@ -60,7 +60,8 @@ public class PlayerManager
             {
                 Debug.Log("玩家人数未达到2人，请更改选择");
                 InitialPanelManager.instance.CallStartErrorLog("玩家人数不能小于2人！");
-            } else
+            }
+            else
             {
                 Debug.Log("玩家人数超过上限8人，请更改选择");
                 InitialPanelManager.instance.CallStartErrorLog("玩家人数不能超过8人！");
@@ -84,12 +85,13 @@ public class PlayerManager
     {
         foreach (Player p in seatedPlayers)
         {
-            if (p.coin <= 2*GolbalVar.minBetCoin)
+            if (p.coin <= 2 * GolbalVar.minBetCoin)
             {
                 p.OutOfGame();
                 totalSeatNum--;
                 activePlayers.Remove(p);
-            } else
+            }
+            else
             {
                 p.ResetNewRound();
                 if (!activePlayers.Contains(p))
@@ -111,7 +113,7 @@ public class PlayerManager
         activePlayers.Sort((a, b) => {
             return a.seatNum - b.seatNum;
         });
-        
+
         foreach (Player p in activePlayers)
         {
             p.role = Player.PlayerRole.normal;
@@ -122,12 +124,13 @@ public class PlayerManager
             activePlayers[btn].role = Player.PlayerRole.button;
             activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
             activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.bigBlind;
-        } else
+        }
+        else
         {
             activePlayers[(btn) % totalSeatNum].role = Player.PlayerRole.smallBlind;
             activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
         }
-        
+
 
         SortPlayers();
     }
@@ -150,7 +153,7 @@ public class PlayerManager
     /// </summary>
     public void SortPlayers()
     {
-        for(int i = 0; i<=GolbalVar.curBtnSeat; i++)
+        for (int i = 0; i <= GolbalVar.curBtnSeat; i++)
         {
             Player p = activePlayers[i];
             activePlayers.Remove(p);
@@ -159,7 +162,7 @@ public class PlayerManager
     }
     public Player FindPlayer(int seatNum)
     {
-        foreach(Player p in seatedPlayers)
+        foreach (Player p in seatedPlayers)
         {
             if (p.seatNum == seatNum)
             {
@@ -171,7 +174,7 @@ public class PlayerManager
     public int CalcFoldNum(List<Player> pList)
     {
         int num = 0;
-        foreach(Player p in pList)
+        foreach (Player p in pList)
         {
             if (p.isFold == true)
                 num++;
@@ -214,7 +217,7 @@ public class PlayerManager
                     }
                     break;
                 }
-                
+
             case 1://跟注
                 {
                     //剩余金额能否跟注
@@ -243,7 +246,7 @@ public class PlayerManager
                     }
                     break;
                 }
-                
+
             case 2://加注
                 {
                     //判断操作是否合法
@@ -273,7 +276,7 @@ public class PlayerManager
                     }
                     break;
                 }
-                
+
             case 3://弃牌
                 {
                     p.isFold = true;
@@ -282,11 +285,11 @@ public class PlayerManager
                     UIManager.instance.PrintLog(strbet);
                     break;
                 }
-               
+
             case 4://ALL IN
                 {
                     p.betCoin = p.betCoin + p.coin;
-                    p.isAllIn = true;                    
+                    p.isAllIn = true;
                     GolbalVar.pot += p.coin;
                     p.coin = 0;
                     strbet = p.playerName + "选择【ALL IN】，当前剩余金额为" + p.coin;
@@ -296,17 +299,17 @@ public class PlayerManager
                     }
                     else
                     {
-                        GolbalVar.maxBetCoin = p.betCoin;  
+                        GolbalVar.maxBetCoin = p.betCoin;
                     }
                     strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
 
                     break;
-                }                
+                }
         }
     }
-    
+
     //用于测试的随机行动
     public int RandomAction()
     {
@@ -366,7 +369,7 @@ public class PlayerManager
             }
             Bet(pList[playerIndex]);
 
-            
+
             playerIndex++;
             if (playerIndex >= pList.Count)
             {
@@ -387,6 +390,6 @@ public class PlayerManager
                 nowPlayerIndex = 0;
                 return 1;
             }
-        } while (true);     
+        } while (true);
     }
 }
