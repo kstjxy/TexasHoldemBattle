@@ -89,7 +89,6 @@ public class GameManager_undone: MonoBehaviour
         namelist.Add("005");
         namelist.Add("006");
         //确定玩家列表
-        PlayerManager.instance.InitPlayers(namelist);
         //参加的玩家，编号从1开始
         int tmpNo = 1;
         foreach (Player p in PlayerManager.instance.allPlayers)
