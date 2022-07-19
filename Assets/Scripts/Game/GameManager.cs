@@ -29,6 +29,7 @@ public class GameManager: MonoBehaviour
     public int curPlayerSeat = 0;
     public Player curPlayer = null;
     public bool playersInAction = false;
+    public List<Player> winners = new List<Player>();
     
     public static GameState GameStatus()
     {
@@ -182,7 +183,6 @@ public class GameManager: MonoBehaviour
         } else
         {
             UpdateCurPlayer();
-            RecordManager.instance.CallActionRecord(1, 2);
         }
     }
     public void Turn()
@@ -247,11 +247,23 @@ public class GameManager: MonoBehaviour
             else
             {
                 ReadyForNextState();
+                winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
+                UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为："+PrintWinner(winners));
             }
         }
         else
         {
             UpdateCurPlayer();
+            curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            if (IsValidSelection(curPlayer))
+            {
+                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+            } else
+            {
+                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                PlayerManager.instance.activePlayers.Remove(curPlayer);
+            }
         }
     }
 
@@ -325,10 +337,44 @@ public class GameManager: MonoBehaviour
 
     public void ReadyForNextState()
     {
-        curPlayerSeat = 0;
         curPlayer.playerObject.BackToWaiting_AvatarChange();
-        GolbalVar.gameStatusCounter++;
+        if(GolbalVar.gameStatusCounter != 5)
+        {
+            curPlayerSeat = 0;
+            GolbalVar.gameStatusCounter++;
+        }
     }
+
+    public bool IsValidSelection(Player p)
+    {
+        if (p.finalCards.Count != 5)
+        {
+            return false;
+        }
+        List<Card> existed = new List<Card>();
+        foreach(Card c in p.finalCards)
+        {
+            if (!existed.Contains(c) && (GolbalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
+            {
+                existed.Add(c);
+            } else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public string PrintWinner(List<Player> pList)
+    {
+        string str = "【" + pList[0].playerName;
+        for (int i = 1; i<pList.Count; i++)
+        {
+            str = str + "】【" + pList[i].playerName;
+        }
+        return str + "】";
+    }
+
 
 
     public void Start()
