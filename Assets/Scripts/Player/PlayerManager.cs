@@ -150,7 +150,7 @@ public class PlayerManager
     /// </summary>
     public void SortPlayers()
     {
-        for(int i = 0; i<GolbalVar.curBtnSeat; i++)
+        for(int i = 0; i<=GolbalVar.curBtnSeat; i++)
         {
             Player p = activePlayers[i];
             activePlayers.Remove(p);
@@ -334,59 +334,59 @@ public class PlayerManager
     //-1    
     //0     仅剩一名玩家，游戏结束
     //1
-    public int PlayerBet(List<Player> pList, int playerIndex)
+    public int PlayerBet()
     {
+        List<Player> pList = activePlayers;
+        int playerIndex = 0;
         string strbet;
-        if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
+        do
         {
-            strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
-            return -1;
-        }
-
-
-        if (nowPlayerIndex == pList.Count)
-            nowPlayerIndex = 0;
-        if (nowPlayerIndex == 0)
-        {
-            Debug.Log("新一轮下注开始");
-            UIManager.instance.PrintLog("新一轮下注开始");
-        }
-
-        if (nowPlayerIndex == playerIndex)
-        {
-            nowPlayerIndex++;
-            if (CalcFoldNum(pList) == pList.Count - 1 && pList[playerIndex].isFold == false)
+            if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
-                nowPlayerIndex = 0;
+                strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+                continue;
+            }
+
+            if (playerIndex == pList.Count)
+                playerIndex = 0;
+            if (playerIndex == 0)
+            {
+                Debug.Log("新一轮下注开始");
+                UIManager.instance.PrintLog("新一轮下注开始");
+            }
+
+            if (CalcFoldNum(pList) == pList.Count - 1)
+            {
                 strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                Debug.Log("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
-                UIManager.instance.PrintLog("除了" + pList[playerIndex].playerName + "，其余玩家均弃权");
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
                 return 0;
             }
             Bet(pList[playerIndex]);
-        }
-        //
-        if (nowPlayerIndex >= pList.Count)
-        {
-            strbet = "底池：" + GolbalVar.pot + "最大下注金额：" + GolbalVar.maxBetCoin;
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-        }
 
-        okPlayers.Clear();
-        foreach(Player p in pList)
-            if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
-                okPlayers.Add(p);
-        if(okPlayers.Count == pList.Count)
-        {
-            strbet = "第" + GolbalVar.curRoundNum + "回合结束";
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-            nowPlayerIndex = 0;
-        }
+            
+            playerIndex++;
+            if (playerIndex >= pList.Count)
+            {
+                strbet = "底池：" + GolbalVar.pot + "最大下注金额：" + GolbalVar.maxBetCoin;
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+            }
 
-        return 1;
+            okPlayers.Clear();
+            foreach (Player p in pList)
+                if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+                    okPlayers.Add(p);
+            if (okPlayers.Count == pList.Count)
+            {
+                strbet = "第" + GolbalVar.curRoundNum + "回合结束";
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+                nowPlayerIndex = 0;
+                return 1;
+            }
+        } while (true);     
     }
-
-    
 }

@@ -116,7 +116,7 @@ public class GameManager: MonoBehaviour
         GolbalVar.curRoundNum++;
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum +"】轮");
         PlayerManager.instance.NewRound();
-        PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
+        //PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat); NewRound() has done this;
         UIManager.instance.PrintLog("位置分配完毕！");
         if (PlayerManager.instance.activePlayers.Count >= 3)
         {
@@ -132,7 +132,6 @@ public class GameManager: MonoBehaviour
         curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
         CardManager.instance.InitialCardsList();
         GolbalVar.gameStatusCounter++;
-
     }
 
     public void Preflop()
@@ -145,6 +144,8 @@ public class GameManager: MonoBehaviour
                 UIManager.instance.PrintLog("当前为【前翻牌圈】");
                 CardManager.instance.AssignCardsToPlayers();
                 UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+                int sign = PlayerManager.instance.PlayerBet();
+                if (sign == 0) GolbalVar.gameStatusCounter = 5;
             } else
             {
                 ReadyForNextState();

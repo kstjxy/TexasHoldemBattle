@@ -42,13 +42,22 @@ public class PlayerObject : MonoBehaviour
     /// 输入0则是单纯刷新当前筹码显示。
     /// </summary>
     /// <param name="change"></param>
-    public void UpdateCoinsCount(int change)
+    /*public void UpdateCoinsCount(int change)
     {
         if (change + player.coin < 0)
             return;
         else
             player.coin += change;
+        UIManager.instance.UpdateCoinsPool(-change);//玩家赢钱奖池减少，玩家赌钱奖池增多
+        coinsText.text = player.coin.ToString();
+    }*/
+    //已弃用
 
+    /// <summary>
+    /// 更新玩家筹码数量
+    /// </summary>
+    public void UpdateCoinsCount()
+    {
         coinsText.text = player.coin.ToString();
     }
 
