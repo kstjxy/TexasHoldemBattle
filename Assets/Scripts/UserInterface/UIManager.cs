@@ -208,7 +208,7 @@ public class UIManager : MonoBehaviour
             effect = Instantiate(Resources.Load<GameObject>("Prefabs/TextEffect"));
         else
             effect = textEffectsPool.Dequeue();
-        effect.GetComponent<Text>().text = betCount.ToString();
+        effect.GetComponent<Text>().text = "-" + betCount.ToString();
         effect.transform.SetParent(playerObjects[p.seatNum].transform);
         effect.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         effect.transform.localScale = Vector2.one;
