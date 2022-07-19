@@ -145,10 +145,10 @@ public class GameManager: MonoBehaviour
                 UIManager.instance.PrintLog("当前为【前翻牌圈】");
                 CardManager.instance.AssignCardsToPlayers();
                 UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
-                int sign = PlayerManager.instance.PlayerBet();
-                if (sign == 0) GolbalVar.gameStatusCounter = 5;
             } else
             {
+                int sign = PlayerManager.instance.PlayerBet();
+                if (sign == 0) GolbalVar.gameStatusCounter = 5;
                 ReadyForNextState();
             }
             
