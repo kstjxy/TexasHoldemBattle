@@ -31,6 +31,7 @@ public class PlayerManager
         foreach (string name in nameList)
         {
             Player p = new Player(name);
+            p.ai = new BaseAI();
             allPlayers.Add(p);
         }
     }

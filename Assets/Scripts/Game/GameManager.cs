@@ -179,7 +179,6 @@ public class GameManager: MonoBehaviour
         } else
         {
             UpdateCurPlayer();
-            RecordManager.instance.CallActionRecord(1, 2);
         }
     }
     public void Turn()

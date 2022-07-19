@@ -15,6 +15,7 @@ public class Player
         outOfGame       //不在此轮游戏中
     }
 
+    public BaseAI ai;
     public string playerName;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1
     public int coin = 0;
