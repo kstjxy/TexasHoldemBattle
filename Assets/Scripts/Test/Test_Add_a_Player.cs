@@ -9,7 +9,9 @@ public class Test_Add_a_Player : MonoBehaviour
     /// </summary>
     public void ButtonClicked()
     {
-        Player p = new Player("Test" + Random.Range(0.1f, 3.2f).ToString());
+        BaseAI ai = new BaseAI();
+        ai.OnInit();
+        Player p = new Player(ai);
         PlayerManager.instance.allPlayers.Add(p);
         InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
     }
