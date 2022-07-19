@@ -5,8 +5,9 @@ using UnityEngine;
 public class BaseAI
 {
     public string name = "my Name";
+    public Player player;
 
-    public Player.Action BetAction()
+    public virtual Player.Action BetAction()
     {
         return Player.Action.IDLE;
     }
