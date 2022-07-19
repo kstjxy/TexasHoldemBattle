@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager: MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     // 单例
     public static GameManager instance;
@@ -30,7 +30,7 @@ public class GameManager: MonoBehaviour
     public Player curPlayer = null;
     public bool playersInAction = false;
     public List<Player> winners = new List<Player>();
-    
+
     public static GameState GameStatus()
     {
         switch (GolbalVar.gameStatusCounter)
@@ -59,7 +59,7 @@ public class GameManager: MonoBehaviour
 
     public void GameUpdate()
     {
-        switch(GolbalVar.gameStatusCounter)
+        switch (GolbalVar.gameStatusCounter)
         {
             case -1:
                 Init();
@@ -115,7 +115,7 @@ public class GameManager: MonoBehaviour
     public void RoundInit()
     {
         GolbalVar.curRoundNum++;
-        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum +"】轮");
+        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum + "】轮");
         PlayerManager.instance.NewRound();
         //PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat); NewRound() has done this;
         UIManager.instance.PrintLog("位置分配完毕！");
@@ -128,143 +128,85 @@ public class GameManager: MonoBehaviour
             UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为庄家和小盲位");
         }
         UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
-
-        curPlayerSeat = 0;
-        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
+               
         CardManager.instance.InitialCardsList();
         GolbalVar.gameStatusCounter++;
     }
 
     public void Preflop()
     {
-        if (!playersInAction)
-        {
-            if (curPlayerSeat == 0)
-            {
-                playersInAction = true;
-                UIManager.instance.PrintLog("当前为【前翻牌圈】");
-                CardManager.instance.AssignCardsToPlayers();
-                UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
-            } else
-            {
-                int sign = PlayerManager.instance.PlayerBet();
-                if (sign == 0) GolbalVar.gameStatusCounter = 5;
-                ReadyForNextState();
-            }
-            
-        } else
-        {
-            UpdateCurPlayer();
-            UIManager.instance.PrintLog("【" + curPlayer.playerName + "】的手牌为：【" + curPlayer.playerCardList[0].PrintCard() + "】【" + curPlayer.playerCardList[1].PrintCard() + "】");
-        }
+        
+        UIManager.instance.PrintLog("当前为【前翻牌圈】");
+        CardManager.instance.AssignCardsToPlayers();
+        UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+        
+        //int sign = PlayerManager.instance.PlayerBet();
+        //if (sign == 0) GolbalVar.gameStatusCounter = 5;
+        StartCoroutine(PlayerManager.instance.PlayerBet());
+        ReadyForNextState();       
+               
+        UIManager.instance.PrintLog("【" + curPlayer.playerName + "】的手牌为：【" + curPlayer.playerCardList[0].PrintCard() + "】【" + curPlayer.playerCardList[1].PrintCard() + "】");
     }
 
     public void Flop()
     {
-        if (!playersInAction)
+        UIManager.instance.PrintLog("当前为【翻牌圈】");
+        CardManager.instance.AssignCardsToTable(3);
+        for (int i = 0; i < 3; i++)
         {
-            if (curPlayerSeat == 0)
-            {
-                playersInAction = true;
-                UIManager.instance.PrintLog("当前为【翻牌圈】");
-                CardManager.instance.AssignCardsToTable(3);
-                for (int i = 0; i < 3; i++)
-                {
-                    UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
-                }
-                UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
-                    GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
-                int sign = PlayerManager.instance.PlayerBet();
-                if (sign == 0) GolbalVar.gameStatusCounter = 5;
-            } else
-            {
-                ReadyForNextState();
-            }
-        } else
-        {
-            UpdateCurPlayer();
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
         }
+        UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
+            GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
+        StartCoroutine(PlayerManager.instance.PlayerBet());
+        
+        
+        ReadyForNextState();
     }
     public void Turn()
     {
-        if (!playersInAction)
-        {
-            if (curPlayerSeat == 0)
-            {
-                playersInAction = true;
-                UIManager.instance.PrintLog("当前为【转牌圈】");
-                CardManager.instance.AssignCardsToTable(1);
-                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
-                UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
-                int sign = PlayerManager.instance.PlayerBet();
-                if (sign == 0) GolbalVar.gameStatusCounter = 5;
-            }
-            else
-            {
-                ReadyForNextState();
-            }
-        }
-        else
-        {
-            UpdateCurPlayer();
-        }
+        playersInAction = true;
+        UIManager.instance.PrintLog("当前为【转牌圈】");
+        CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+        UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
+        StartCoroutine(PlayerManager.instance.PlayerBet());             
+        
+        ReadyForNextState();    
     }
 
     public void River()
     {
-        if (!playersInAction)
-        {
-            if (curPlayerSeat == 0)
-            {
-                playersInAction = true;
-                UIManager.instance.PrintLog("当前为【河牌圈】");
-                CardManager.instance.AssignCardsToTable(1);
-                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
-                UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】"); ;
-                int sign = PlayerManager.instance.PlayerBet();
-                if (sign == 0) GolbalVar.gameStatusCounter = 5;
-            }
-            else
-            {
-                ReadyForNextState();
-            }
-        }
-        else
-        {
-            UpdateCurPlayer();
-        }
-    }
+        playersInAction = true;
+        UIManager.instance.PrintLog("当前为【河牌圈】");
+        CardManager.instance.AssignCardsToTable(1);
+        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+        UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】"); ;
+        StartCoroutine(PlayerManager.instance.PlayerBet());     
+                
+        ReadyForNextState();
+     }
 
     public void Result()
     {
-        if (!playersInAction)
+        UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");       
+               
+        ReadyForNextState();
+        winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
+        UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+        
+        //这里foreach player
+        curPlayer.finalCards = curPlayer.ai.FinalSelection();
+        if (IsValidSelection(curPlayer))
         {
-            if (curPlayerSeat == 0)
-            {
-                playersInAction = true;
-                UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
-            }
-            else
-            {
-                ReadyForNextState();
-                winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
-                UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为："+PrintWinner(winners));
-            }
-        }
-        else
+            UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+            "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+        } else
         {
-            UpdateCurPlayer();
-            curPlayer.finalCards = curPlayer.ai.FinalSelection();
-            if (IsValidSelection(curPlayer))
-            {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
-                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
-            } else
-            {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
-                PlayerManager.instance.activePlayers.Remove(curPlayer);
-            }
+            UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+            PlayerManager.instance.activePlayers.Remove(curPlayer);
         }
+        
     }
 
     public void GameOver()
@@ -279,7 +221,7 @@ public class GameManager: MonoBehaviour
     public List<Player> GetRankedPlayers()
     {
         List<Player> pList = new List<Player>();
-        foreach(Player p in PlayerManager.instance.seatedPlayers)
+        foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
             pList.Add(p);
         }
@@ -288,13 +230,13 @@ public class GameManager: MonoBehaviour
         });
         return pList;
     }
- 
+
     /// <summary>
     /// 将玩家进行排名，相同数量coin拥有者名次相等
     /// </summary>
     /// <param name="pList">已经排序完毕的玩家list</param>
     /// <returns>玩家的排名列表</returns>
-    public List<int> GetPlayerRank (List<Player> pList)
+    public List<int> GetPlayerRank(List<Player> pList)
     {
         List<int> rankNum = new List<int>();
         int curRank = 1;
@@ -323,24 +265,11 @@ public class GameManager: MonoBehaviour
         return rankNum;
     }
 
-    public void UpdateCurPlayer()
-    {
-        curPlayer.playerObject.BackToWaiting_AvatarChange();
-        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
-        curPlayerSeat++;
-        curPlayer.playerObject.HightLightAction_AvatarChange();
-        if (curPlayerSeat == PlayerManager.instance.activePlayers.Count)
-        {
-            playersInAction = false;
-        }
-    }
 
     public void ReadyForNextState()
     {
-        curPlayer.playerObject.BackToWaiting_AvatarChange();
-        if(GolbalVar.gameStatusCounter != 5)
+        if (GolbalVar.gameStatusCounter != 5)
         {
-            curPlayerSeat = 0;
             GolbalVar.gameStatusCounter++;
         }
     }
@@ -352,7 +281,7 @@ public class GameManager: MonoBehaviour
             return false;
         }
         List<Card> existed = new List<Card>();
-        foreach(Card c in p.finalCards)
+        foreach (Card c in p.finalCards)
         {
             if (!existed.Contains(c) && (GolbalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
             {
@@ -368,7 +297,7 @@ public class GameManager: MonoBehaviour
     public string PrintWinner(List<Player> pList)
     {
         string str = "【" + pList[0].playerName;
-        for (int i = 1; i<pList.Count; i++)
+        for (int i = 1; i < pList.Count; i++)
         {
             str = str + "】【" + pList[i].playerName;
         }
@@ -380,13 +309,13 @@ public class GameManager: MonoBehaviour
     public void Start()
     {
         Debug.Log("游戏开始......");
- //       PlayerManager.instance.InitPlayers();
+        //       PlayerManager.instance.InitPlayers();
         GolbalVar.gameStatusCounter = -2;
     }
 
     // Update is called once per frame
     public void Update()
-    {   
+    {
         if (GolbalVar.curRoundNum > GolbalVar.totalRoundNum)
         {
             GameOver();
@@ -397,6 +326,136 @@ public class GameManager: MonoBehaviour
             GameUpdate();
             timer = 0;
         }
-       
+
     }
 }
+
+#region 原GameManager
+/*
+public void RoundInit()
+{
+    GolbalVar.curRoundNum++;
+    UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum + "】轮");
+    PlayerManager.instance.NewRound();
+    //PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat); NewRound() has done this;
+    UIManager.instance.PrintLog("位置分配完毕！");
+    if (PlayerManager.instance.activePlayers.Count >= 3)
+    {
+        UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
+        UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
+    }
+    else
+    {
+        UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为庄家和小盲位");
+    }
+    UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+
+    curPlayerSeat = 0;
+    curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
+    CardManager.instance.InitialCardsList();
+    GolbalVar.gameStatusCounter++;
+}
+
+public void Preflop()
+{
+    if (!playersInAction)
+    {
+        if (curPlayerSeat == 0)
+        {
+            playersInAction = true;
+            UIManager.instance.PrintLog("当前为【前翻牌圈】");
+            CardManager.instance.AssignCardsToPlayers();
+            UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+        }
+        else
+        {
+            //int sign = PlayerManager.instance.PlayerBet();
+            //if (sign == 0) GolbalVar.gameStatusCounter = 5;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+            ReadyForNextState();
+        }
+
+    }
+    else
+    {
+        UpdateCurPlayer();
+        UIManager.instance.PrintLog("【" + curPlayer.playerName + "】的手牌为：【" + curPlayer.playerCardList[0].PrintCard() + "】【" + curPlayer.playerCardList[1].PrintCard() + "】");
+    }
+}
+
+public void Flop()
+{
+    if (!playersInAction)
+    {
+        if (curPlayerSeat == 0)
+        {
+            playersInAction = true;
+            UIManager.instance.PrintLog("当前为【翻牌圈】");
+            CardManager.instance.AssignCardsToTable(3);
+            for (int i = 0; i < 3; i++)
+            {
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+            }
+            UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
+                GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+        }
+        else
+        {
+            ReadyForNextState();
+        }
+    }
+    else
+    {
+        UpdateCurPlayer();
+    }
+}
+public void Turn()
+{
+    if (!playersInAction)
+    {
+        if (curPlayerSeat == 0)
+        {
+            playersInAction = true;
+            UIManager.instance.PrintLog("当前为【转牌圈】");
+            CardManager.instance.AssignCardsToTable(1);
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+            UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+        }
+        else
+        {
+            ReadyForNextState();
+        }
+    }
+    else
+    {
+        UpdateCurPlayer();
+    }
+}
+
+public void River()
+{
+    if (!playersInAction)
+    {
+        if (curPlayerSeat == 0)
+        {
+            playersInAction = true;
+            UIManager.instance.PrintLog("当前为【河牌圈】");
+            CardManager.instance.AssignCardsToTable(1);
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+            UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】"); ;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+        }
+        else
+        {
+            ReadyForNextState();
+        }
+    }
+    else
+    {
+        UpdateCurPlayer();
+    }
+}
+*/
+#endregion

@@ -370,21 +370,25 @@ public class PlayerManager
         if (p.state == -1)
             p.state = 0;
         else
+        {
+            //AI 的接口
+            //当前为随机
             p.state = RandomAction();
+        }
         BetAction(p);
     }
     //返回值说明
     //-1    
     //0     仅剩一名玩家，游戏结束
     //1
-    public int PlayerBet()
+     public IEnumerator PlayerBet()
     {
         List<Player> pList = activePlayers;
         int playerIndex = 0;
         string strbet;
         bool flag = false;
         do
-        {
+        {            
             if (playerIndex == pList.Count)
             {
                 playerIndex = 0;
@@ -411,10 +415,16 @@ public class PlayerManager
                     continue;
                 }
             }
+
             if (playerIndex == 0)
             {
                 Debug.Log("新一轮下注开始");
                 UIManager.instance.PrintLog("新一轮下注开始");
+                pList[playerIndex].playerObject.BackToWaiting_AvatarChange();
+            }
+            else
+            {
+                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
             }
 
             if (CalcFoldNum(pList) == pList.Count - 1)
@@ -422,8 +432,11 @@ public class PlayerManager
                 strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
-                return 0;
+                //0
+                GolbalVar.gameStatusCounter = 5;
+                break;
             }
+
             Bet(pList[playerIndex]);
 
 
@@ -446,8 +459,11 @@ public class PlayerManager
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
-                return 1;
+                //1
+                break;
             }
+            yield return new WaitForSeconds(GolbalVar.speedFactor);
         } while (true);
+
     }
 }
