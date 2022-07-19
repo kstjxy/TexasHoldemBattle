@@ -45,7 +45,7 @@ public class PlayerSelectButton : MonoBehaviour
         }
         else
         {
-            avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_wating");
+            avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_waiting");
             stateText.text = "<color=#A0EBFF>waiting...</color>";
         }
     }

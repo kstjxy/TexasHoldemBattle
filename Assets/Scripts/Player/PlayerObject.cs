@@ -66,7 +66,21 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void HightLightAction_AvatarChange()
     {
-        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_actioning");
+        switch (player.role)
+        {
+            case Player.PlayerRole.button:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_button_actioning");
+                break;
+            case Player.PlayerRole.bigBlind:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_BB_actioning");
+                break;
+            case Player.PlayerRole.smallBlind:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_SB_actioning");
+                break;
+            default:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_actioning");
+                break;
+        }
     }
 
     /// <summary>
@@ -74,7 +88,21 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void BackToWaiting_AvatarChange()
     {
-        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_wating");
+        switch (player.role)
+        {
+            case Player.PlayerRole.button:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_button_waiting");
+                break;
+            case Player.PlayerRole.bigBlind:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_BB_waiting");
+                break;
+            case Player.PlayerRole.smallBlind:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_SB_waiting");
+                break;
+            default:
+                avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_waiting");
+                break;
+        }
     }
 
     /// <summary>
