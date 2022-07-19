@@ -11,7 +11,7 @@ public class GolbalVar
 
     public static int curBetCount;      //当前加注上线
     public static int curRoundNum;      //当前局数
-    public static int curBtnSeat = 0;       //当前庄家座位
+    public static int curBtnSeat = -1;       //当前庄家座位
     public static int pot;              //池底金额
     public static int maxBetCoin;       //当前最大下注金额
     public static List<Card> publicCards;    //公共卡牌
