@@ -155,7 +155,7 @@ public class PlayerManager
     {
         for (int i = 0; i <= GolbalVar.curBtnSeat; i++)
         {
-            Player p = activePlayers[i];
+            Player p = activePlayers[0];
             activePlayers.Remove(p);
             activePlayers.Add(p);
         }
