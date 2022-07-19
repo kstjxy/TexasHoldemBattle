@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public Button continueButton;
     public Button restartButton;
     public Slider speedValueSlider;
+    public List<GameObject> playerObjects;
 
     [Header("CommunityCards_Image")]
     public List<Image> communityCards;
@@ -25,13 +26,11 @@ public class UIManager : MonoBehaviour
     public Text countDownText;
     public List<Text> rankingList;
 
-    [Header("PositionsForSeatInRect")]
-    public RectTransform tableRect;
-
-    List<Vector2> positions;
-
     //单例模式
     public static UIManager instance;
+
+    //特效对象池
+    public Queue<GameObject> textEffectsPool = new Queue<GameObject>();
 
     private void Awake()
     {
@@ -45,7 +44,6 @@ public class UIManager : MonoBehaviour
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
-        positions = new List<Vector2>() { new Vector2(-240, 165), new Vector2(-400, 80), new Vector2(-400, -40), new Vector2(-240, -140), new Vector2(140, -140), new Vector2(300, -40), new Vector2(300, 80), new Vector2(140, 165) };
     }
 
     private void Update()
@@ -77,9 +75,9 @@ public class UIManager : MonoBehaviour
         GameManager.instance.Restart();
         CardManager.instance.Restart();
         //删除所有牌桌上的AI
-        for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
+        for (int i = 0; i < playerObjects.Count; i++)
         {
-            Destroy(PlayerManager.instance.seatedPlayers[i].playerObject.gameObject);
+            playerObjects[i].gameObject.SetActive(false);
         }
         //清空桌面的公共牌
         for (int i = 0; i < communityCards.Count; i++)
@@ -155,17 +153,14 @@ public class UIManager : MonoBehaviour
     /// <returns>PlayerObject 本身</returns>
     public PlayerObject SetPlayerOnSeat(Player p)
     {
-        GameObject po = Instantiate(Resources.Load<GameObject>("Prefabs/Player_Prefab"));
-
         if (p.seatNum < 0 || p.seatNum > 7)
         {
             PrintLog("有人未上座！！错误的座位号："+p.seatNum);
+            return null;
         }
-        po.transform.SetParent(tableRect);
-        RectTransform poRT = po.GetComponent<RectTransform>();
-        poRT.anchoredPosition = positions[p.seatNum];
-        poRT.localScale = new Vector3(1, 1, 1);
+        GameObject po = playerObjects[p.seatNum];
         po.GetComponent<PlayerObject>().InitializeThePlayer(p);
+        po.SetActive(true);
         return po.GetComponent<PlayerObject>();
     }
 
@@ -199,5 +194,24 @@ public class UIManager : MonoBehaviour
     public void UpdateGameRounds()
     {
         gamesCountText.text = "GAMES: " + GolbalVar.curRoundNum + "/" + GolbalVar.totalRoundNum;
+    }
+
+    /// <summary>
+    /// 显示支付筹码的文字的特效
+    /// </summary>
+    /// <param name="p">哪个玩家支付筹码</param>
+    /// <param name="betCount">下注下了多少</param>
+    public void BetCoinsEffect(Player p, int betCount)
+    {
+        GameObject effect;
+        if (textEffectsPool.Count <= 0)
+            effect = Instantiate(Resources.Load<GameObject>("Prefabs/TextEffect"));
+        else
+            effect = textEffectsPool.Dequeue();
+        effect.GetComponent<Text>().text = betCount.ToString();
+        effect.transform.SetParent(playerObjects[p.seatNum].transform);
+        effect.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        effect.transform.localScale = Vector2.one;
+        effect.SetActive(true);
     }
 }
