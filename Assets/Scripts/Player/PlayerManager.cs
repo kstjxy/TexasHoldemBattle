@@ -261,7 +261,7 @@ public class PlayerManager
                     else
                     {
                         //ÅÐ¶ÏÇ®¹»²»¹»
-                        if (p.coin + p.betCoin - GolbalVar.maxBetCoin + 2 * GolbalVar.minBetCoin > 0)
+                        if (p.coin + p.betCoin - GolbalVar.maxBetCoin - 2 * GolbalVar.minBetCoin > 0)
                         {
                             int change = GolbalVar.maxBetCoin - p.betCoin + 2 * GolbalVar.minBetCoin;
                             p.coin -= change;
