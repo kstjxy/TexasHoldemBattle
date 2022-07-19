@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class GameManager: MonoBehaviour
 {
-    // µ¥Àı
+    // å•ä¾‹
     public static GameManager instance;
     void Awake()
     {
         instance = this;
     }
 
-    //ÓÎÏ·½ø³Ì
+    //æ¸¸æˆè¿›ç¨‹
     public enum GameState
     {
-        setting,    //ÉèÖÃ½çÃæ£¬µ÷ÕûÓÎÏ·¹æÔò
-        init,       //³õÊ¼»¯£¬ÇĞ»»½çÃæ£¬Íæ¼ÒÈë×ù
-        roundInit,  //Ã¿Ò»¾Ö¿ªÊ¼µÄINIT£¬È·¶¨PLAYER ROLES
-        preflop,    //·¢¸øÍæ¼ÒÁ½ÕÅÅÆ µÚÒ»ÂÖÏÂ×¢
-        flop,       //¹«¿ª¿¨³ØÈıÕÅÅÆ µÚ¶şÂÖÏÂ×¢
-        turn,       //¹«¿ª¿¨³ØµÚËÄÕÅÅÆ µÚÈıÂÖÏÂ×¢
-        river,      //¹«¿ª¿¨³ØµÚËÄÕÅÅÆ µÚËÄÂÖÏÂ×¢
-        result,     //Ò»¾ÖÓÎÏ·½áÊøÏÔÊ¾½á¹û£¬µ÷Õû³ïÂëºÍÅÅĞĞ
-        gameover    //Éè¶¨µÄËùÓĞ¾Ö½áÊø
+        setting,    //è®¾ç½®ç•Œé¢ï¼Œè°ƒæ•´æ¸¸æˆè§„åˆ™
+        init,       //åˆå§‹åŒ–ï¼Œåˆ‡æ¢ç•Œé¢ï¼Œç©å®¶å…¥åº§
+        roundInit,  //æ¯ä¸€å±€å¼€å§‹çš„INITï¼Œç¡®å®šPLAYER ROLES
+        preflop,    //å‘ç»™ç©å®¶ä¸¤å¼ ç‰Œ ç¬¬ä¸€è½®ä¸‹æ³¨
+        flop,       //å…¬å¼€å¡æ± ä¸‰å¼ ç‰Œ ç¬¬äºŒè½®ä¸‹æ³¨
+        turn,       //å…¬å¼€å¡æ± ç¬¬å››å¼ ç‰Œ ç¬¬ä¸‰è½®ä¸‹æ³¨
+        river,      //å…¬å¼€å¡æ± ç¬¬å››å¼ ç‰Œ ç¬¬å››è½®ä¸‹æ³¨
+        result,     //ä¸€å±€æ¸¸æˆç»“æŸæ˜¾ç¤ºç»“æœï¼Œè°ƒæ•´ç­¹ç å’Œæ’è¡Œ
+        gameover    //è®¾å®šçš„æ‰€æœ‰å±€ç»“æŸ
     }
 
     public static float timer = 0;
@@ -115,19 +115,19 @@ public class GameManager: MonoBehaviour
     public void RoundInit()
     {
         GolbalVar.curRoundNum++;
-        UIManager.instance.PrintLog("ĞÂÒ»ÂÖÓÎÏ·¿ªÊ¼£¡µ±Ç°ÎªµÚ¡¾" + GolbalVar.curRoundNum +"¡¿ÂÖ");
+        UIManager.instance.PrintLog("æ–°ä¸€è½®æ¸¸æˆå¼€å§‹ï¼å½“å‰ä¸ºç¬¬ã€" + GolbalVar.curRoundNum +"ã€‘è½®");
         PlayerManager.instance.NewRound();
         //PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat); NewRound() has done this;
-        UIManager.instance.PrintLog("Î»ÖÃ·ÖÅäÍê±Ï£¡");
+        UIManager.instance.PrintLog("ä½ç½®åˆ†é…å®Œæ¯•ï¼");
         if (PlayerManager.instance.activePlayers.Count >= 3)
         {
-            UIManager.instance.PrintLog("¡¾" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "¡¿Îª×¯¼ÒÎ»");
-            UIManager.instance.PrintLog("¡¾" + PlayerManager.instance.activePlayers[0].playerName + "¡¿ÎªĞ¡Ã¤Î»");
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "ã€‘ä¸ºåº„å®¶ä½");
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[0].playerName + "ã€‘ä¸ºå°ç›²ä½");
         } else
         {
-            UIManager.instance.PrintLog("¡¾" + PlayerManager.instance.activePlayers[0].playerName + "¡¿Îª×¯¼ÒºÍĞ¡Ã¤Î»");
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[0].playerName + "ã€‘ä¸ºåº„å®¶å’Œå°ç›²ä½");
         }
-        UIManager.instance.PrintLog("¡¾" + PlayerManager.instance.activePlayers[1].playerName + "¡¿Îª´óÃ¤Î»");
+        UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[1].playerName + "ã€‘ä¸ºå¤§ç›²ä½");
 
         curPlayerSeat = 0;
         curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
@@ -142,9 +142,9 @@ public class GameManager: MonoBehaviour
             if (curPlayerSeat == 0)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("µ±Ç°Îª¡¾Ç°·­ÅÆÈ¦¡¿");
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€å‰ç¿»ç‰Œåœˆã€‘");
                 CardManager.instance.AssignCardsToPlayers();
-                UIManager.instance.PrintLog("Ã¿¸öÔÚÓÎÏ·ÖĞµÄÍæ¼Ò»ñµÃÁ½ÕÅÊÖÅÆ");
+                UIManager.instance.PrintLog("æ¯ä¸ªåœ¨æ¸¸æˆä¸­çš„ç©å®¶è·å¾—ä¸¤å¼ æ‰‹ç‰Œ");
                 int sign = PlayerManager.instance.PlayerBet();
                 if (sign == 0) GolbalVar.gameStatusCounter = 5;
             } else
@@ -155,7 +155,7 @@ public class GameManager: MonoBehaviour
         } else
         {
             UpdateCurPlayer();
-            UIManager.instance.PrintLog("¡¾" + curPlayer.playerName + "¡¿µÄÊÖÅÆÎª£º¡¾" + curPlayer.playerCardList[0].PrintCard() + "¡¿¡¾" + curPlayer.playerCardList[1].PrintCard() + "¡¿");
+            UIManager.instance.PrintLog("ã€" + curPlayer.playerName + "ã€‘çš„æ‰‹ç‰Œä¸ºï¼šã€" + curPlayer.playerCardList[0].PrintCard() + "ã€‘ã€" + curPlayer.playerCardList[1].PrintCard() + "ã€‘");
         }
     }
 
@@ -166,14 +166,14 @@ public class GameManager: MonoBehaviour
             if (curPlayerSeat == 0)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("µ±Ç°Îª¡¾·­ÅÆÈ¦¡¿");
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€ç¿»ç‰Œåœˆã€‘");
                 CardManager.instance.AssignCardsToTable(3);
                 for (int i = 0; i < 3; i++)
                 {
                     UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
                 }
-                UIManager.instance.PrintLog("¹«¹²¿¨³Ø·¢³öÇ°ÈıÕÅÅÆ£¬·Ö±ğÎª£º\n¡¾" + GolbalVar.publicCards[0].PrintCard() + "¡¿¡¾" +
-                    GolbalVar.publicCards[1].PrintCard() + "¡¿¡¾" + GolbalVar.publicCards[2].PrintCard() + "¡¿");
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºå‰ä¸‰å¼ ç‰Œï¼Œåˆ†åˆ«ä¸ºï¼š\nã€" + GolbalVar.publicCards[0].PrintCard() + "ã€‘ã€" +
+                    GolbalVar.publicCards[1].PrintCard() + "ã€‘ã€" + GolbalVar.publicCards[2].PrintCard() + "ã€‘");
             } else
             {
                 ReadyForNextState();
@@ -190,10 +190,10 @@ public class GameManager: MonoBehaviour
             if (curPlayerSeat == 0)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("µ±Ç°Îª¡¾×ªÅÆÈ¦¡¿");
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€è½¬ç‰Œåœˆã€‘");
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
-                UIManager.instance.PrintLog("¹«¹²¿¨³Ø·¢³öµÚËÄÕÅÅÆ£¬Îª¡¾" + GolbalVar.publicCards[3].PrintCard() + "¡¿");
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºç¬¬å››å¼ ç‰Œï¼Œä¸ºã€" + GolbalVar.publicCards[3].PrintCard() + "ã€‘");
             }
             else
             {
@@ -213,10 +213,10 @@ public class GameManager: MonoBehaviour
             if (curPlayerSeat == 0)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("µ±Ç°Îª¡¾ºÓÅÆÈ¦¡¿");
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€æ²³ç‰Œåœˆã€‘");
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
-                UIManager.instance.PrintLog("¹«¹²¿¨³Ø·¢³ö×îºóÒ»ÕÅÅÆ£¬Îª¡¾" + GolbalVar.publicCards[4].PrintCard() + "¡¿"); ;
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºæœ€åä¸€å¼ ç‰Œï¼Œä¸ºã€" + GolbalVar.publicCards[4].PrintCard() + "ã€‘"); ;
             }
             else
             {
@@ -236,13 +236,13 @@ public class GameManager: MonoBehaviour
             if (curPlayerSeat == 0)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("±¾ÂÖÓÎÏ·½áÊø£¡ÏÖÔÚ½øÈë½áËã½×¶Î");
+                UIManager.instance.PrintLog("æœ¬è½®æ¸¸æˆç»“æŸï¼ç°åœ¨è¿›å…¥ç»“ç®—é˜¶æ®µ");
             }
             else
             {
                 ReadyForNextState();
                 winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
-                UIManager.instance.PrintLog("ËùÓĞÍæ¼Ò×îÖÕÊÖÅÆÑ¡ÔñÍê±Ï£¡\nÔÚ³¡ÅÆÁ¦×î´óÍæ¼ÒÎª£º"+PrintWinner(winners));
+                UIManager.instance.PrintLog("æ‰€æœ‰ç©å®¶æœ€ç»ˆæ‰‹ç‰Œé€‰æ‹©å®Œæ¯•ï¼\nåœ¨åœºç‰ŒåŠ›æœ€å¤§ç©å®¶ä¸ºï¼š"+PrintWinner(winners));
             }
         }
         else
@@ -251,11 +251,11 @@ public class GameManager: MonoBehaviour
             curPlayer.finalCards = curPlayer.ai.FinalSelection();
             if (IsValidSelection(curPlayer))
             {
-                UIManager.instance.PrintLog("Íæ¼Ò¡¾" + curPlayer.playerName + "¡¿×îºóÑ¡¶¨µÄÎåÕÅÅÆÎª£º\n¡¾" + curPlayer.finalCards[0].PrintCard() + "¡¿¡¾" + curPlayer.finalCards[1].PrintCard() +
-                "¡¿¡¾" + curPlayer.finalCards[2].PrintCard() + "¡¿¡¾" + curPlayer.finalCards[3].PrintCard() + "¡¿¡¾" + curPlayer.finalCards[4].PrintCard() + "¡¿");
+                UIManager.instance.PrintLog("ç©å®¶ã€" + curPlayer.playerName + "ã€‘æœ€åé€‰å®šçš„äº”å¼ ç‰Œä¸ºï¼š\nã€" + curPlayer.finalCards[0].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[1].PrintCard() +
+                "ã€‘ã€" + curPlayer.finalCards[2].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[3].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[4].PrintCard() + "ã€‘");
             } else
             {
-                UIManager.instance.PrintLog("Íæ¼Ò¡¾" + curPlayer.playerName + "¡¿×îºóÑ¡¶¨µÄÅÆ²»·ûºÏ¹æ·¶,ÎŞ·¨²ÎÓë¹Ú¾ü½ÇÖğ");
+                UIManager.instance.PrintLog("ç©å®¶ã€" + curPlayer.playerName + "ã€‘æœ€åé€‰å®šçš„ç‰Œä¸ç¬¦åˆè§„èŒƒ,æ— æ³•å‚ä¸å† å†›è§’é€");
                 PlayerManager.instance.activePlayers.Remove(curPlayer);
             }
         }
@@ -267,9 +267,9 @@ public class GameManager: MonoBehaviour
     }
 
     /// <summary>
-    /// ½«Íæ¼ÒÍ¨¹ıcoinµÄÊıÖµ½øĞĞÅÅĞò
+    /// å°†ç©å®¶é€šè¿‡coinçš„æ•°å€¼è¿›è¡Œæ’åº
     /// </summary>
-    /// <returns>Í¨¹ıcoin´óĞ¡¾­¹ıÅÅĞòµÄÍæ¼Òlist</returns>
+    /// <returns>é€šè¿‡coinå¤§å°ç»è¿‡æ’åºçš„ç©å®¶list</returns>
     public List<Player> GetRankedPlayers()
     {
         List<Player> pList = new List<Player>();
@@ -284,10 +284,10 @@ public class GameManager: MonoBehaviour
     }
  
     /// <summary>
-    /// ½«Íæ¼Ò½øĞĞÅÅÃû£¬ÏàÍ¬ÊıÁ¿coinÓµÓĞÕßÃû´ÎÏàµÈ
+    /// å°†ç©å®¶è¿›è¡Œæ’åï¼Œç›¸åŒæ•°é‡coinæ‹¥æœ‰è€…åæ¬¡ç›¸ç­‰
     /// </summary>
-    /// <param name="pList">ÒÑ¾­ÅÅĞòÍê±ÏµÄÍæ¼Òlist</param>
-    /// <returns>Íæ¼ÒµÄÅÅÃûÁĞ±í</returns>
+    /// <param name="pList">å·²ç»æ’åºå®Œæ¯•çš„ç©å®¶list</param>
+    /// <returns>ç©å®¶çš„æ’ååˆ—è¡¨</returns>
     public List<int> GetPlayerRank (List<Player> pList)
     {
         List<int> rankNum = new List<int>();
@@ -361,19 +361,19 @@ public class GameManager: MonoBehaviour
 
     public string PrintWinner(List<Player> pList)
     {
-        string str = "¡¾" + pList[0].playerName;
+        string str = "ã€" + pList[0].playerName;
         for (int i = 1; i<pList.Count; i++)
         {
-            str = str + "¡¿¡¾" + pList[i].playerName;
+            str = str + "ã€‘ã€" + pList[i].playerName;
         }
-        return str + "¡¿";
+        return str + "ã€‘";
     }
 
 
 
     public void Start()
     {
-        Debug.Log("ÓÎÏ·¿ªÊ¼......");
+        Debug.Log("æ¸¸æˆå¼€å§‹......");
  //       PlayerManager.instance.InitPlayers();
         GolbalVar.gameStatusCounter = -2;
     }
@@ -391,5 +391,6 @@ public class GameManager: MonoBehaviour
             GameUpdate();
             timer = 0;
         }
+       
     }
 }
