@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 
 public class PlayerManager
@@ -153,7 +152,7 @@ public class PlayerManager
     {
         for(int i = 0; i<=GolbalVar.curBtnSeat; i++)
         {
-            Player p = activePlayers[0];
+            Player p = activePlayers[i];
             activePlayers.Remove(p);
             activePlayers.Add(p);
         }
@@ -200,7 +199,7 @@ public class PlayerManager
                         p.coin -= p.betCoin;
                         GolbalVar.maxBetCoin = p.betCoin;
                         GolbalVar.pot += p.betCoin;
-                        strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        strbet = p.playerName + "选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -209,8 +208,7 @@ public class PlayerManager
                         p.betCoin = 2 * GolbalVar.minBetCoin;
                         p.coin -= p.betCoin;
                         GolbalVar.maxBetCoin = p.betCoin;
-                        GolbalVar.pot += p.betCoin;
-                        strbet = p.playerName + "\t选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        strbet = p.playerName + "选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -224,14 +222,14 @@ public class PlayerManager
                     {
                         if (p.betCoin == GolbalVar.maxBetCoin)  //已经是跟注了 即为过牌
                         {
-                            strbet = p.playerName + "\t选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            strbet = p.playerName + "选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         }
                         else //跟注
                         {
                             p.coin -= GolbalVar.maxBetCoin - p.betCoin;
                             GolbalVar.pot += GolbalVar.maxBetCoin - p.betCoin;
                             p.betCoin = GolbalVar.maxBetCoin;
-                            strbet = p.playerName + "\t选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            strbet = p.playerName + "选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
 
                         }
 
@@ -260,12 +258,10 @@ public class PlayerManager
                         //判断钱够不够
                         if (p.coin + p.betCoin - GolbalVar.maxBetCoin + 2 * GolbalVar.minBetCoin > 0)
                         {
-                            int change = GolbalVar.maxBetCoin - p.betCoin + 2 * GolbalVar.minBetCoin;
-                            p.coin -= change;
-                            p.betCoin += change;
-                            GolbalVar.pot +=change;
-                            GolbalVar.maxBetCoin = p.betCoin;
-                            strbet = p.playerName + "\t选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            p.coin -= 2 * GolbalVar.minBetCoin;
+                            p.betCoin += 2 * GolbalVar.minBetCoin;
+                            GolbalVar.pot += 2 * GolbalVar.minBetCoin;
+                            strbet = p.playerName + "选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                             Debug.Log(strbet);
                             UIManager.instance.PrintLog(strbet);
                         }
@@ -280,19 +276,10 @@ public class PlayerManager
                 
             case 3://弃牌
                 {
-                    //如果当前下注的钱已经是最大押注，无需弃牌
-                    if (p.betCoin == GolbalVar.maxBetCoin)
-                    {
-                        p.state = 1;
-                        BetAction(p);
-                    }
-                    else
-                    {
-                        p.isFold = true;
-                        strbet = p.playerName + "\t选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                        Debug.Log(strbet);
-                        UIManager.instance.PrintLog(strbet);                        
-                    }
+                    p.isFold = true;
+                    strbet = p.playerName + "选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    Debug.Log(strbet);
+                    UIManager.instance.PrintLog(strbet);
                     break;
                 }
                
@@ -302,7 +289,7 @@ public class PlayerManager
                     p.isAllIn = true;                    
                     GolbalVar.pot += p.coin;
                     p.coin = 0;
-                    strbet = p.playerName + "\t选择【ALL IN】，当前剩余金额为" + p.coin;
+                    strbet = p.playerName + "选择【ALL IN】，当前剩余金额为" + p.coin;
                     if (p.betCoin < GolbalVar.maxBetCoin)
                     {
                         strbet += "由于当前玩家的ALL IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
@@ -323,12 +310,11 @@ public class PlayerManager
     //用于测试的随机行动
     public int RandomAction()
     {
-        System.Random randint = new System.Random(Guid.NewGuid().GetHashCode());
-        int ranNum = randint.Next(1, 101);
-        //Debug.Log("随机值为：" + ranNum);
-        //50% 跟注 或 过
-        if (ranNum <= 50) return 1;
-        //25% 加注
+        Random.InitState((int)System.DateTime.Now.Ticks);
+        int ranNum = Random.Range(1, 101);
+        //60% 跟注 或 过
+        if (ranNum <= 60) return 1;
+        //15% 加注
         if (ranNum <= 75) return 2;
         //20% 弃牌
         if (ranNum <= 95) return 3;
@@ -353,35 +339,18 @@ public class PlayerManager
         List<Player> pList = activePlayers;
         int playerIndex = 0;
         string strbet;
-        bool flag = false;
         do
         {
-            if (playerIndex == pList.Count)
-            {
-                playerIndex = 0;
-                flag = true;
-            }
-               
-
             if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
                 strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
-                playerIndex++;
                 continue;
             }
 
-            //preflop时大盲后一位开始
-            if (pList[playerIndex].state == 0)
-            {
-                if (pList[playerIndex].role == Player.PlayerRole.smallBlind || pList[playerIndex].role == Player.PlayerRole.bigBlind)
-                {
-                    pList[playerIndex].state = 1;
-                    playerIndex++;
-                    continue;
-                }
-            }
+            if (playerIndex == pList.Count)
+                playerIndex = 0;
             if (playerIndex == 0)
             {
                 Debug.Log("新一轮下注开始");
@@ -401,7 +370,7 @@ public class PlayerManager
             playerIndex++;
             if (playerIndex >= pList.Count)
             {
-                strbet = "底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin;
+                strbet = "底池：" + GolbalVar.pot + "最大下注金额：" + GolbalVar.maxBetCoin;
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
             }
@@ -410,10 +379,9 @@ public class PlayerManager
             foreach (Player p in pList)
                 if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
                     okPlayers.Add(p);
-            //必须强制下注一轮 用flag限制
-            if (okPlayers.Count == pList.Count && (flag || playerIndex == pList.Count) )
+            if (okPlayers.Count == pList.Count)
             {
-                strbet = "本轮下注结束";
+                strbet = "第" + GolbalVar.curRoundNum + "回合结束";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
