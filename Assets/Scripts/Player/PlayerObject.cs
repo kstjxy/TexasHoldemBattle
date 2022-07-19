@@ -11,6 +11,7 @@ public class PlayerObject : MonoBehaviour
     [Header("PlayerPanelElements")]
     public Text nameText;
     public Text coinsText;
+    public Text sumBetsText;
     public Image avatarImage;
     public Image card1Image;
     public Image card2Image;
@@ -59,6 +60,13 @@ public class PlayerObject : MonoBehaviour
     public void UpdateCoinsCount()
     {
         coinsText.text = player.coin.ToString();
+    }
+    /// <summary>
+    /// 更新玩家当局总下注筹码数量
+    /// </summary>
+    public void UpdateBetCoinsCount()
+    {
+        sumBetsText.text = player.betCoin.ToString();
     }
 
     /// <summary>
