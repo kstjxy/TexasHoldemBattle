@@ -204,7 +204,11 @@ public class PlayerManager
                         GolbalVar.maxBetCoin = p.betCoin;
                         GolbalVar.pot += p.betCoin;
                         UIManager.instance.UpdateCoinsPool();
+                        UIManager.instance.BetCoinsEffect(p, p.betCoin);
+                        p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
+                        
+                     
                         strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
@@ -216,6 +220,8 @@ public class PlayerManager
                         GolbalVar.maxBetCoin = p.betCoin;
                         GolbalVar.pot += p.betCoin;
                         UIManager.instance.UpdateCoinsPool();
+                        UIManager.instance.BetCoinsEffect(p, p.betCoin);
+                        p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
                         strbet = p.playerName + "\t选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         Debug.Log(strbet);
@@ -235,10 +241,13 @@ public class PlayerManager
                         }
                         else //跟注
                         {
-                            p.coin -= GolbalVar.maxBetCoin - p.betCoin;
-                            GolbalVar.pot += GolbalVar.maxBetCoin - p.betCoin;
+                            int change = GolbalVar.maxBetCoin - p.betCoin;
+                            p.coin -= change;
+                            GolbalVar.pot += change;
                             p.betCoin = GolbalVar.maxBetCoin;
                             UIManager.instance.UpdateCoinsPool();
+                            UIManager.instance.BetCoinsEffect(p, change);
+                            p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
                             strbet = p.playerName + "\t选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
 
@@ -275,6 +284,8 @@ public class PlayerManager
                             GolbalVar.pot += change;
                             GolbalVar.maxBetCoin = p.betCoin;
                             UIManager.instance.UpdateCoinsPool();
+                            UIManager.instance.BetCoinsEffect(p, change);
+                            p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
                             strbet = p.playerName + "\t选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                             Debug.Log(strbet);
@@ -311,9 +322,10 @@ public class PlayerManager
 
             case 4://ALL IN
                 {
-                    p.betCoin = p.betCoin + p.coin;
+                    int change = p.coin;
+                    p.betCoin  += change;
                     p.isAllIn = true;
-                    GolbalVar.pot += p.coin;
+                    GolbalVar.pot += change;
                     p.coin = 0;
                     strbet = p.playerName + "\t选择【ALL IN】，当前剩余金额为" + p.coin;
                     if (p.betCoin < GolbalVar.maxBetCoin)
@@ -325,6 +337,8 @@ public class PlayerManager
                         GolbalVar.maxBetCoin = p.betCoin;
                     }
                     UIManager.instance.UpdateCoinsPool();
+                    UIManager.instance.BetCoinsEffect(p, change);
+                    p.playerObject.UpdateBetCoinsCount();
                     p.playerObject.UpdateCoinsCount();
                     strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                     Debug.Log(strbet);
