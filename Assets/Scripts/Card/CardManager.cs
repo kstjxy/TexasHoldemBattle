@@ -8,9 +8,7 @@ public class CardManager : MonoBehaviour
     //单例模式
     public static CardManager instance;
     //牌组
-    private List<Card> cards;
-    public List<Card> tableCards;
-    public List<Card> publicCards;
+    private List<Card> cards = new List<Card>();
 
     private void Awake()
     {
@@ -18,14 +16,16 @@ public class CardManager : MonoBehaviour
             Destroy(this);
         else
             instance = this;
-
-        InitialCardsList();
     }
 
-    //加载牌堆 在
-    private void InitialCardsList()
+    /// <summary>
+    /// Initialize the card List of 4*13 Cards
+    /// </summary>
+    public void InitialCardsList()
     {
         cards.Clear();
+        if (GolbalVar.publicCards == null)
+            GolbalVar.publicCards = new List<Card>();
         for (int i = 2; i < 15; i++)
         {
             cards.Add(new Card(CardSuit.club, i));
@@ -35,22 +35,34 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void AssignCardsToPlayers(List<Player> playerList)
+    /// <summary>
+    /// 在preflop阶段给当前在游戏中的玩家一人发两张牌 仅玩家自已可见
+    /// </summary>
+    public void AssignCardsToPlayers()
     {
-        foreach(Player p in playerList)
+        foreach(Player p in PlayerManager.instance.activePlayers)
         {
             p.AddPlayerCards(AssignRandomCard(), AssignRandomCard());
+            p.playerObject.ShowCards();
         }
     }
 
-    public void AssignCardsToTable()
+    /// <summary>
+    /// 给公共卡池发牌
+    /// </summary>
+    /// <param name="num">在公共卡池的发牌数量</param>
+    public void AssignCardsToTable(int num)
     {
-        for(int i = 0; i<5; i++)
+        for (int i = 0; i < num; i++)
         {
-            tableCards.Add(AssignRandomCard());
+            GolbalVar.publicCards.Add(AssignRandomCard());
         }
     }
 
+    /// <summary>
+    /// 随机从剩余牌堆中选出一张牌
+    /// </summary>
+    /// <returns>从剩余牌堆中抽出的牌</returns>
     public Card AssignRandomCard()
     {
         if (cards.Count <= 0)
@@ -63,7 +75,12 @@ public class CardManager : MonoBehaviour
         return rndCard;
     }
 
-    //从最终翻牌的全部玩家中寻找冠军，可以是一个或多个平局
+
+    /// <summary>
+    /// 从最终翻牌的全部玩家中寻找冠军，可以是一个或多个平局
+    /// </summary>
+    /// <param name="pList">当局中的剩余玩家LIST</param>
+    /// <returns>牌力最大的/当局冠军玩家LIST</returns>
     public List<Player> FindWinner(List<Player> pList)
     {
         List<Player> wList = new List<Player>();
@@ -99,7 +116,13 @@ public class CardManager : MonoBehaviour
         return wList;
     }
 
-    //比较两组牌的牌力，如果c1大则return -1, c2大则return 1, 如果相同则return 0
+
+    /// <summary>
+    /// 比较两组牌的牌力
+    /// </summary>
+    /// <param name="c1">第一组的五张牌</param>
+    /// <param name="c2">第二组的五张牌</param>
+    /// <returns>如果c1大则return -1, c2大则return 1, 如果相同则return 0</returns>
     public int CompareCards(List<Card> c1, List<Card> c2)
     {
         int result1 = MatchCase(c1);
@@ -131,6 +154,11 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 是否为顺子
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public bool IsStright(List<Card> cList)
     {
         for(int i=1; i<cList.Count; i++)
@@ -143,6 +171,11 @@ public class CardManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 最多的相同数字牌有几个
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int MaxSameNum(List<Card> cList)
     {
         int max = 1;
@@ -164,6 +197,11 @@ public class CardManager : MonoBehaviour
         return max;
     }
 
+    /// <summary>
+    /// 是否为同花
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public bool IsFlush(List<Card> cList)
     {
         CardSuit curS = cList[0].cardSuit;
@@ -177,6 +215,11 @@ public class CardManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 中途数值变了几次
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int ValueChangeNum(List<Card> cList)
     {
         int valueChange = 0;
@@ -190,6 +233,11 @@ public class CardManager : MonoBehaviour
         return valueChange;
     }
 
+    /// <summary>
+    /// 牌面总值
+    /// </summary>
+    /// <param name="cList"></param>
+    /// <returns></returns>
     public int totalCardValue(List<Card> cList)
     {
         int totalValue = 0;
@@ -250,20 +298,12 @@ public class CardManager : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// 发规定数量的牌到桌面上，并显示
-    /// </summary>
-    /// <param name="num">牌的数量</param>
-    public void DealACardToTable(int num)
+    public void Restart()
     {
-        //在这个方法中要做到：更新公共牌列表（GameManager.instance），显示新增的牌（UIManager.instance）
+        if (GolbalVar.publicCards == null)
+            GolbalVar.publicCards = new List<Card>();
+        else
+            GolbalVar.publicCards.Clear();
+        InitialCardsList();
     }
-
-
-    public void DealCardsToAPlayer()
-    {
-        //在这个方法中要做到：更新玩家牌列表（用方法PlayerObject.player.AddPlayerCards()），显示玩家的牌（用方法PlayerObject.ShowCards()）
-    }
-
 }

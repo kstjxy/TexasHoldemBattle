@@ -23,7 +23,7 @@ public class PlayerObject : MonoBehaviour
     {
         player = p;
         nameText.text = player.playerName;
-        coinsText.text = player.coin.ToString();
+        coinsText.text = GolbalVar.initCoin.ToString();
     }
 
     /// <summary>
@@ -33,6 +33,32 @@ public class PlayerObject : MonoBehaviour
     {
         card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
         card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
+        StartCoroutine(UIManager.instance.FlopAnim(card1Image.GetComponent<RectTransform>()));
+        StartCoroutine(UIManager.instance.FlopAnim(card2Image.GetComponent<RectTransform>()));
+    }
+
+    /// <summary>
+    /// 更新筹码数量，输入正数增加筹码，负数减少，
+    /// 输入0则是单纯刷新当前筹码显示。
+    /// </summary>
+    /// <param name="change"></param>
+    /*public void UpdateCoinsCount(int change)
+    {
+        if (change + player.coin < 0)
+            return;
+        else
+            player.coin += change;
+        UIManager.instance.UpdateCoinsPool(-change);//玩家赢钱奖池减少，玩家赌钱奖池增多
+        coinsText.text = player.coin.ToString();
+    }*/
+    //已弃用
+
+    /// <summary>
+    /// 更新玩家筹码数量
+    /// </summary>
+    public void UpdateCoinsCount()
+    {
+        coinsText.text = player.coin.ToString();
     }
 
     /// <summary>

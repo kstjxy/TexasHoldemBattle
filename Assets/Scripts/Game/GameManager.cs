@@ -2,170 +2,394 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager: MonoBehaviour
 {
-    // µ¥Àı
+    // å•ä¾‹
     public static GameManager instance;
     void Awake()
     {
         instance = this;
     }
 
-    //ÓÎÏ·½ø³Ì
+    //æ¸¸æˆè¿›ç¨‹
     public enum GameState
     {
-        init,       //Õû¸öÓÎÏ·³õÊ¼»¯
-        roundinit,  //Ã¿¾ÖÓÎÏ·³õÊ¼»¯£¬È·¶¨×¯¼Ò ´óÃ¤Ğ¡Ã¤
-        preflop,    
-        flop,
-        turn,
-        river,
-        calc,       //Ò»¾ÖÓÎÏ·½áÊø
-        gameover    //Éè¶¨µÄËùÓĞ¾Ö½áÊø
+        setting,    //è®¾ç½®ç•Œé¢ï¼Œè°ƒæ•´æ¸¸æˆè§„åˆ™
+        init,       //åˆå§‹åŒ–ï¼Œåˆ‡æ¢ç•Œé¢ï¼Œç©å®¶å…¥åº§
+        roundInit,  //æ¯ä¸€å±€å¼€å§‹çš„INITï¼Œç¡®å®šPLAYER ROLES
+        preflop,    //å‘ç»™ç©å®¶ä¸¤å¼ ç‰Œ ç¬¬ä¸€è½®ä¸‹æ³¨
+        flop,       //å…¬å¼€å¡æ± ä¸‰å¼ ç‰Œ ç¬¬äºŒè½®ä¸‹æ³¨
+        turn,       //å…¬å¼€å¡æ± ç¬¬å››å¼ ç‰Œ ç¬¬ä¸‰è½®ä¸‹æ³¨
+        river,      //å…¬å¼€å¡æ± ç¬¬å››å¼ ç‰Œ ç¬¬å››è½®ä¸‹æ³¨
+        result,     //ä¸€å±€æ¸¸æˆç»“æŸæ˜¾ç¤ºç»“æœï¼Œè°ƒæ•´ç­¹ç å’Œæ’è¡Œ
+        gameover    //è®¾å®šçš„æ‰€æœ‰å±€ç»“æŸ
     }
-    public GameState currentState = GameState.init; //0
-    //½ø³Ì×ª»»  ask
-    public static int GameStatus()
-    {
-        int gamestate = GlobalVar.gameStatusCounter;
-        if (gamestate < 7)
-        {
 
+    public static float timer = 0;
+    public int curPlayerSeat = 0;
+    public Player curPlayer = null;
+    public bool playersInAction = false;
+    public List<Player> winners = new List<Player>();
+    
+    public static GameState GameStatus()
+    {
+        switch (GolbalVar.gameStatusCounter)
+        {
+            case -2:
+                return GameState.setting;
+            case -1:
+                return GameState.init;
+            case 0:
+                return GameState.roundInit;
+            case 1:
+                return GameState.preflop;
+            case 2:
+                return GameState.flop;
+            case 3:
+                return GameState.turn;
+            case 4:
+                return GameState.river;
+            case 5:
+                return GameState.result;
+            case 6:
+                return GameState.gameover;
+        }
+        throw new UnityException("GameStatus error");
+    }
+
+    public void GameUpdate()
+    {
+        switch(GolbalVar.gameStatusCounter)
+        {
+            case -1:
+                Init();
+                break;
+            case 0:
+                RoundInit();
+                break;
+            case 1:
+                Preflop();
+                break;
+            case 2:
+                Flop();
+                break;
+            case 3:
+                Turn();
+                break;
+            case 4:
+                River();
+                break;
+            case 5:
+                Result();
+                break;
+            case 6:
+                GameOver();
+                break;
         }
     }
 
-    //È«¾Ö±äÁ¿
-    public static List<string> namelist = new List<string>();   //Íæ¼ÒĞÕÃû
-    public static List<Player> playerList = new List<Player>(); //Íæ¼ÒÁĞ±í PlayerObject
-    public static List<Card> cardList = new List<Card>();       //¹«¹²ÅÆ
-    public static List<int> allNum = new List<int>();           //ËùÓĞÍæ¼ÒµÄĞòºÅ
-    public static List<int> playingNum = new List<int>();       //»¹ÔÚÍæµÄÍæ¼ÒµÄĞòºÅ
-    public static List<int> lostNum = new List<int>();          //ÒÑÌÔÌ­Íæ¼ÒµÄĞòºÅ
-    public static int buton;                                    //×¯¼ÒĞòºÅ
-    public static int setRound;                                 //Éè¶¨×Ü¾ÖÊı
-    public static int initMoney;                                //
-    public static int betMoney;                                 //
-    public static int curRound;                                 //µ±Ç°¾ÖÊı
-    public float time = 0;                                      //ÓÃÓÚµ÷½ÚËÙ¶È£¬¼ÆÊ±
-    public double gapset = 5;                                   //Ê±¼ä¼ä¸ô
-    public double ratioTime = 0;                                //ÍÏ¶¯Ìõ²ÎÊı
-    public float gaptime = 5;                                   //ÕæÕıµÄÊ±¼ä¼ä¸ô 
-    public bool started = 0;                                    //ÓÎÏ·¿ªÊ¼±êÖ¾                
-    public static string debugLogStr;
-    public static string DebugLogStr
+    public void Setting()
     {
-        get => debugLogStr;
-        set => debugLogStr = value + '\n';
-    }
-
-
-
-    public void Init()//³õÊ¼»¯
-    {
-        Debug.log("\t\t³õÊ¼»¯ing\t\t");
-        //´ÓUI£¿»ñÈ¡Íæ¼ÒĞÕÃûÁĞ±í£¨Î´Íê³É£©
-        namelist.Add("001");
-        namelist.Add("002");
-        namelist.Add("003");
-        //È·¶¨Íæ¼ÒÁĞ±í
-        PlayerManager.instance.IniPlayers(namelist) = initMoney;
-        //²Î¼ÓµÄÍæ¼Ò£¬±àºÅ´Ó1¿ªÊ¼
-        int tmpNo = 1;
-        foreach (Player p in PlayerManager.instance.allPlayers)
+        if (PlayerManager.instance.SeatPlayers())
         {
-            //¿ÉÒÔ¼ÓÒ»¸öÍæ²»ÍæµÄÅĞ¶Ï£¨£©
-            PlayerManager.instance.SeatedPlayer(p, tmpNo++);
+            GolbalVar.gameStatusCounter++;
         }
-        //¶Ä×¢´óĞ¡
-        betMoney = 5;
-        //³õÊ¼Ç®Êı
-        initMoney = 2000;
-        //×Ü¾ÖÊı
-        setRound = 20;
-        //¼Ó×¢´ÎÊı?
-        //³õÊ¼»¯gamestate
-        currentState = GameState.init;
-        curRound = 0;
-        
+    }
+
+    public void Restart()
+    {
+        GolbalVar.gameStatusCounter = -2;
+        GolbalVar.curRoundNum = 0;
+    }
+
+    public void Init()
+    {
+        foreach (Player p in PlayerManager.instance.seatedPlayers)
+        {
+            p.coin = GolbalVar.initCoin;
+        }
+        UIManager.instance.UpdateRankingList();
+        GolbalVar.gameStatusCounter++;
+    }
+
+    public void RoundInit()
+    {
+        GolbalVar.curRoundNum++;
+        UIManager.instance.PrintLog("æ–°ä¸€è½®æ¸¸æˆå¼€å§‹ï¼å½“å‰ä¸ºç¬¬ã€" + GolbalVar.curRoundNum +"ã€‘è½®");
+        PlayerManager.instance.NewRound();
+        //PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat); NewRound() has done this;
+        UIManager.instance.PrintLog("ä½ç½®åˆ†é…å®Œæ¯•ï¼");
+        if (PlayerManager.instance.activePlayers.Count >= 3)
+        {
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "ã€‘ä¸ºåº„å®¶ä½");
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[0].playerName + "ã€‘ä¸ºå°ç›²ä½");
+        } else
+        {
+            UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[0].playerName + "ã€‘ä¸ºåº„å®¶å’Œå°ç›²ä½");
+        }
+        UIManager.instance.PrintLog("ã€" + PlayerManager.instance.activePlayers[1].playerName + "ã€‘ä¸ºå¤§ç›²ä½");
+
+        curPlayerSeat = 0;
+        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
+        CardManager.instance.InitialCardsList();
+        GolbalVar.gameStatusCounter++;
+    }
+
+    public void Preflop()
+    {
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€å‰ç¿»ç‰Œåœˆã€‘");
+                CardManager.instance.AssignCardsToPlayers();
+                UIManager.instance.PrintLog("æ¯ä¸ªåœ¨æ¸¸æˆä¸­çš„ç©å®¶è·å¾—ä¸¤å¼ æ‰‹ç‰Œ");
+                int sign = PlayerManager.instance.PlayerBet();
+                if (sign == 0) GolbalVar.gameStatusCounter = 5;
+            } else
+            {
+                ReadyForNextState();
+            }
+            
+        } else
+        {
+            UpdateCurPlayer();
+            UIManager.instance.PrintLog("ã€" + curPlayer.playerName + "ã€‘çš„æ‰‹ç‰Œä¸ºï¼šã€" + curPlayer.playerCardList[0].PrintCard() + "ã€‘ã€" + curPlayer.playerCardList[1].PrintCard() + "ã€‘");
+        }
+    }
+
+    public void Flop()
+    {
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€ç¿»ç‰Œåœˆã€‘");
+                CardManager.instance.AssignCardsToTable(3);
+                for (int i = 0; i < 3; i++)
+                {
+                    UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+                }
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºå‰ä¸‰å¼ ç‰Œï¼Œåˆ†åˆ«ä¸ºï¼š\nã€" + GolbalVar.publicCards[0].PrintCard() + "ã€‘ã€" +
+                    GolbalVar.publicCards[1].PrintCard() + "ã€‘ã€" + GolbalVar.publicCards[2].PrintCard() + "ã€‘");
+            } else
+            {
+                ReadyForNextState();
+            }
+        } else
+        {
+            UpdateCurPlayer();
+        }
+    }
+    public void Turn()
+    {
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€è½¬ç‰Œåœˆã€‘");
+                CardManager.instance.AssignCardsToTable(1);
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºç¬¬å››å¼ ç‰Œï¼Œä¸ºã€" + GolbalVar.publicCards[3].PrintCard() + "ã€‘");
+            }
+            else
+            {
+                ReadyForNextState();
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+        }
+    }
+
+    public void River()
+    {
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("å½“å‰ä¸ºã€æ²³ç‰Œåœˆã€‘");
+                CardManager.instance.AssignCardsToTable(1);
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+                UIManager.instance.PrintLog("å…¬å…±å¡æ± å‘å‡ºæœ€åä¸€å¼ ç‰Œï¼Œä¸ºã€" + GolbalVar.publicCards[4].PrintCard() + "ã€‘"); ;
+            }
+            else
+            {
+                ReadyForNextState();
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+        }
+    }
+
+    public void Result()
+    {
+        if (!playersInAction)
+        {
+            if (curPlayerSeat == 0)
+            {
+                playersInAction = true;
+                UIManager.instance.PrintLog("æœ¬è½®æ¸¸æˆç»“æŸï¼ç°åœ¨è¿›å…¥ç»“ç®—é˜¶æ®µ");
+            }
+            else
+            {
+                ReadyForNextState();
+                winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
+                UIManager.instance.PrintLog("æ‰€æœ‰ç©å®¶æœ€ç»ˆæ‰‹ç‰Œé€‰æ‹©å®Œæ¯•ï¼\nåœ¨åœºç‰ŒåŠ›æœ€å¤§ç©å®¶ä¸ºï¼š"+PrintWinner(winners));
+            }
+        }
+        else
+        {
+            UpdateCurPlayer();
+            curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            if (IsValidSelection(curPlayer))
+            {
+                UIManager.instance.PrintLog("ç©å®¶ã€" + curPlayer.playerName + "ã€‘æœ€åé€‰å®šçš„äº”å¼ ç‰Œä¸ºï¼š\nã€" + curPlayer.finalCards[0].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[1].PrintCard() +
+                "ã€‘ã€" + curPlayer.finalCards[2].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[3].PrintCard() + "ã€‘ã€" + curPlayer.finalCards[4].PrintCard() + "ã€‘");
+            } else
+            {
+                UIManager.instance.PrintLog("ç©å®¶ã€" + curPlayer.playerName + "ã€‘æœ€åé€‰å®šçš„ç‰Œä¸ç¬¦åˆè§„èŒƒ,æ— æ³•å‚ä¸å† å†›è§’é€");
+                PlayerManager.instance.activePlayers.Remove(curPlayer);
+            }
+        }
+    }
+
+    public void GameOver()
+    {
 
     }
-    public void SetGap(double ratio)
-    {
-        gaptime = (1.01 - ratio) * gapset;
-    }
-    public void RoundInit()//³õÊ¼»¯
-    {
-        Debug.log("\t\t\t\t")
-        //È·¶¨Íæ¼ÒÁĞ±í
 
-        //¶Ä×¢´óĞ¡
-        //³õÊ¼Ç®Êı
-        //×Ü¾ÖÊı
-        //¼Ó×¢´ÎÊı
-    }
-    public void RoundInit()//³õÊ¼»¯
+    /// <summary>
+    /// å°†ç©å®¶é€šè¿‡coinçš„æ•°å€¼è¿›è¡Œæ’åº
+    /// </summary>
+    /// <returns>é€šè¿‡coinå¤§å°ç»è¿‡æ’åºçš„ç©å®¶list</returns>
+    public List<Player> GetRankedPlayers()
     {
-        //È·¶¨Íæ¼ÒÁĞ±í
-        //¶Ä×¢´óĞ¡
-        //³õÊ¼Ç®Êı
-        //×Ü¾ÖÊı
-        //¼Ó×¢´ÎÊı
+        List<Player> pList = new List<Player>();
+        foreach(Player p in PlayerManager.instance.seatedPlayers)
+        {
+            pList.Add(p);
+        }
+        pList.Sort((a, b) => {
+            return b.coin - a.coin;
+        });
+        return pList;
     }
-    public void RoundInit()//³õÊ¼»¯
+ 
+    /// <summary>
+    /// å°†ç©å®¶è¿›è¡Œæ’åï¼Œç›¸åŒæ•°é‡coinæ‹¥æœ‰è€…åæ¬¡ç›¸ç­‰
+    /// </summary>
+    /// <param name="pList">å·²ç»æ’åºå®Œæ¯•çš„ç©å®¶list</param>
+    /// <returns>ç©å®¶çš„æ’ååˆ—è¡¨</returns>
+    public List<int> GetPlayerRank (List<Player> pList)
     {
-        //È·¶¨Íæ¼ÒÁĞ±í
-        //¶Ä×¢´óĞ¡
-        //³õÊ¼Ç®Êı
-        //×Ü¾ÖÊı
-        //¼Ó×¢´ÎÊı
+        List<int> rankNum = new List<int>();
+        int curRank = 1;
+        int cumm = 0;
+        int prevCumm = 0;
+        rankNum.Add(curRank);
+        for (int i = 1; i < pList.Count; i++)
+        {
+            if (pList[i - 1].coin != pList[i].coin)
+            {
+                curRank++;
+                prevCumm = cumm;
+                cumm = 0;
+            }
+            else
+            {
+                cumm++;
+            }
+            if (prevCumm != 0)
+            {
+                curRank += prevCumm;
+                prevCumm = 0;
+            }
+            rankNum.Add(curRank);
+        }
+        return rankNum;
     }
-    // Start is called before the first frame update
-    void Begin()
-    {	
-        
+
+    public void UpdateCurPlayer()
+    {
+        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
+        curPlayerSeat++;
+        curPlayer.playerObject.HightLightAction_AvatarChange();
+        if (curPlayerSeat == PlayerManager.instance.activePlayers.Count)
+        {
+            playersInAction = false;
+        }
+    }
+
+    public void ReadyForNextState()
+    {
+        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        if(GolbalVar.gameStatusCounter != 5)
+        {
+            curPlayerSeat = 0;
+            GolbalVar.gameStatusCounter++;
+        }
+    }
+
+    public bool IsValidSelection(Player p)
+    {
+        if (p.finalCards.Count != 5)
+        {
+            return false;
+        }
+        List<Card> existed = new List<Card>();
+        foreach(Card c in p.finalCards)
+        {
+            if (!existed.Contains(c) && (GolbalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
+            {
+                existed.Add(c);
+            } else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public string PrintWinner(List<Player> pList)
+    {
+        string str = "ã€" + pList[0].playerName;
+        for (int i = 1; i<pList.Count; i++)
+        {
+            str = str + "ã€‘ã€" + pList[i].playerName;
+        }
+        return str + "ã€‘";
+    }
+
+
+
+    public void Start()
+    {
+        Debug.Log("æ¸¸æˆå¼€å§‹......");
+ //       PlayerManager.instance.InitPlayers();
+        GolbalVar.gameStatusCounter = -2;
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {   
-        if £¨started){
-            if (time >= gaptime)
-            {
-                switch (currentState)
-                {
-                    case GameState.init:
-                        RoundInit();
-                        break;
-                    case GameState.roundinit:
-                        Preflop();
-                        break;
-                    case GameState.preflop:
-                        Flop();
-                        break;
-                    case GameState.flop:
-                        Turn();
-                        break;
-                    case GameState.turn:
-                        River();
-                        break;
-                    case GameState.river:
-                        Calc();
-                        break;
-                    case GameState.calc:
-                        curRound++;
-                        if (curRound == setRound)
-                        {
-                            Gameover();
-                            break;
-                        }
-
-                        RoundInit();
-                        break;
-                }
-                // throw new UnityException("GameState Error" + currentState)
-                time = 0;
-            }
-            else time += Time.deltaTime;
+        if (GolbalVar.curRoundNum > GolbalVar.totalRoundNum)
+        {
+            GameOver();
+        }
+        timer += Time.deltaTime;
+        if (timer > 2 * GolbalVar.speedFactor)
+        {
+            GameUpdate();
+            timer = 0;
         }
        
     }

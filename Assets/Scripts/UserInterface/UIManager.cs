@@ -18,15 +18,17 @@ public class UIManager : MonoBehaviour
     public List<Image> communityCards;
 
     [Header("UI Components_Texts")]
-    public Text chipPoolText;
+    public Text coinPoolText;
     public Text gamesCountText;
     public Text speedValueText;
     public Text logText;
+    public Text countDownText;
     public List<Text> rankingList;
 
     [Header("PositionsForSeatInRect")]
     public RectTransform tableRect;
-    public List<Vector2> positions;
+
+    List<Vector2> positions;
 
     //单例模式
     public static UIManager instance;
@@ -43,40 +45,54 @@ public class UIManager : MonoBehaviour
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
+        positions = new List<Vector2>() { new Vector2(-240, 165), new Vector2(-400, 80), new Vector2(-400, -40), new Vector2(-240, -140), new Vector2(140, -140), new Vector2(300, -40), new Vector2(300, 80), new Vector2(140, 165) };
     }
 
-    private void Start()
+    private void Update()
     {
-        
+        if (GolbalVar.gameStatusCounter > -2)
+            countDownText.text = "COUNTDOWN: " + (2 * GolbalVar.speedFactor - GameManager.timer).ToString();
     }
-    //unfinished
-    void Pause_ButtonClicked()
+
+    public void Pause_ButtonClicked()
     {
         pausePanelAnimator.Play("Paused", 0, 0);
         Time.timeScale = 0;
     }
-    //unfinished
-    void Continue_ButtonClicked()
+
+    public void Continue_ButtonClicked()
     {
         if (Time.timeScale > 0)
             return;
         Time.timeScale = 1;
         pausePanelAnimator.Play("Continue", 0, 0);
     }
-    //unfinished
+
     void Restart_ButtonClicked()
     {
         //进行一些清空进度回归初始化的操作
         if (Time.timeScale <= 0)
             return;
         InitialPanelManager.instance.CallInitialPanel();
+        GameManager.instance.Restart();
+        CardManager.instance.Restart();
+        //删除所有牌桌上的AI
+        for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
+        {
+            Destroy(PlayerManager.instance.seatedPlayers[i].playerObject.gameObject);
+        }
+        //清空桌面的公共牌
+        for (int i = 0; i < communityCards.Count; i++)
+        {
+            communityCards[i].sprite = Resources.Load<Sprite>("Cards/emptyPlace");
+        }
+        //清空LOG
+        logText.text = "LOG:";
     }
-    //unfinished
     void Speed_OnSliderValueChanged(float value)
     {
-        //设置实际速度（其实是减小AI调用的时间间隔）
-        //显示速度
-        speedValueText.text = value.ToString();
+        GolbalVar.speedFactor = value;
+        speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
     }
 
     /// <summary>
@@ -88,14 +104,22 @@ public class UIManager : MonoBehaviour
         logText.text = logText.text + "\n" + log;
     }
 
-    //unfinished
     /// <summary>
-    /// 更新排行榜内容，直接读取来自 GameManager 的玩家列表来排名
+    /// 更新排行榜内容，接收一个已经排好序的playerList
     /// </summary>
     public void UpdateRankingList()
     {
-        //读取玩家列表进行排序
-        Debug.Log("Ranking List Updated!!  具体流程暂时还没写噢");
+        List<Player> playerList = GameManager.instance.GetRankedPlayers();
+        List<int> rank = GameManager.instance.GetPlayerRank(playerList);
+        if (rank.Count != playerList.Count)
+        {
+            Debug.Log("List items Count Error");
+            return;
+        }
+        for (int i = 0; i < 8 && i < playerList.Count; i++)
+        {
+            rankingList[i].text = rank[i].ToString() + ". " + playerList[i].coin.ToString() + ":" + playerList[i].playerName;
+        }
     }
 
     /// <summary>
@@ -108,22 +132,72 @@ public class UIManager : MonoBehaviour
         if (cardPlace < 0 || cardPlace > 4)
             return;
         communityCards[cardPlace].sprite = card.GetSpriteSurface();
+        StartCoroutine(FlopAnim(communityCards[cardPlace].GetComponent<RectTransform>()));
+    }
+
+    public IEnumerator FlopAnim(RectTransform cardImage)
+    {
+        float originalWidth = cardImage.rect.width;
+        float originalHeight = cardImage.rect.height;
+        cardImage.sizeDelta = new Vector2(0, cardImage.rect.height);
+        while (cardImage.rect.width < originalWidth)
+        {
+            cardImage.sizeDelta = new Vector2(cardImage.rect.width+0.5f, originalHeight);
+            yield return null;
+        }
+        cardImage.sizeDelta = new Vector2(originalWidth, originalHeight);
     }
 
     /// <summary>
-    /// 让玩家信息面板显示在合适的坐标点，上座
+    /// 让玩家信息面板显示在合适的坐标点，上座，并返回 PlayerObject
     /// </summary>
-    /// <param name="po">玩家 PlayerObject </param>
-    /// <param name="seatCount">座位号，从0~7一共八个座位</param>
-    public void SetPlayerOnSeat(PlayerObject po , int seatCount)
+    /// <param name="p">Player</param>
+    /// <returns>PlayerObject 本身</returns>
+    public PlayerObject SetPlayerOnSeat(Player p)
     {
-        if (seatCount < 0 || seatCount > 7)
+        GameObject po = Instantiate(Resources.Load<GameObject>("Prefabs/Player_Prefab"));
+
+        if (p.seatNum < 0 || p.seatNum > 7)
         {
-            PrintLog("有人未上座！！");
-            return;
+            PrintLog("有人未上座！！错误的座位号："+p.seatNum);
         }
         po.transform.SetParent(tableRect);
         RectTransform poRT = po.GetComponent<RectTransform>();
-        poRT.anchoredPosition = positions[seatCount];
+        poRT.anchoredPosition = positions[p.seatNum];
+        poRT.localScale = new Vector3(1, 1, 1);
+        po.GetComponent<PlayerObject>().InitializeThePlayer(p);
+        return po.GetComponent<PlayerObject>();
+    }
+
+    /// <summary>
+    /// 更新奖池
+    /// </summary>
+    /// <param name="change">奖池变动清情况，为负数则代表全部被玩家赢走</param>
+    /*public void UpdateCoinsPool(int change)
+    {
+
+        if (change < 0)
+            GolbalVar.pot = 0;
+        else
+            GolbalVar.pot += change;
+
+        coinPoolText.text = GolbalVar.pot.ToString();
+    }*/
+    //已弃用
+
+    /// <summary>
+    /// 更新奖池
+    /// </summary>
+    public void UpdateCoinsPool()
+    {
+        coinPoolText.text = GolbalVar.pot.ToString();
+    }
+
+    /// <summary>
+    /// 直接读取更新当前场数
+    /// </summary>
+    public void UpdateGameRounds()
+    {
+        gamesCountText.text = "GAMES: " + GolbalVar.curRoundNum + "/" + GolbalVar.totalRoundNum;
     }
 }
