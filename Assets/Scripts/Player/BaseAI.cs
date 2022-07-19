@@ -5,7 +5,12 @@ using UnityEngine;
 public class BaseAI
 {
     public string name = "my Name";
-    public Player player;
+    public GameStat stats;
+
+    public virtual void OnInit()
+    {
+        this.name = "my name";
+    }
 
     public virtual Player.Action BetAction()
     {

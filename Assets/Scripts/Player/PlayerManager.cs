@@ -24,20 +24,6 @@ public class PlayerManager
     public int nowPlayerIndex;  //当前下注玩家序号
 
     /// <summary>
-    /// 初始化所有玩家
-    /// </summary>
-    /// <param name="nameList">玩家的名字列表</param>
-    public void InitPlayers(List<string> nameList)
-    {
-        foreach (string name in nameList)
-        {
-            Player p = new Player(name);
-            p.ai = new BaseAI();
-            allPlayers.Add(p);
-        }
-    }
-
-    /// <summary>
     /// 判断选择玩家的数量是否符合规范并且赋予座位号
     /// </summary>
     /// <returns>如果玩家数符合要求则RETURN TRUE并进入下一个游戏阶段,否则是FALSE</returns>
