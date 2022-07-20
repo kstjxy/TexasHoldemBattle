@@ -450,7 +450,6 @@ public class PlayerManager
                 UIManager.instance.PrintLog(strbet);
                 lastPlayer = playerIndex;
                 playerIndex++;
-                continue;
             }
 
 
