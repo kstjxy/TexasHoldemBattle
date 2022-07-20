@@ -34,7 +34,7 @@ public class Player
     public bool isAllIn = false;
     public PlayerRole role = PlayerRole.outOfGame;
     public List<Card> playerCardList = new List<Card>();//两张手牌
-    public int state = -1; //no action
+    public int state = 0; //no action
     public List<Card> finalCards = new List<Card>();//最终组成的五张牌组
 
     public List<int[]> last_period = new List<int[]>();//上一轮中玩家自己位置之后的玩家的行动记录（记录为【玩家序号(seatNum)，操作序号】，注册进事件来维护这两个列表）       在自己的回合结束后清空该列表以接收接下来的信息
@@ -81,7 +81,7 @@ public class Player
     {
         isFold = false;
         isAllIn = false;
-        state = -1;
+        state = 0;
         betCoin = 0;
         playerCardList = new List<Card>();
         finalCards = new List<Card>();

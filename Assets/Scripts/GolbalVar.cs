@@ -19,4 +19,6 @@ public class GolbalVar
     public static bool roundComplete = true;   //当前轮次是否结束
 
     public static float speedFactor = 1.0f; //游戏运行速度调整 由SLIDER控制
+
+    public static int roboName = 0;
 }
