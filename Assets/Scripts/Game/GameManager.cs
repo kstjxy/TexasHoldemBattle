@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
     public Player curPlayer = null;
     public bool playersInAction = false;
     public List<Player> winners = new List<Player>();
+    public List<Player> passablePlayer = new List<Player>();
+    public bool flag = false;
+    public List<Player> finalPlayers = new List<Player>();
 
     public static GameState GameStatus()
     {
@@ -151,11 +154,7 @@ public class GameManager : MonoBehaviour
                     UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
                     p.state = 0;
                 }
-            }
-            else
-            {
-
-                ReadyForNextState();
+                flag = false;
             }
 
         }
@@ -180,10 +179,7 @@ public class GameManager : MonoBehaviour
                 }
                 UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
                     GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
-            }
-            else
-            {
-                ReadyForNextState();
+                flag = false;
             }
         }
         else
@@ -202,10 +198,7 @@ public class GameManager : MonoBehaviour
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
                 UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
-            }
-            else
-            {
-                ReadyForNextState();
+                flag = false;
             }
         }
         else
@@ -225,10 +218,7 @@ public class GameManager : MonoBehaviour
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
                 UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】");
-            }
-            else
-            {
-                ReadyForNextState();
+                flag = false;
             }
         }
         else
@@ -245,17 +235,25 @@ public class GameManager : MonoBehaviour
             {
                 playersInAction = true;
                 UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
+                finalPlayers = PlayerManager.instance.GetFinalPlayers();
             }
             else
             {
-                ReadyForNextState();
-                winners = CardManager.instance.FindWinner(PlayerManager.instance.GetFinalPlayers());
+                winners = CardManager.instance.FindWinner(finalPlayers); ;
                 UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
             }
         }
         else
         {
-            UpdateCurPlayer();
+            curPlayerSeat++;
+            if (curPlayerSeat < finalPlayers.Count)
+            {
+                curPlayer = finalPlayers[curPlayerSeat];
+            } else
+            {
+                playersInAction = false;
+                return;
+            }
             curPlayer.finalCards = curPlayer.ai.FinalSelection();
             if (IsValidSelection(curPlayer))
             {
@@ -266,6 +264,8 @@ public class GameManager : MonoBehaviour
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
                 PlayerManager.instance.activePlayers.Remove(curPlayer);
+                finalPlayers.Remove(curPlayer);
+                curPlayerSeat--;
             }
         }
     }
@@ -328,15 +328,23 @@ public class GameManager : MonoBehaviour
 
     public void UpdateCurPlayer()
     {
-        if (curPlayerSeat == -1)
+        if (curPlayerSeat == -1 && !flag)
         {
             UIManager.instance.PrintLog("新一轮下注开始");
         } else
         {
             curPlayer.playerObject.BackToWaiting_AvatarChange();
         }
-
         curPlayerSeat++;
+
+        if (IsRoundCompleted())
+        {
+            ReadyForNextState();
+            return;
+        }
+
+        Debug.Log(curPlayerSeat);
+        curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
 
         if (curPlayer.isFold == true || curPlayer.isAllIn == true)
         {
@@ -344,17 +352,20 @@ public class GameManager : MonoBehaviour
             curPlayerSeat++;
         } else if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count-1)
         {
-            UIManager.instance.PrintLog("除了" + curPlayer.playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot); GolbalVar.gameStatusCounter = 5;
+            UIManager.instance.PrintLog("除了" + curPlayer.playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot);
+            ReadyForNextState();
             GolbalVar.gameStatusCounter = 5;
-            playersInAction = false;
+            return;
         }
 
-        
-        if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count)
+       
+
+        if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count && IsRoundCompleted())
         {
-            playersInAction = false;
-            UIManager.instance.PrintLog("底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin);    
-        } else
+            ReadyForNextState();
+            return;
+
+        } else if (curPlayerSeat < PlayerManager.instance.activePlayers.Count)
         {
             curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
             curPlayer.playerObject.HightLightAction_AvatarChange();
@@ -362,8 +373,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool IsRoundCompleted()
+    {
+        passablePlayer.Clear();
+        foreach (Player p in PlayerManager.instance.activePlayers)
+        {
+            if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+            {
+                passablePlayer.Add(p);
+            }
+        }
+        if (passablePlayer.Count == PlayerManager.instance.activePlayers.Count && 
+            (flag || curPlayerSeat >= PlayerManager.instance.activePlayers.Count))
+        {
+            return true;
+        } else if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count)
+        {
+            flag = true;
+            curPlayerSeat = 0;
+        }
+        return false;
+    }
+
     public void ReadyForNextState()
     {
+        playersInAction = false;
+        UIManager.instance.PrintLog("本轮下注结束！\n底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin);
         curPlayer.playerObject.BackToWaiting_AvatarChange();
         if (GolbalVar.gameStatusCounter != 5)
         {
