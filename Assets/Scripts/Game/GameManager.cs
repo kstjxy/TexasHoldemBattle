@@ -135,82 +135,108 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
-        
-        UIManager.instance.PrintLog("当前为【前翻牌圈】");
-        CardManager.instance.AssignCardsToPlayers();
-        UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
-        
-        //int sign = PlayerManager.instance.PlayerBet();
-        //if (sign == 0) GolbalVar.gameStatusCounter = 5;
-        StartCoroutine(PlayerManager.instance.PlayerBet());
-        ReadyForNextState();
-
-        foreach (Player p in PlayerManager.instance.activePlayers)
+        if (!GolbalVar.roundComplete)
         {
-            UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
-
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }
+        else
+        {
+            UIManager.instance.PrintLog("当前为【前翻牌圈】");
+            Debug.Log("当前为【前翻牌圈】");
+            CardManager.instance.AssignCardsToPlayers();
+            UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+            foreach (Player p in PlayerManager.instance.activePlayers)
+            {
+                UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
+
+            }
+            GolbalVar.roundComplete = false;            
+        }      
+                    
     }
 
     public void Flop()
     {
-        UIManager.instance.PrintLog("当前为【翻牌圈】");
-        CardManager.instance.AssignCardsToTable(3);
-        for (int i = 0; i < 3; i++)
+        if (!GolbalVar.roundComplete)
         {
-            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }
-        UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
-            GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
-        StartCoroutine(PlayerManager.instance.PlayerBet());
-        
-        
-        ReadyForNextState();
+        else
+        {            
+            Debug.Log("当前为【翻牌圈】");
+            UIManager.instance.PrintLog("当前为【翻牌圈】");
+            CardManager.instance.AssignCardsToTable(3);
+            for (int i = 0; i < 3; i++)
+            {
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+            }
+            UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
+                GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
+            GolbalVar.roundComplete = false;
+        }
     }
     public void Turn()
     {
-        playersInAction = true;
-        UIManager.instance.PrintLog("当前为【转牌圈】");
-        CardManager.instance.AssignCardsToTable(1);
-        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
-        UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
-        StartCoroutine(PlayerManager.instance.PlayerBet());             
-        
-        ReadyForNextState();    
+        if (!GolbalVar.roundComplete)
+        {
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+        }
+        else
+        {
+            Debug.Log("当前为【转牌圈】");
+            UIManager.instance.PrintLog("当前为【转牌圈】");
+            CardManager.instance.AssignCardsToTable(1);
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
+            UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
+            GolbalVar.roundComplete = false;
+        }
+         
     }
 
     public void River()
     {
-        playersInAction = true;
-        UIManager.instance.PrintLog("当前为【河牌圈】");
-        CardManager.instance.AssignCardsToTable(1);
-        UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
-        UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】"); ;
-        StartCoroutine(PlayerManager.instance.PlayerBet());     
-                
-        ReadyForNextState();
+        if (!GolbalVar.roundComplete)
+        {
+            StartCoroutine(PlayerManager.instance.PlayerBet());
+        }
+        else
+        {
+            Debug.Log("当前为【河牌圈】");
+            UIManager.instance.PrintLog("当前为【河牌圈】");
+            CardManager.instance.AssignCardsToTable(1);
+            UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
+            UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】");
+            GolbalVar.roundComplete = false; ;
+        }
      }
 
     public void Result()
     {
         UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");       
                
-        ReadyForNextState();
+        
         winners = CardManager.instance.FindWinner(PlayerManager.instance.activePlayers);
         UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
         
         //这里foreach player
-        curPlayer.finalCards = curPlayer.ai.FinalSelection();
-        if (IsValidSelection(curPlayer))
+        foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
-            "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
-        } else
-        {
-            UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
-            PlayerManager.instance.activePlayers.Remove(curPlayer);
+            curPlayer = p;
+            curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            if (IsValidSelection(curPlayer))
+            {
+                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+            }
+            else
+            {
+                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                PlayerManager.instance.activePlayers.Remove(curPlayer);
+            }
+            
         }
-        
+        ReadyForNextState();
+
     }
 
     public void GameOver()
@@ -272,7 +298,7 @@ public class GameManager : MonoBehaviour
 
     public void ReadyForNextState()
     {
-        if (GolbalVar.gameStatusCounter != 5)
+        if (GolbalVar.gameStatusCounter != 5 )
         {
             GolbalVar.gameStatusCounter++;
         }
@@ -324,13 +350,7 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
-        timer += Time.deltaTime;
-        if (timer > 2 * GolbalVar.speedFactor)
-        {
-            GameUpdate();
-            timer = 0;
-        }
-
+        GameUpdate();        
     }
 }
 

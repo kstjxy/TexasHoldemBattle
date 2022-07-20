@@ -422,6 +422,8 @@ public class PlayerManager
                 playerIndex = 0;
                 lastPlayer = 0;
                 flag = false;
+                GolbalVar.roundComplete = true;
+                GameManager.instance.ReadyForNextState();
                 break;
             }
 
@@ -455,10 +457,12 @@ public class PlayerManager
                 playerIndex = 0;
                 lastPlayer = 0;
                 flag = false;
+                GolbalVar.roundComplete = true;
+                GameManager.instance.ReadyForNextState();
                 //1
                 break;
             }
-            yield return new WaitForSeconds(GolbalVar.speedFactor * 5);
+            yield return new WaitForSeconds(GolbalVar.speedFactor * 10);
 
         } while (true);
 
