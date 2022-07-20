@@ -13,7 +13,9 @@ public class UIManager : MonoBehaviour
     public Button continueButton;
     public Button restartButton;
     public Slider speedValueSlider;
+    public Button showCardsButton;
     public List<GameObject> playerObjects;
+    public List<GameObject> cardsSetPanels;
 
     [Header("CommunityCards_Image")]
     public List<Image> communityCards;
@@ -26,6 +28,8 @@ public class UIManager : MonoBehaviour
     public Text countDownText;
     public List<Text> rankingList;
 
+    [Header("Attribute")]
+    public bool isShowingCards = true;
     //单例模式
     public static UIManager instance;
 
@@ -43,6 +47,7 @@ public class UIManager : MonoBehaviour
         pauseButton.onClick.AddListener(delegate () { Pause_ButtonClicked(); });
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
+        showCardsButton.onClick.AddListener(delegate () { ShowingCardsButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
     }
 
@@ -74,10 +79,11 @@ public class UIManager : MonoBehaviour
         InitialPanelManager.instance.CallInitialPanel();
         GameManager.instance.Restart();
         CardManager.instance.Restart();
-        //删除所有牌桌上的AI
+        //删除所有牌桌上的AI与牌组
         for (int i = 0; i < playerObjects.Count; i++)
         {
             playerObjects[i].gameObject.SetActive(false);
+            cardsSetPanels[i].SetActive(false);
         }
         //清空桌面的公共牌
         for (int i = 0; i < communityCards.Count; i++)
@@ -91,6 +97,15 @@ public class UIManager : MonoBehaviour
     {
         GolbalVar.speedFactor = value;
         speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
+    }
+
+    void ShowingCardsButtonClicked()
+    {
+        isShowingCards = !isShowingCards;
+        for (int i = 0; i < PlayerManager.instance.activePlayers.Count; i++)
+        {
+            PlayerManager.instance.activePlayers[i].playerObject.ShowCards();
+        }
     }
 
     /// <summary>
@@ -213,5 +228,45 @@ public class UIManager : MonoBehaviour
         effect.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         effect.transform.localScale = Vector2.one;
         effect.SetActive(true);
+    }
+
+    /// <summary>
+    /// 将搭配好的牌显示出来
+    /// </summary>
+    /// <param name="p">显示牌的Player，牌组finalCards已经设置好五张牌</param>
+    public void ShowFinalCardSet(Player p)
+    {
+        int seat = p.seatNum;
+        if (seat < 0 || seat > 7)
+        {
+            Debug.Log("座位号错误！错误号码：" + seat);
+            return;
+        }
+        List<Card> fc = p.finalCards;
+        for (int i = 0; i < p.playerCardList.Count; i++)
+        {
+            for (int j = 0; j < fc.Count; j++)
+            {
+                if (p.playerCardList[i].Value == fc[j].Value && p.playerCardList[i].cardSuit == fc[j].cardSuit)
+                {
+                    fc.Remove(fc[j]);
+                    break;
+                }
+            }
+        }
+        if (fc.Count != 3)
+        {
+            Debug.Log("牌数错误！错误数量：" + fc.Count);
+            return;
+        }
+        cardsSetPanels[seat].SetActive(true);
+        cardsSetPanels[seat].transform.GetChild(0).GetComponent<Image>().sprite = fc[0].GetSpriteSurface();
+        StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(0).GetComponent<RectTransform>()));
+        cardsSetPanels[seat].transform.GetChild(1).GetComponent<Image>().sprite = fc[1].GetSpriteSurface();
+        StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(1).GetComponent<RectTransform>()));
+        cardsSetPanels[seat].transform.GetChild(2).GetComponent<Image>().sprite = fc[2].GetSpriteSurface();
+        StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(2).GetComponent<RectTransform>()));
+        p.playerObject.card1Image.sprite = p.playerCardList[0].GetSpriteSurface();
+        p.playerObject.card2Image.sprite = p.playerCardList[1].GetSpriteSurface();
     }
 }

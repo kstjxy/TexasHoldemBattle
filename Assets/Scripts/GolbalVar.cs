@@ -16,6 +16,7 @@ public class GolbalVar
     public static int maxBetCoin;       //当前最大下注金额
     public static List<Card> publicCards;    //公共卡牌
     public static int gameStatusCounter = 0;    //当前游戏进程
+    public static bool roundComplete = true;   //当前轮次是否结束
 
     public static float speedFactor = 1.0f; //游戏运行速度调整 由SLIDER控制
 

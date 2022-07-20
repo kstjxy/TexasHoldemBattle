@@ -187,6 +187,7 @@ public class GameManager : MonoBehaviour
             UpdateCurPlayer();
         }
     }
+    
     public void Turn()
     {
         if (!playersInAction)
@@ -206,6 +207,7 @@ public class GameManager : MonoBehaviour
             UpdateCurPlayer();
         }
     }
+     
 
     public void River()
     {
@@ -453,13 +455,7 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
-        timer += Time.deltaTime;
-        if (timer > 2 * GolbalVar.speedFactor)
-        {
-            GameUpdate();
-            timer = 0;
-        }
-
+        GameUpdate();        
     }
 }
 

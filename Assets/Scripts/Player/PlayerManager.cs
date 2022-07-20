@@ -16,17 +16,17 @@ public class PlayerManager
         }
     }
 
-    public List<Player> allPlayers = new List<Player>();        //ËùÓĞÍæ¼ÒµÄÁĞ±í
-    public List<Player> seatedPlayers = new List<Player>();     //±»Ñ¡ÖĞÈë×ùÍæ¼ÒÁĞ±í£¬°üÀ¨FOLDºÍÒÑ¾­ÆÆ²úµÄ
-    public List<Player> activePlayers = new List<Player>();     //µ±Ç°»¹ÔÚ±¾¾ÖÓÎÏ·ÖĞµÄÍæ¼ÒÁĞ±í
-    public List<Player> okPlayers = new List<Player>();         //±¾ÂÖÂú×ãÌõ¼şµÄÍæ¼Ò
-    public int totalSeatNum;    //µ±Ç°»ØºÏÒ»¹²Èë×ùµÄÍæ¼ÒÊı£¬°üÀ¨ÒÑ¾­FOLDµÄ²»°üÀ¨ÒÑ¾­ÆÆ²úµÄ
-    public int nowPlayerIndex;  //µ±Ç°ÏÂ×¢Íæ¼ÒĞòºÅ
+    public List<Player> allPlayers = new List<Player>();        //æ‰€æœ‰ç©å®¶çš„åˆ—è¡¨
+    public List<Player> seatedPlayers = new List<Player>();     //è¢«é€‰ä¸­å…¥åº§ç©å®¶åˆ—è¡¨ï¼ŒåŒ…æ‹¬FOLDå’Œå·²ç»ç ´äº§çš„
+    public List<Player> activePlayers = new List<Player>();     //å½“å‰è¿˜åœ¨æœ¬å±€æ¸¸æˆä¸­çš„ç©å®¶åˆ—è¡¨
+    public List<Player> okPlayers = new List<Player>();         //æœ¬è½®æ»¡è¶³æ¡ä»¶çš„ç©å®¶
+    public int totalSeatNum;    //å½“å‰å›åˆä¸€å…±å…¥åº§çš„ç©å®¶æ•°ï¼ŒåŒ…æ‹¬å·²ç»FOLDçš„ä¸åŒ…æ‹¬å·²ç»ç ´äº§çš„
+    public int nowPlayerIndex;  //å½“å‰ä¸‹æ³¨ç©å®¶åºå·
 
     /// <summary>
-    /// ÅĞ¶ÏÑ¡ÔñÍæ¼ÒµÄÊıÁ¿ÊÇ·ñ·ûºÏ¹æ·¶²¢ÇÒ¸³Óè×ùÎ»ºÅ
+    /// åˆ¤æ–­é€‰æ‹©ç©å®¶çš„æ•°é‡æ˜¯å¦ç¬¦åˆè§„èŒƒå¹¶ä¸”èµ‹äºˆåº§ä½å·
     /// </summary>
-    /// <returns>Èç¹ûÍæ¼ÒÊı·ûºÏÒªÇóÔòRETURN TRUE²¢½øÈëÏÂÒ»¸öÓÎÏ·½×¶Î,·ñÔòÊÇFALSE</returns>
+    /// <returns>å¦‚æœç©å®¶æ•°ç¬¦åˆè¦æ±‚åˆ™RETURN TRUEå¹¶è¿›å…¥ä¸‹ä¸€ä¸ªæ¸¸æˆé˜¶æ®µ,å¦åˆ™æ˜¯FALSE</returns>
     public bool SeatPlayers()
     {
         seatedPlayers = new List<Player>();
@@ -45,13 +45,13 @@ public class PlayerManager
         {
             if (totalSeatNum < 2)
             {
-                Debug.Log("Íæ¼ÒÈËÊıÎ´´ïµ½2ÈË£¬Çë¸ü¸ÄÑ¡Ôñ");
-                InitialPanelManager.instance.CallStartErrorLog("Íæ¼ÒÈËÊı²»ÄÜĞ¡ÓÚ2ÈË£¡");
+                Debug.Log("ç©å®¶äººæ•°æœªè¾¾åˆ°2äººï¼Œè¯·æ›´æ”¹é€‰æ‹©");
+                InitialPanelManager.instance.CallStartErrorLog("ç©å®¶äººæ•°ä¸èƒ½å°äº2äººï¼");
             }
             else
             {
-                Debug.Log("Íæ¼ÒÈËÊı³¬¹ıÉÏÏŞ8ÈË£¬Çë¸ü¸ÄÑ¡Ôñ");
-                InitialPanelManager.instance.CallStartErrorLog("Íæ¼ÒÈËÊı²»ÄÜ³¬¹ı8ÈË£¡");
+                Debug.Log("ç©å®¶äººæ•°è¶…è¿‡ä¸Šé™8äººï¼Œè¯·æ›´æ”¹é€‰æ‹©");
+                InitialPanelManager.instance.CallStartErrorLog("ç©å®¶äººæ•°ä¸èƒ½è¶…è¿‡8äººï¼");
             }
             foreach (Player pl in seatedPlayers)
             {
@@ -66,7 +66,7 @@ public class PlayerManager
     }
 
     /// <summary>
-    /// Ã¿Ò»ÂÖĞÂÓÎÏ·¿ªÊ¼Ç°ÅĞ¶¨Íæ¼ÒµÄ²Æ¸»ÖµĞŞ¸ÄACTIVE PLAYERS
+    /// æ¯ä¸€è½®æ–°æ¸¸æˆå¼€å§‹å‰åˆ¤å®šç©å®¶çš„è´¢å¯Œå€¼ä¿®æ”¹ACTIVE PLAYERS
     /// </summary>
     public void NewRound()
     {
@@ -92,9 +92,9 @@ public class PlayerManager
     }
 
     /// <summary>
-    /// ¸øËùÓĞÔÚµ±¾ÖÓÎÏ·ÖĞµÄÍæ¼ÒÉèÖÃROLE
+    /// ç»™æ‰€æœ‰åœ¨å½“å±€æ¸¸æˆä¸­çš„ç©å®¶è®¾ç½®ROLE
     /// </summary>
-    /// <param name="btn">×¯¼ÒµÄ×ùÎ»ºÅ</param>
+    /// <param name="btn">åº„å®¶çš„åº§ä½å·</param>
     public void SetPlayersRole(int btn)
     {
         activePlayers.Sort((a, b) => {
@@ -142,7 +142,7 @@ public class PlayerManager
     }
 
     /// <summary>
-    /// Í¨¹ıPLAY ROLEÀ´ĞŞ¸Ä»îÔ¾Íæ¼ÒµÄĞĞ¶¯Ë³Ğò£¬Ğ¡Ã¤´óÃ¤ÔÚ×îÇ°Ãæ£¬×¯¼ÒÔÚ×îºó
+    /// é€šè¿‡PLAY ROLEæ¥ä¿®æ”¹æ´»è·ƒç©å®¶çš„è¡ŒåŠ¨é¡ºåºï¼Œå°ç›²å¤§ç›²åœ¨æœ€å‰é¢ï¼Œåº„å®¶åœ¨æœ€å
     /// </summary>
     public void SortPlayers()
     {
@@ -175,20 +175,20 @@ public class PlayerManager
         return num;
     }
 
-    //Íæ¼ÒµÄ¾ßÌå²Ù×÷
-    // -1 ³õÊ¼»¯´óÃ¤Ğ¡Ã¤
-    // 1 ¸ú×¢ »ò ¹ıÅÆ
-    // 2 ¼Ó×¢
-    // 3 ÆúÅÆ
+    //ç©å®¶çš„å…·ä½“æ“ä½œ
+    // -1 åˆå§‹åŒ–å¤§ç›²å°ç›²
+    // 1 è·Ÿæ³¨ æˆ– è¿‡ç‰Œ
+    // 2 åŠ æ³¨
+    // 3 å¼ƒç‰Œ
     // 4 ALL IN
     public void BetAction(Player p)
     {
         string strbet;
         switch (p.state)
         {
-            case 0://preflolp½×¶Î´¦ÀíĞ¡Ã¤£¬´óÃ¤
+            case 0://preflolpé˜¶æ®µå¤„ç†å°ç›²ï¼Œå¤§ç›²
                 {
-                    //Ğ¡Ã¤×¢
+                    //å°ç›²æ³¨
                     if (p.role == Player.PlayerRole.smallBlind)
                     {
                         p.betCoin = GolbalVar.minBetCoin;
@@ -199,7 +199,7 @@ public class PlayerManager
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\tÑ¡Ôñ¡¾Ğ¡Ã¤×¢¡¿£¬Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                        strbet = p.playerName + "\té€‰æ‹©ã€å°ç›²æ³¨ã€‘ï¼Œå‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -213,7 +213,7 @@ public class PlayerManager
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\tÑ¡Ôñ¡¾´óÃ¤×¢¡¿£¬Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                        strbet = p.playerName + "\té€‰æ‹©ã€å¤§ç›²æ³¨ã€‘ï¼Œå‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -221,16 +221,16 @@ public class PlayerManager
                     break;
                 }
 
-            case 1://¸ú×¢
+            case 1://è·Ÿæ³¨
                 {
-                    //Ê£Óà½ğ¶îÄÜ·ñ¸ú×¢
-                    if (p.coin + p.betCoin >= GolbalVar.maxBetCoin) //¹»Ç®
+                    //å‰©ä½™é‡‘é¢èƒ½å¦è·Ÿæ³¨
+                    if (p.coin + p.betCoin > GolbalVar.maxBetCoin) //å¤Ÿé’±
                     {
-                        if (p.betCoin == GolbalVar.maxBetCoin)  //ÒÑ¾­ÊÇ¸ú×¢ÁË ¼´Îª¹ıÅÆ
+                        if (p.betCoin == GolbalVar.maxBetCoin)  //å·²ç»æ˜¯è·Ÿæ³¨äº† å³ä¸ºè¿‡ç‰Œ
                         {
-                            strbet = p.playerName + "\tÑ¡Ôñ¡¾¹ıÅÆ¡¿£¬µ±Ç°Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                            strbet = p.playerName + "\té€‰æ‹©ã€è¿‡ç‰Œã€‘ï¼Œå½“å‰å‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                         }
-                        else //¸ú×¢
+                        else //è·Ÿæ³¨
                         {
                             int change = GolbalVar.maxBetCoin - p.betCoin;
                             p.coin -= change;
@@ -240,14 +240,14 @@ public class PlayerManager
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\tÑ¡Ôñ¡¾¸ú×¢¡¿£¬µ±Ç°Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                            strbet = p.playerName + "\té€‰æ‹©ã€è·Ÿæ³¨ã€‘ï¼Œå½“å‰å‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
 
                         }
 
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
-                    else //Ç®²»¹» »¹Òª¸ú×¢ ´ËÊ±Îªallin
+                    else //é’±ä¸å¤Ÿ è¿˜è¦è·Ÿæ³¨ æ­¤æ—¶ä¸ºallin
                     {
                         p.state = 4;
                         BetAction(p);
@@ -255,18 +255,18 @@ public class PlayerManager
                     break;
                 }
 
-            case 2://¼Ó×¢
+            case 2://åŠ æ³¨
                 {
-                    //ÅĞ¶Ï²Ù×÷ÊÇ·ñºÏ·¨
+                    //åˆ¤æ–­æ“ä½œæ˜¯å¦åˆæ³•
                     if (GolbalVar.curBetCount > GolbalVar.maxBetCount)
                     {
-                        strbet = "±¾»ØºÏ¼Ó×¢´ÎÊıÒÑ´ï" + GolbalVar.maxBetCount + "´Î£¬" + p.playerName + "±¾´Î²Ù×÷·Ç·¨£¬Ä¬ÈÏÎª¸ú×¢";
+                        strbet = "æœ¬å›åˆåŠ æ³¨æ¬¡æ•°å·²è¾¾" + GolbalVar.maxBetCount + "æ¬¡ï¼Œ" + p.playerName + "æœ¬æ¬¡æ“ä½œéæ³•ï¼Œé»˜è®¤ä¸ºè·Ÿæ³¨";
                         p.state = 1;
                         BetAction(p);
                     }
                     else
                     {
-                        //ÅĞ¶ÏÇ®¹»²»¹»
+                        //åˆ¤æ–­é’±å¤Ÿä¸å¤Ÿ
                         if (p.coin + p.betCoin - GolbalVar.maxBetCoin - 2 * GolbalVar.minBetCoin > 0)
                         {
                             int change = GolbalVar.maxBetCoin - p.betCoin + 2 * GolbalVar.minBetCoin;
@@ -278,12 +278,12 @@ public class PlayerManager
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\tÑ¡Ôñ¡¾¼Ó×¢¡¿£¬µ±Ç°Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                            strbet = p.playerName + "\té€‰æ‹©ã€åŠ æ³¨ã€‘ï¼Œå½“å‰å‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                             Debug.Log(strbet);
                             UIManager.instance.PrintLog(strbet);
                             GolbalVar.curBetCount++;
                         }
-                        //Ç®²»¹»¼´ÎªALL IN
+                        //é’±ä¸å¤Ÿå³ä¸ºALL IN
                         else
                         {
                             p.state = 4;
@@ -293,9 +293,9 @@ public class PlayerManager
                     break;
                 }
 
-            case 3://ÆúÅÆ
+            case 3://å¼ƒç‰Œ
                 {
-                    //Èç¹ûµ±Ç°ÏÂ×¢µÄÇ®ÒÑ¾­ÊÇ×î´óÑº×¢£¬ÎŞĞèÆúÅÆ
+                    //å¦‚æœå½“å‰ä¸‹æ³¨çš„é’±å·²ç»æ˜¯æœ€å¤§æŠ¼æ³¨ï¼Œæ— éœ€å¼ƒç‰Œ
                     if (p.betCoin == GolbalVar.maxBetCoin)
                     {
                         p.state = 1;
@@ -304,7 +304,7 @@ public class PlayerManager
                     else
                     {
                         p.isFold = true;
-                        strbet = p.playerName + "\tÑ¡Ôñ¡¾ÆúÅÆ¡¿£¬µ±Ç°Ê£Óà½ğ¶îÎª" + p.coin + "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                        strbet = p.playerName + "\té€‰æ‹©ã€å¼ƒç‰Œã€‘ï¼Œå½“å‰å‰©ä½™é‡‘é¢ä¸º" + p.coin + "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -318,10 +318,10 @@ public class PlayerManager
                     p.isAllIn = true;
                     GolbalVar.pot += change;
                     p.coin = 0;
-                    strbet = p.playerName + "\tÑ¡Ôñ¡¾ALL IN¡¿£¬µ±Ç°Ê£Óà½ğ¶îÎª" + p.coin;
+                    strbet = p.playerName + "\té€‰æ‹©ã€ALL INã€‘ï¼Œå½“å‰å‰©ä½™é‡‘é¢ä¸º" + p.coin;
                     if (p.betCoin < GolbalVar.maxBetCoin)
                     {
-                        strbet += "ÓÉÓÚµ±Ç°Íæ¼ÒµÄALL INÏÂ×¢½ğ¶î" + p.betCoin + "Ğ¡ÓÚµ±Ç°×î´óÑº×¢½ğ¶î£¬×î´óÑº×¢½ğ¶î²»±ä";
+                        strbet += "ç”±äºå½“å‰ç©å®¶çš„ALL INä¸‹æ³¨é‡‘é¢" + p.betCoin + "å°äºå½“å‰æœ€å¤§æŠ¼æ³¨é‡‘é¢ï¼Œæœ€å¤§æŠ¼æ³¨é‡‘é¢ä¸å˜";
                     }
                     else
                     {
@@ -331,7 +331,7 @@ public class PlayerManager
                     UIManager.instance.BetCoinsEffect(p, change);
                     p.playerObject.UpdateBetCoinsCount();
                     p.playerObject.UpdateCoinsCount();
-                    strbet += "£¬µ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                    strbet += "ï¼Œå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
 
@@ -340,17 +340,17 @@ public class PlayerManager
         }
     }
 
-    //ÓÃÓÚ²âÊÔµÄËæ»úĞĞ¶¯
+    //ç”¨äºæµ‹è¯•çš„éšæœºè¡ŒåŠ¨
     public int RandomAction()
     {
         System.Random randint = new System.Random(Guid.NewGuid().GetHashCode());
         int ranNum = randint.Next(1, 101);
-        //Debug.Log("Ëæ»úÖµÎª£º" + ranNum);
-        //50% ¸ú×¢ »ò ¹ı
+        //Debug.Log("éšæœºå€¼ä¸ºï¼š" + ranNum);
+        //50% è·Ÿæ³¨ æˆ– è¿‡
         if (ranNum <= 50) return 1;
-        //25% ¼Ó×¢
+        //25% åŠ æ³¨
         if (ranNum <= 75) return 2;
-        //20% ÆúÅÆ
+        //20% å¼ƒç‰Œ
         if (ranNum <= 95) return 3;
         //5% ALL IN
         return 4;
@@ -360,41 +360,81 @@ public class PlayerManager
     {
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
         {
-            //AI µÄ½Ó¿Ú
-            //µ±Ç°ÎªËæ»ú
+            //AI çš„æ¥å£
+            //å½“å‰ä¸ºéšæœº
             p.state = (int)p.ai.BetAction();
         }
         BetAction(p);
     }
-    //·µ»ØÖµËµÃ÷
+    public void avatar(Player p)
+    {
+        if (p.isFold == true)
+            p.playerObject.QuitTheGame_AvatarChange();
+        else
+            p.playerObject.BackToWaiting_AvatarChange();
+    }
+    //è¿”å›å€¼è¯´æ˜
     //-1    
-    //0     ½öÊ£Ò»ÃûÍæ¼Ò£¬ÓÎÏ·½áÊø
+    //0     ä»…å‰©ä¸€åç©å®¶ï¼Œæ¸¸æˆç»“æŸ
     //1
      public IEnumerator PlayerBet()
-    {
+     {
         List<Player> pList = activePlayers;
-        int playerIndex = 0;
         string strbet;
-        bool flag = false;
         do
-        {            
-            if (playerIndex == pList.Count)
+        {
+            okPlayers.Clear();
+            foreach (Player p in pList)
+                if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+                    okPlayers.Add(p);
+            //å¿…é¡»å¼ºåˆ¶ä¸‹æ³¨ä¸€è½® ç”¨flagé™åˆ¶
+            if (okPlayers.Count == pList.Count && flag)
             {
-                playerIndex = 0;
-                flag = true;
-            }
-
-
-            if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
-            {
-                strbet = pList[playerIndex].playerName + "ÒÑ¾­ÆúÅÆ/ALL IN£¬²»×ö²Ù×÷";
+                strbet = "æœ¬è½®ä¸‹æ³¨ç»“æŸ";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
-                playerIndex++;
-                continue;
+                nowPlayerIndex = 0;
+                avatar(pList[lastPlayer]);
+                playerIndex = 0;
+                lastPlayer = 0;
+                flag = false;
+                GolbalVar.roundComplete = true;
+                GameManager.instance.ReadyForNextState();
+                //1
+                break;
+            }
+            if (playerIndex == pList.Count)
+            {
+                strbet = "åº•æ± ï¼š" + GolbalVar.pot + "ï¼Œæœ€å¤§ä¸‹æ³¨é‡‘é¢ï¼š" + GolbalVar.maxBetCoin;
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+
+                playerIndex = 0;
+                flag = true;
+
+            }
+            if (CalcFoldNum(pList) == pList.Count - 1)
+            {
+                strbet = "é™¤äº†" + pList[playerIndex].playerName + "ï¼Œå…¶ä½™ç©å®¶å‡å¼ƒæƒã€‚\nå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+                //0
+                GolbalVar.gameStatusCounter = 5;
+                avatar(pList[lastPlayer]);
+                playerIndex = 0;
+                lastPlayer = 0;
+                flag = false;
+                GolbalVar.roundComplete = true;
+                GameManager.instance.ReadyForNextState();
+                break;
+            }
+            if (playerIndex == 0)
+            {
+                Debug.Log("æ–°ä¸€è½®ä¸‹æ³¨å¼€å§‹");
+                UIManager.instance.PrintLog("æ–°ä¸€è½®ä¸‹æ³¨å¼€å§‹");
             }
 
-            //preflopÊ±´óÃ¤ºóÒ»Î»¿ªÊ¼
+            //preflopæ—¶å¤§ç›²åä¸€ä½å¼€å§‹
             if (pList[playerIndex].state == 0)
             {
                 if (pList[playerIndex].role == Player.PlayerRole.smallBlind || pList[playerIndex].role == Player.PlayerRole.bigBlind)
@@ -405,46 +445,43 @@ public class PlayerManager
                 }
             }
 
-            if (playerIndex == 0)
+            if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
-                Debug.Log("ĞÂÒ»ÂÖÏÂ×¢¿ªÊ¼");
-                UIManager.instance.PrintLog("ĞÂÒ»ÂÖÏÂ×¢¿ªÊ¼");
-                pList[playerIndex].playerObject.BackToWaiting_AvatarChange();
-            }
-            else
-            {
+                avatar(pList[lastPlayer]);
                 pList[playerIndex].playerObject.HightLightAction_AvatarChange();
             }
 
             if (CalcFoldNum() == pList.Count - 1)
             {
-                strbet = "³ıÁË" + pList[playerIndex].playerName + "£¬ÆäÓàÍæ¼Ò¾ùÆúÈ¨¡£\nµ±Ç°×î´óÑº×¢Îª" + GolbalVar.maxBetCoin + "£¬µ±Ç°µ×³ØµÄ½ğ¶îÎª" + GolbalVar.pot;
+                strbet = "é™¤äº†" + pList[playerIndex].playerName + "ï¼Œå…¶ä½™ç©å®¶å‡å¼ƒæƒã€‚\nå½“å‰æœ€å¤§æŠ¼æ³¨ä¸º" + GolbalVar.maxBetCoin + "ï¼Œå½“å‰åº•æ± çš„é‡‘é¢ä¸º" + GolbalVar.pot;
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
-                //0
-                GolbalVar.gameStatusCounter = 5;
-                break;
+                lastPlayer = playerIndex;
+                playerIndex++;
             }
 
-            Bet(pList[playerIndex]);
 
-
-            playerIndex++;
-            if (playerIndex >= pList.Count)
+            else
             {
-                strbet = "µ×³Ø£º" + GolbalVar.pot + "£¬×î´óÏÂ×¢½ğ¶î£º" + GolbalVar.maxBetCoin;
-                Debug.Log(strbet);
-                UIManager.instance.PrintLog(strbet);
-            }
+                avatar(pList[lastPlayer]);
+                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
+                lastPlayer = playerIndex;
+
+                Bet(pList[playerIndex]);
+
+                playerIndex++;
+            } 
+           
+            yield return new WaitForSeconds(GolbalVar.speedFactor*2);
 
             okPlayers.Clear();
             foreach (Player p in pList)
                 if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
                     okPlayers.Add(p);
-            //±ØĞëÇ¿ÖÆÏÂ×¢Ò»ÂÖ ÓÃflagÏŞÖÆ
+            //å¿…é¡»å¼ºåˆ¶ä¸‹æ³¨ä¸€è½® ç”¨flagé™åˆ¶
             if (okPlayers.Count == pList.Count && (flag || playerIndex == pList.Count))
             {
-                strbet = "±¾ÂÖÏÂ×¢½áÊø";
+                strbet = "æœ¬è½®ä¸‹æ³¨ç»“æŸ";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
