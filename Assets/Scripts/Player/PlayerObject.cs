@@ -32,8 +32,18 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void ShowCards()
     {
-        card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
-        card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
+        if (UIManager.instance.isShowingCards)
+        {
+            card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
+            card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
+        }
+        else
+        {
+            Sprite cardBack = Resources.Load<Sprite>("Cards/card_back");
+            card1Image.sprite = cardBack;
+            card2Image.sprite = cardBack;
+            //œ‘ æ≈∆±≥√Ê
+        }
         StartCoroutine(UIManager.instance.FlopAnim(card1Image.GetComponent<RectTransform>()));
         StartCoroutine(UIManager.instance.FlopAnim(card2Image.GetComponent<RectTransform>()));
     }

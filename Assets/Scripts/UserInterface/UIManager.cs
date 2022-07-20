@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public Button continueButton;
     public Button restartButton;
     public Slider speedValueSlider;
+    public Button showCardsButton;
     public List<GameObject> playerObjects;
     public List<GameObject> cardsSetPanels;
 
@@ -27,6 +28,8 @@ public class UIManager : MonoBehaviour
     public Text countDownText;
     public List<Text> rankingList;
 
+    [Header("Attribute")]
+    public bool isShowingCards = true;
     //µ¥ÀýÄ£Ê½
     public static UIManager instance;
 
@@ -44,6 +47,7 @@ public class UIManager : MonoBehaviour
         pauseButton.onClick.AddListener(delegate () { Pause_ButtonClicked(); });
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
+        showCardsButton.onClick.AddListener(delegate () { ShowingCardsButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
     }
 
@@ -93,6 +97,15 @@ public class UIManager : MonoBehaviour
     {
         GolbalVar.speedFactor = value;
         speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
+    }
+
+    void ShowingCardsButtonClicked()
+    {
+        isShowingCards = !isShowingCards;
+        for (int i = 0; i < PlayerManager.instance.activePlayers.Count; i++)
+        {
+            PlayerManager.instance.activePlayers[i].playerObject.ShowCards();
+        }
     }
 
     /// <summary>
@@ -253,5 +266,7 @@ public class UIManager : MonoBehaviour
         StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(1).GetComponent<RectTransform>()));
         cardsSetPanels[seat].transform.GetChild(2).GetComponent<Image>().sprite = fc[2].GetSpriteSurface();
         StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(2).GetComponent<RectTransform>()));
+        p.playerObject.card1Image.sprite = p.playerCardList[0].GetSpriteSurface();
+        p.playerObject.card2Image.sprite = p.playerCardList[1].GetSpriteSurface();
     }
 }
