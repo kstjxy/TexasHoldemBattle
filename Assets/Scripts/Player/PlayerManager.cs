@@ -373,6 +373,9 @@ public class PlayerManager
         else
             p.playerObject.BackToWaiting_AvatarChange();
     }
+
+
+    /*
     //返回值说明
     //-1    
     //0     仅剩一名玩家，游戏结束
@@ -492,6 +495,7 @@ public class PlayerManager
         } while (true);
 
     }
+    */
 
     public List<Player> GetFinalPlayers()
     {
