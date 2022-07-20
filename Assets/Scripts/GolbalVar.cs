@@ -18,4 +18,6 @@ public class GolbalVar
     public static int gameStatusCounter = 0;    //当前游戏进程
 
     public static float speedFactor = 1.0f; //游戏运行速度调整 由SLIDER控制
+
+    public static int roboName = 0;
 }

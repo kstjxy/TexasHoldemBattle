@@ -7,7 +7,7 @@ public class BaseAI
     public string name = "my Name";
     public GameStat stats;
 
-    public virtual void OnInit()
+    public virtual void OnInit(int n)
     {
         this.name ="Test_" + (Random.Range(100,900)).ToString();
     }

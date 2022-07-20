@@ -118,7 +118,13 @@ public class PlayerManager
             activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
         }
 
-
+        foreach (Player p in activePlayers)
+        {
+            if (p.role == Player.PlayerRole.bigBlind || p.role == Player.PlayerRole.smallBlind)
+            {
+                p.state = 1;
+            }
+        }
         SortPlayers();
     }
     public bool ActivePlayers()
@@ -158,10 +164,10 @@ public class PlayerManager
         }
         return null;
     }
-    public int CalcFoldNum(List<Player> pList)
+    public int CalcFoldNum()
     {
         int num = 0;
-        foreach (Player p in pList)
+        foreach (Player p in activePlayers)
         {
             if (p.isFold == true)
                 num++;
@@ -170,7 +176,7 @@ public class PlayerManager
     }
 
     //玩家的具体操作
-    //-1 初始化大盲小盲
+    // -1 初始化大盲小盲
     // 1 跟注 或 过牌
     // 2 加注
     // 3 弃牌
@@ -193,8 +199,6 @@ public class PlayerManager
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        
-                     
                         strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
@@ -213,6 +217,7 @@ public class PlayerManager
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
+                    p.state = 1;
                     break;
                 }
 
@@ -309,7 +314,7 @@ public class PlayerManager
             case 4://ALL IN
                 {
                     int change = p.coin;
-                    p.betCoin  += change;
+                    p.betCoin += change;
                     p.isAllIn = true;
                     GolbalVar.pot += change;
                     p.coin = 0;
@@ -353,13 +358,11 @@ public class PlayerManager
     }
     public void Bet(Player p)
     {
-        if (p.state == -1)
-            p.state = 0;
-        else
+        if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
         {
             //AI 的接口
             //当前为随机
-            p.state = RandomAction();
+            p.state = (int)p.ai.BetAction();
         }
         BetAction(p);
     }
@@ -413,7 +416,7 @@ public class PlayerManager
                 pList[playerIndex].playerObject.HightLightAction_AvatarChange();
             }
 
-            if (CalcFoldNum(pList) == pList.Count - 1)
+            if (CalcFoldNum() == pList.Count - 1)
             {
                 strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
                 Debug.Log(strbet);
@@ -448,8 +451,21 @@ public class PlayerManager
                 //1
                 break;
             }
-            yield return new WaitForSeconds(GolbalVar.speedFactor);
+            yield return new WaitForSeconds(2*GolbalVar.speedFactor);
         } while (true);
 
+    }
+
+    public List<Player> GetFinalPlayers()
+    {
+        List<Player> final = new List<Player>();
+        foreach (Player p in activePlayers)
+        {
+            if (!p.isFold)
+            {
+                final.Add(p);
+            }
+        }
+        return final;
     }
 }
