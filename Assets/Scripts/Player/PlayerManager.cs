@@ -462,7 +462,7 @@ public class PlayerManager
                 //1
                 break;
             }
-            yield return new WaitForSeconds(GolbalVar.speedFactor * 10);
+            yield return new WaitForSeconds(GolbalVar.speedFactor);
 
         } while (true);
 

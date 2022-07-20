@@ -135,11 +135,8 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
-        if (!GolbalVar.roundComplete)
-        {
-            StartCoroutine(PlayerManager.instance.PlayerBet());
-        }
-        else
+        
+        if (GolbalVar.roundComplete)
         {
             UIManager.instance.PrintLog("当前为【前翻牌圈】");
             Debug.Log("当前为【前翻牌圈】");
@@ -150,18 +147,15 @@ public class GameManager : MonoBehaviour
                 UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
 
             }
-            GolbalVar.roundComplete = false;            
+            GolbalVar.roundComplete = false;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }      
                     
     }
 
     public void Flop()
     {
-        if (!GolbalVar.roundComplete)
-        {
-            StartCoroutine(PlayerManager.instance.PlayerBet());
-        }
-        else
+        if (GolbalVar.roundComplete)
         {            
             Debug.Log("当前为【翻牌圈】");
             UIManager.instance.PrintLog("当前为【翻牌圈】");
@@ -173,15 +167,12 @@ public class GameManager : MonoBehaviour
             UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GolbalVar.publicCards[0].PrintCard() + "】【" +
                 GolbalVar.publicCards[1].PrintCard() + "】【" + GolbalVar.publicCards[2].PrintCard() + "】");
             GolbalVar.roundComplete = false;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }
     }
     public void Turn()
     {
-        if (!GolbalVar.roundComplete)
-        {
-            StartCoroutine(PlayerManager.instance.PlayerBet());
-        }
-        else
+        if (GolbalVar.roundComplete)
         {
             Debug.Log("当前为【转牌圈】");
             UIManager.instance.PrintLog("当前为【转牌圈】");
@@ -189,17 +180,15 @@ public class GameManager : MonoBehaviour
             UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[3], 3);
             UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GolbalVar.publicCards[3].PrintCard() + "】");
             GolbalVar.roundComplete = false;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }
          
     }
+     
 
     public void River()
     {
-        if (!GolbalVar.roundComplete)
-        {
-            StartCoroutine(PlayerManager.instance.PlayerBet());
-        }
-        else
+        if (GolbalVar.roundComplete)
         {
             Debug.Log("当前为【河牌圈】");
             UIManager.instance.PrintLog("当前为【河牌圈】");
@@ -207,6 +196,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[4], 4);
             UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GolbalVar.publicCards[4].PrintCard() + "】");
             GolbalVar.roundComplete = false; ;
+            StartCoroutine(PlayerManager.instance.PlayerBet());
         }
      }
 
