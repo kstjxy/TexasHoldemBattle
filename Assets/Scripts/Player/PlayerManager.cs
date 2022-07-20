@@ -369,6 +369,13 @@ public class PlayerManager
         }
         BetAction(p);
     }
+    public void avatar(Player p)
+    {
+        if (p.isFold == true)
+            p.playerObject.QuitTheGame_AvatarChange();
+        else
+            p.playerObject.BackToWaiting_AvatarChange();
+    }
     //返回值说明
     //-1    
     //0     仅剩一名玩家，游戏结束
@@ -390,7 +397,7 @@ public class PlayerManager
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                avatar(pList[lastPlayer]);
                 playerIndex = 0;
                 lastPlayer = 0;
                 flag = false;
@@ -416,7 +423,7 @@ public class PlayerManager
                 UIManager.instance.PrintLog(strbet);
                 //0
                 GolbalVar.gameStatusCounter = 5;
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                avatar(pList[lastPlayer]);
                 playerIndex = 0;
                 lastPlayer = 0;
                 flag = false;
@@ -443,7 +450,7 @@ public class PlayerManager
 
             if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                avatar(pList[lastPlayer]);
                 pList[playerIndex].playerObject.HightLightAction_AvatarChange();
                 strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
                 Debug.Log(strbet);
@@ -455,7 +462,7 @@ public class PlayerManager
 
             else
             {
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                avatar(pList[lastPlayer]);
                 pList[playerIndex].playerObject.HightLightAction_AvatarChange();
                 lastPlayer = playerIndex;
 
