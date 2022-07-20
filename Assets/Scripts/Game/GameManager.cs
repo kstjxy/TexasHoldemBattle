@@ -328,6 +328,14 @@ public class GameManager : MonoBehaviour
 
     public void UpdateCurPlayer()
     {
+        if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
+        {
+            UIManager.instance.PrintLog("场上仅剩未弃权，游戏直接结束。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot);
+            ReadyForNextState();
+            GolbalVar.gameStatusCounter = 5;
+            return;
+        }
+
         if (curPlayerSeat == -1 && !flag)
         {
             UIManager.instance.PrintLog("新一轮下注开始");
@@ -350,15 +358,7 @@ public class GameManager : MonoBehaviour
         {
             UIManager.instance.PrintLog(curPlayer.playerName + "已经弃牌/ALL IN，不做操作");
             curPlayerSeat++;
-        } else if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count-1)
-        {
-            UIManager.instance.PrintLog("除了" + curPlayer.playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot);
-            ReadyForNextState();
-            GolbalVar.gameStatusCounter = 5;
-            return;
         }
-
-       
 
         if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count && IsRoundCompleted())
         {
