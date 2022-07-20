@@ -368,9 +368,10 @@ public class PlayerManager
     //0     仅剩一名玩家，游戏结束
     //1
      public IEnumerator PlayerBet()
-    {
+     {
         List<Player> pList = activePlayers;
         int playerIndex = 0;
+        int lastPlayer = 0;
         string strbet;
         bool flag = false;
         do
@@ -384,9 +385,12 @@ public class PlayerManager
 
             if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
                 strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
+                lastPlayer = playerIndex;
                 playerIndex++;
                 continue;
             }
@@ -406,13 +410,11 @@ public class PlayerManager
             {
                 Debug.Log("新一轮下注开始");
                 UIManager.instance.PrintLog("新一轮下注开始");
-                pList[playerIndex].playerObject.BackToWaiting_AvatarChange();
-            }
-            else
-            {
-                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
             }
 
+            pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+            pList[playerIndex].playerObject.HightLightAction_AvatarChange();
+            lastPlayer = playerIndex;
             if (CalcFoldNum(pList) == pList.Count - 1)
             {
                 strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
@@ -420,6 +422,7 @@ public class PlayerManager
                 UIManager.instance.PrintLog(strbet);
                 //0
                 GolbalVar.gameStatusCounter = 5;
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
                 break;
             }
 
@@ -445,10 +448,12 @@ public class PlayerManager
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
                 //1
                 break;
             }
-            yield return new WaitForSeconds(GolbalVar.speedFactor);
+            yield return new WaitForSeconds(GolbalVar.speedFactor * 5);
+
         } while (true);
 
     }

@@ -143,9 +143,13 @@ public class GameManager : MonoBehaviour
         //int sign = PlayerManager.instance.PlayerBet();
         //if (sign == 0) GolbalVar.gameStatusCounter = 5;
         StartCoroutine(PlayerManager.instance.PlayerBet());
-        ReadyForNextState();       
-               
-        UIManager.instance.PrintLog("【" + curPlayer.playerName + "】的手牌为：【" + curPlayer.playerCardList[0].PrintCard() + "】【" + curPlayer.playerCardList[1].PrintCard() + "】");
+        ReadyForNextState();
+
+        foreach (Player p in PlayerManager.instance.activePlayers)
+        {
+            UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
+
+        }
     }
 
     public void Flop()
