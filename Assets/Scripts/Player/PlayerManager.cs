@@ -225,7 +225,7 @@ public class PlayerManager
             case 1://跟注
                 {
                     //剩余金额能否跟注
-                    if (p.coin + p.betCoin >= GolbalVar.maxBetCoin) //够钱
+                    if (p.coin + p.betCoin > GolbalVar.maxBetCoin) //够钱
                     {
                         if (p.betCoin == GolbalVar.maxBetCoin)  //已经是跟注了 即为过牌
                         {
@@ -378,70 +378,7 @@ public class PlayerManager
         List<Player> pList = activePlayers;
         string strbet;
         do
-        {         
-            if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
-            {
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
-                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
-                strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
-                Debug.Log(strbet);
-                UIManager.instance.PrintLog(strbet);
-                lastPlayer = playerIndex;
-                playerIndex++;
-                continue;
-            }
-
-            //preflop时大盲后一位开始
-            if (pList[playerIndex].state == 0)
-            {
-                if (pList[playerIndex].role == Player.PlayerRole.smallBlind || pList[playerIndex].role == Player.PlayerRole.bigBlind)
-                {
-                    pList[playerIndex].state = 1;
-                    playerIndex++;
-                    continue;
-                }
-            }
-
-            if (playerIndex == 0)
-            {
-                Debug.Log("新一轮下注开始");
-                UIManager.instance.PrintLog("新一轮下注开始");
-            }
-
-            pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
-            pList[playerIndex].playerObject.HightLightAction_AvatarChange();
-            lastPlayer = playerIndex;
-            if (CalcFoldNum(pList) == pList.Count - 1)
-            {
-                strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
-                Debug.Log(strbet);
-                UIManager.instance.PrintLog(strbet);
-                //0
-                GolbalVar.gameStatusCounter = 5;
-                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
-                playerIndex = 0;
-                lastPlayer = 0;
-                flag = false;
-                GolbalVar.roundComplete = true;
-                GameManager.instance.ReadyForNextState();
-                break;
-            }
-
-            Bet(pList[playerIndex]);
-
-
-            playerIndex++;
-            if (playerIndex == pList.Count)
-            {
-                strbet = "底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin;
-                Debug.Log(strbet);
-                UIManager.instance.PrintLog(strbet);
-            
-                playerIndex = 0;
-                flag = true;
-                
-            }
-
+        {
             okPlayers.Clear();
             foreach (Player p in pList)
                 if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
@@ -462,7 +399,73 @@ public class PlayerManager
                 //1
                 break;
             }
-            yield return new WaitForSeconds(GolbalVar.speedFactor);
+            if (playerIndex == pList.Count)
+            {
+                strbet = "底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin;
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+
+                playerIndex = 0;
+                flag = true;
+
+            }
+            if (CalcFoldNum(pList) == pList.Count - 1)
+            {
+                strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+                //0
+                GolbalVar.gameStatusCounter = 5;
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                playerIndex = 0;
+                lastPlayer = 0;
+                flag = false;
+                GolbalVar.roundComplete = true;
+                GameManager.instance.ReadyForNextState();
+                break;
+            }
+            if (playerIndex == 0)
+            {
+                Debug.Log("新一轮下注开始");
+                UIManager.instance.PrintLog("新一轮下注开始");
+            }
+
+            //preflop时大盲后一位开始
+            if (pList[playerIndex].state == 0)
+            {
+                if (pList[playerIndex].role == Player.PlayerRole.smallBlind || pList[playerIndex].role == Player.PlayerRole.bigBlind)
+                {
+                    pList[playerIndex].state = 1;
+                    playerIndex++;
+                    continue;
+                }
+            }
+
+            if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
+            {
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
+                strbet = pList[playerIndex].playerName + "已经弃牌/ALL IN，不做操作";
+                Debug.Log(strbet);
+                UIManager.instance.PrintLog(strbet);
+                lastPlayer = playerIndex;
+                playerIndex++;
+                continue;
+            }
+
+
+            else
+            {
+                pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                pList[playerIndex].playerObject.HightLightAction_AvatarChange();
+                lastPlayer = playerIndex;
+
+                Bet(pList[playerIndex]);
+
+                playerIndex++;
+            } 
+           
+            yield return new WaitForSeconds(GolbalVar.speedFactor*2);
 
         } while (true);
 
