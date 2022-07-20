@@ -213,6 +213,12 @@ public class PlayerManager
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
+                    else
+                    {
+                        strbet = p.playerName + "\t正在进行初始化";
+                        Debug.Log(strbet);
+                        UIManager.instance.PrintLog(strbet);
+                    }
                     break;
                 }
 
@@ -370,19 +376,9 @@ public class PlayerManager
      public IEnumerator PlayerBet()
      {
         List<Player> pList = activePlayers;
-        int playerIndex = 0;
-        int lastPlayer = 0;
         string strbet;
-        bool flag = false;
         do
-        {            
-            if (playerIndex == pList.Count)
-            {
-                playerIndex = 0;
-                flag = true;
-            }
-
-
+        {         
             if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
             {
                 pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
@@ -423,6 +419,9 @@ public class PlayerManager
                 //0
                 GolbalVar.gameStatusCounter = 5;
                 pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                playerIndex = 0;
+                lastPlayer = 0;
+                flag = false;
                 break;
             }
 
@@ -430,11 +429,15 @@ public class PlayerManager
 
 
             playerIndex++;
-            if (playerIndex >= pList.Count)
+            if (playerIndex == pList.Count)
             {
                 strbet = "底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin;
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
+            
+                playerIndex = 0;
+                flag = true;
+                
             }
 
             okPlayers.Clear();
@@ -442,13 +445,16 @@ public class PlayerManager
                 if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
                     okPlayers.Add(p);
             //必须强制下注一轮 用flag限制
-            if (okPlayers.Count == pList.Count && (flag || playerIndex == pList.Count))
+            if (okPlayers.Count == pList.Count && flag)
             {
                 strbet = "本轮下注结束";
                 Debug.Log(strbet);
                 UIManager.instance.PrintLog(strbet);
                 nowPlayerIndex = 0;
                 pList[lastPlayer].playerObject.BackToWaiting_AvatarChange();
+                playerIndex = 0;
+                lastPlayer = 0;
+                flag = false;
                 //1
                 break;
             }
@@ -457,4 +463,8 @@ public class PlayerManager
         } while (true);
 
     }
+
+    private int playerIndex = 0;
+    private int lastPlayer = 0;
+    private bool flag = false;
 }
