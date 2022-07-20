@@ -9,7 +9,7 @@ public class BaseAI
 
     public virtual void OnInit()
     {
-        this.name = "my name";
+        this.name ="Test_" + (Random.Range(100,900)).ToString();
     }
 
     public virtual Player.Action BetAction()
