@@ -462,6 +462,7 @@ public class PlayerManager
                 //1
                 break;
             }
+            Debug.Log("StartWaitung  " + playerIndex);
             yield return new WaitForSeconds(GolbalVar.speedFactor * 10);
 
         } while (true);
