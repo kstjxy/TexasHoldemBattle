@@ -341,6 +341,14 @@ public class GameManager : MonoBehaviour
         return rankNum;
     }
 
+    public void avatar(Player p)
+    {
+        if (p.isFold == true)
+            p.playerObject.QuitTheGame_AvatarChange();
+        else
+            p.playerObject.BackToWaiting_AvatarChange();
+    }
+
     public void UpdateCurPlayer()
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
@@ -356,7 +364,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.PrintLog("新一轮下注开始");
         } else
         {
-            curPlayer.playerObject.BackToWaiting_AvatarChange();
+            avatar(curPlayer);
         }
         curPlayerSeat++;
 
@@ -373,7 +381,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.PrintLog(curPlayer.playerName + "已经弃牌/ALL IN，不做操作");
             curPlayerSeat++;
         }
-
+        //此处
         if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count && IsRoundCompleted())
         {
             ReadyForNextState();
@@ -412,7 +420,7 @@ public class GameManager : MonoBehaviour
     public void ReadyForNextState()
     {
         playersInAction = false;
-        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        avatar(curPlayer);
         curPlayerSeat = -1;
         if (GlobalVar.gameStatusCounter != 5)
         {
