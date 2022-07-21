@@ -324,7 +324,7 @@ public class PlayerManager
                     p.isAllIn = true;
                     GlobalVar.pot += change;
                     p.coin = 0;
-                    strbet = p.playerName + "【ALL_IN】，当前剩余金额" + p.coin;
+                    strbet = p.playerName + "【ALL_IN】";
                     if (p.betCoin < GlobalVar.maxBetCoin)
                     {
                         strbet += "由于当前玩家的ALL_IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
