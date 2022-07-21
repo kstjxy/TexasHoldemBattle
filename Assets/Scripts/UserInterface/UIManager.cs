@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +16,7 @@ public class UIManager : MonoBehaviour
     public Button restartButton;
     public Slider speedValueSlider;
     public Button showCardsButton;
+    public Button saveLogsButton;
     public List<GameObject> playerObjects;
     public List<GameObject> cardsSetPanels;
 
@@ -30,6 +33,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Attribute")]
     public bool isShowingCards = true;
+    public string logSave;
     //单例模式
     public static UIManager instance;
 
@@ -48,6 +52,7 @@ public class UIManager : MonoBehaviour
         continueButton.onClick.AddListener(delegate () { Continue_ButtonClicked(); });
         restartButton.onClick.AddListener(delegate () { Restart_ButtonClicked(); });
         showCardsButton.onClick.AddListener(delegate () { ShowingCardsButtonClicked(); });
+        saveLogsButton.onClick.AddListener(delegate () { SaveLogsButtonClicked(); });
         speedValueSlider.onValueChanged.AddListener(delegate (float value) { Speed_OnSliderValueChanged(value); });
     }
 
@@ -105,6 +110,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    void SaveLogsButtonClicked()
+    {
+        string type = "txt";
+        OpenFileName openFileName = new OpenFileName();
+        openFileName.structSize = Marshal.SizeOf(openFileName);
+        openFileName.filter = "文件(*." + type + ")\0*." + type + "";
+        openFileName.file = new string(new char[256]);
+        openFileName.maxFile = openFileName.file.Length;
+        openFileName.fileTitle = new string(new char[64]);
+        openFileName.maxFileTitle = openFileName.fileTitle.Length;
+        openFileName.initialDir = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
+        openFileName.title = "新建一个记事本/文本txt文档来保存log内容";
+        openFileName.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000008;
+        if (LocalDialog.GetSaveFileName(openFileName))
+        {
+            string path = openFileName.file;
+            File.WriteAllText(path, null);
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine(logSave);
+            sw.Flush();
+            sw.Close();
+        }
+    }
+
     /// <summary>
     /// 输出日志到下方的 LOG & DETAILS 中
     /// </summary>
@@ -112,6 +141,7 @@ public class UIManager : MonoBehaviour
     public void PrintLog(string log)
     {
         logText.text = logText.text + "\n" + log;
+        logSave = logSave + "\n" + log;
     }
 
     /// <summary>
@@ -139,7 +169,7 @@ public class UIManager : MonoBehaviour
             rankingList[i].text = rank[i].ToString() + ". " + playerList[i].coin.ToString() + ":" + playerList[i].playerName;
             rankingList[i].gameObject.SetActive(true);
         }
-        rankingList[i].gameObject.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(340, i * 30);
+        rankingList[0].gameObject.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(340, i * 30);
         for (; i < 8; i++)//其余的要设置为unActive
         {
             rankingList[i].gameObject.SetActive(false);
@@ -159,14 +189,25 @@ public class UIManager : MonoBehaviour
         StartCoroutine(FlopAnim(communityCards[cardPlace].GetComponent<RectTransform>()));
     }
     /// <summary>
-    /// 清空桌面上的公共牌
+    /// 清空桌面上的公共牌以及玩家的手牌
     /// </summary>
     public void ClearCommunityCard()
     {
+        Sprite emptyCard = Resources.Load<Sprite>("Cards/emptyPlace");
         for (int i = 0; i < communityCards.Count; i++)
         {
-            communityCards[i].sprite = Resources.Load<Sprite>("Cards/emptyPlace");
+            communityCards[i].sprite = emptyCard;
             StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
+        }
+        for (int i = 0; i < playerObjects.Count; i++)
+        {
+            if (playerObjects[i].activeSelf)
+            {
+                playerObjects[i].GetComponent<PlayerObject>().card1Image.sprite = emptyCard;
+                playerObjects[i].GetComponent<PlayerObject>().card2Image.sprite = emptyCard;
+                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+            }
         }
     }
 
