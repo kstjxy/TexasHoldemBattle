@@ -205,7 +205,7 @@ public class PlayerManager
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                        strbet = p.playerName + "【小盲注】剩余金额" + p.coin + "，当前最大押注" + GlobalVar.maxBetCoin + "，当前底池金额" + GlobalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -219,7 +219,7 @@ public class PlayerManager
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\t选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                        strbet = p.playerName + "【大盲注】剩余金额" + p.coin + "，当前最大押注" + GlobalVar.maxBetCoin + "，当前底池金额" + GlobalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -234,7 +234,7 @@ public class PlayerManager
                     {
                         if (p.betCoin == GlobalVar.maxBetCoin)  //已经是跟注了 即为过牌
                         {
-                            strbet = p.playerName + "\t选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                            strbet = p.playerName + "【过牌】";
                         }
                         else //跟注
                         {
@@ -246,7 +246,7 @@ public class PlayerManager
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\t选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                            strbet = p.playerName + "【跟注】，当前剩余金额" + p.coin + "，当前底池金额" + GlobalVar.pot;
 
                         }
 
@@ -284,7 +284,7 @@ public class PlayerManager
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\t选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                            strbet = p.playerName + "【加注】，当前剩余金额" + p.coin + "，当前最大押注" + GlobalVar.maxBetCoin + "，当前底池金额" + GlobalVar.pot;
                             Debug.Log(strbet);
                             UIManager.instance.PrintLog(strbet);
                             GlobalVar.curBetCount++;
@@ -310,7 +310,7 @@ public class PlayerManager
                     else
                     {
                         p.isFold = true;
-                        strbet = p.playerName + "\t选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                        strbet = p.playerName + "【弃牌】，当前剩余金额" + p.coin;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -324,10 +324,10 @@ public class PlayerManager
                     p.isAllIn = true;
                     GlobalVar.pot += change;
                     p.coin = 0;
-                    strbet = p.playerName + "\t选择【ALL IN】，当前剩余金额为" + p.coin;
+                    strbet = p.playerName + "【ALL_IN】，当前剩余金额" + p.coin;
                     if (p.betCoin < GlobalVar.maxBetCoin)
                     {
-                        strbet += "由于当前玩家的ALL IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
+                        strbet += "由于当前玩家的ALL_IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
                     }
                     else
                     {
@@ -337,7 +337,7 @@ public class PlayerManager
                     UIManager.instance.BetCoinsEffect(p, change);
                     p.playerObject.UpdateBetCoinsCount();
                     p.playerObject.UpdateCoinsCount();
-                    strbet += "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
+                    strbet += "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池金额" + GlobalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
 

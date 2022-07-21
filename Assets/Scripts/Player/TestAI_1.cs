@@ -6,7 +6,7 @@ public class TestAI_1 : BaseAI
 {
     public override void OnInit(int n)
     {
-        name = "Test "+n;
+        name = "Test_"+n;
     }
 
     public override Player.Action BetAction()
