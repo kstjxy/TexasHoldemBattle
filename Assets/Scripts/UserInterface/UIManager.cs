@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
             cardsSetPanels[i].SetActive(false);
         }
         //清空桌面的公共牌
-        ClearCommunityCard();
+        ClearAllCards();
         //清空LOG
         ClearLog();
     }
@@ -191,7 +191,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 清空桌面上的公共牌以及玩家的手牌
     /// </summary>
-    public void ClearCommunityCard()
+    public void ClearAllCards()
     {
         Sprite emptyCard = Resources.Load<Sprite>("Cards/emptyPlace");
         for (int i = 0; i < communityCards.Count; i++)
@@ -207,6 +207,7 @@ public class UIManager : MonoBehaviour
                 playerObjects[i].GetComponent<PlayerObject>().card2Image.sprite = emptyCard;
                 StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
                 StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                cardsSetPanels[i].SetActive(false);//cardSetPanel与playerObjects是对应的，因此可以放在同一个循环里（如果认为不太合理的话单独分出来也可以）
             }
         }
     }

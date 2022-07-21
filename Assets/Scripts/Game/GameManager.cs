@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
-        UIManager.instance.ClearCommunityCard();
+        UIManager.instance.ClearAllCards();
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
         PlayerManager.instance.NewRound();
