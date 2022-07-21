@@ -120,6 +120,7 @@ public class PlayerManager
 
         foreach (Player p in activePlayers)
         {
+            p.playerObject.BackToWaiting_AvatarChange();
             if (p.role == Player.PlayerRole.bigBlind || p.role == Player.PlayerRole.smallBlind)
             {
                 p.state = 1;
