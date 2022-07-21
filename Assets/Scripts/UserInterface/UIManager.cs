@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -141,6 +142,7 @@ public class UIManager : MonoBehaviour
     public void PrintLog(string log)
     {
         logText.text = logText.text + "\n" + log;
+        log = Regex.Replace(log, @"(<.*?>|</color>)", "");
         logSave = logSave + "\n" + log;
     }
 
