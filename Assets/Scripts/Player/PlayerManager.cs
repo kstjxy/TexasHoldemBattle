@@ -346,22 +346,6 @@ public class PlayerManager
         }
     }
 
-    //用于测试的随机行动
-    public int RandomAction()
-    {
-        System.Random randint = new System.Random(Guid.NewGuid().GetHashCode());
-        int ranNum = randint.Next(1, 101);
-        //Debug.Log("随机值为：" + ranNum);
-        //50% 跟注 或 过
-        if (ranNum <= 50) return 1;
-        //25% 加注
-        if (ranNum <= 75) return 2;
-        //20% 弃牌
-        if (ranNum <= 95) return 3;
-        //5% ALL IN
-        return 4;
-
-    }
     public void Bet(Player p)
     {
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
