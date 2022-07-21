@@ -332,7 +332,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
         {
-            UIManager.instance.PrintLog("场上仅剩未弃权，游戏直接结束。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot);
+            UIManager.instance.PrintLog("场上仅剩一人未弃权，游戏直接结束。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot);
             ReadyForNextState();
             GolbalVar.gameStatusCounter = 5;
             return;
@@ -353,7 +353,6 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Debug.Log(curPlayerSeat);
         curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
 
         if (curPlayer.isFold == true || curPlayer.isAllIn == true)
