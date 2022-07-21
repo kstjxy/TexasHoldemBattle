@@ -238,6 +238,7 @@ public class GameManager : MonoBehaviour
                 playersInAction = true;
                 UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
                 finalPlayers = PlayerManager.instance.GetFinalPlayers();
+                CardManager.instance.FillUpTableCards();
             }
             else
             {
