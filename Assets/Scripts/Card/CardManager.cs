@@ -298,6 +298,15 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    public void FillUpTableCards()
+    {
+        int num = 5 - GolbalVar.publicCards.Count;
+        if (num > 0)
+        {
+            AssignCardsToTable(num);
+        }
+    }
+
     public void Restart()
     {
         if (GolbalVar.publicCards == null)

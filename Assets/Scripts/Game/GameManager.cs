@@ -448,13 +448,19 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
+
     public void Update()
     {
         if (GolbalVar.curRoundNum > GolbalVar.totalRoundNum)
         {
             GameOver();
         }
-        GameUpdate();        
+        timer += Time.deltaTime;
+        if (timer > 2*GolbalVar.speedFactor)
+        {
+            timer = 0;
+            GameUpdate();
+        }
     }
 }
 
