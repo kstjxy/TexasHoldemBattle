@@ -356,13 +356,6 @@ public class PlayerManager
         }
         BetAction(p);
     }
-    public void avatar(Player p)
-    {
-        if (p.isFold == true)
-            p.playerObject.QuitTheGame_AvatarChange();
-        else
-            p.playerObject.BackToWaiting_AvatarChange();
-    }
 
     public List<Player> GetFinalPlayers()
     {

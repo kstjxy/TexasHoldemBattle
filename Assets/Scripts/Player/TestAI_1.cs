@@ -12,8 +12,8 @@ public class TestAI_1 : BaseAI
     public override Player.Action BetAction()
     {
         int ranNum = new System.Random().Next(0, 101);
-        //Debug.Log("随机值为：" + ranNum);
-        if (ranNum <= 75) return Player.Action.CALL;
+        Debug.Log("随机值为：" + ranNum);
+        if (ranNum <= 50) return Player.Action.CALL;
         if (ranNum <= 90) return Player.Action.RAISE;
         if (ranNum <= 98) return Player.Action.FOLD;
         return Player.Action.ALL_IN;

@@ -274,6 +274,7 @@ public class GameManager : MonoBehaviour
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
                 "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+                UIManager.instance.ShowFinalCardSet(curPlayer);
             }
             else
             {
@@ -340,7 +341,6 @@ public class GameManager : MonoBehaviour
         }
         return rankNum;
     }
-
     public void UpdateCurPlayer()
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
@@ -359,13 +359,7 @@ public class GameManager : MonoBehaviour
             curPlayer.playerObject.BackToWaiting_AvatarChange();
         }
 
-        bool notFound = true;
-        while (notFound)
-        {
-
-        }
-
-        curPlayerSeat++;
+        NextValidPlayer();
 
         if (IsRoundCompleted())
         {
@@ -374,26 +368,8 @@ public class GameManager : MonoBehaviour
         }
 
         curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
-
-        
-        if (curPlayer.isFold == true || curPlayer.isAllIn == true)
-        {
-            UIManager.instance.PrintLog(curPlayer.playerName + "已经弃牌/ALL IN，不做操作");
-            curPlayerSeat++;
-        }
-
-
-        if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count && IsRoundCompleted())
-        {
-            ReadyForNextState();
-            return;
-
-        } else if (curPlayerSeat < PlayerManager.instance.activePlayers.Count)
-        {
-            curPlayer = PlayerManager.instance.activePlayers[curPlayerSeat];
-            curPlayer.playerObject.HightLightAction_AvatarChange();
-            PlayerManager.instance.Bet(curPlayer);
-        }
+        curPlayer.playerObject.HightLightAction_AvatarChange();
+        PlayerManager.instance.Bet(curPlayer);
     }
 
     public bool IsRoundCompleted()
@@ -446,6 +422,25 @@ public class GameManager : MonoBehaviour
             } else
             {
                 GlobalVar.gameStatusCounter = 0;
+            }
+        }
+    }
+
+    public void NextValidPlayer()
+    {
+        curPlayerSeat++;
+        while (true)
+        {
+            if (curPlayerSeat >= PlayerManager.instance.activePlayers.Count)
+            {
+                return;
+            } else if (PlayerManager.instance.activePlayers[curPlayerSeat].isFold == true || PlayerManager.instance.activePlayers[curPlayerSeat].isAllIn == true)
+            {
+                UIManager.instance.PrintLog(PlayerManager.instance.activePlayers[curPlayerSeat].playerName + "已经弃牌/ALL IN，不做操作");
+                curPlayerSeat++;
+            } else
+            {
+                return;
             }
         }
     }
