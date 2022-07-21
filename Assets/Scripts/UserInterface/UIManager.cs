@@ -124,14 +124,21 @@ public class UIManager : MonoBehaviour
     {
         List<Player> playerList = GameManager.instance.GetRankedPlayers();
         List<int> rank = GameManager.instance.GetPlayerRank(playerList);
-        if (rank.Count != playerList.Count)
+        if (rank.Count != playerList.Count || playerList.Count > 8)
         {
             Debug.Log("List items Count Error");
             return;
         }
-        for (int i = 0; i < 8 && i < playerList.Count; i++)
+        int i ;
+        for (i = 0; i < 8 && i < playerList.Count; i++)//要显示的设置为Active
         {
             rankingList[i].text = rank[i].ToString() + ". " + playerList[i].coin.ToString() + ":" + playerList[i].playerName;
+            rankingList[i].gameObject.SetActive(true);
+        }
+        rankingList[i].gameObject.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(340, i * 30);
+        for (; i < 8; i++)//其余的要设置为unActive
+        {
+            rankingList[i].gameObject.SetActive(false);
         }
     }
 
