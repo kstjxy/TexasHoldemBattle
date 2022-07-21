@@ -5478,6 +5478,9 @@ MonoBehaviour:
     playerObject: {fileID: 0}
   playersInAction: 0
   winners: []
+  passablePlayer: []
+  flag: 0
+  finalPlayers: []
 --- !u!4 &849509219
 Transform:
   m_ObjectHideFlags: 0
@@ -11181,7 +11184,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Show Player Cards
+  m_Text: Player Cards Expose
 --- !u!222 &1562806627
 CanvasRenderer:
   m_ObjectHideFlags: 0
