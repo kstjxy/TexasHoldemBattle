@@ -27,7 +27,7 @@ public class GameManager_undone: MonoBehaviour
     //½ø³Ì×ª»»  ask
     public static int GameStatus()
     {
-        int gamestate = GolbalVar.gameStatusCounter;
+        int gamestate = GlobalVar.gameStatusCounter;
         if (gamestate < 7)
         {
 

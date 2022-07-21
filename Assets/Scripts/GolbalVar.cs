@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GolbalVar
+public class GlobalVar
 {
     public static int totalRoundNum;    //总局数
     public static int minBetCoin;       //最小下注金额

@@ -24,7 +24,7 @@ public class PlayerObject : MonoBehaviour
     {
         player = p;
         nameText.text = player.playerName;
-        coinsText.text = GolbalVar.initCoin.ToString();
+        coinsText.text = GlobalVar.initCoin.ToString();
     }
 
     /// <summary>

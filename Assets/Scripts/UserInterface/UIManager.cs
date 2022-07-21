@@ -58,8 +58,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (GolbalVar.gameStatusCounter > -2)
-            countDownText.text = "COUNTDOWN: " + (2 * GolbalVar.speedFactor - GameManager.timer).ToString();
+        if (GlobalVar.gameStatusCounter > -2)
+            countDownText.text = "COUNTDOWN: " + (2 * GlobalVar.speedFactor - GameManager.timer).ToString();
     }
 
     public void Pause_ButtonClicked()
@@ -97,8 +97,8 @@ public class UIManager : MonoBehaviour
     }
     void Speed_OnSliderValueChanged(float value)
     {
-        GolbalVar.speedFactor = value;
-        speedValueText.text = (2 * GolbalVar.speedFactor).ToString();
+        GlobalVar.speedFactor = value;
+        speedValueText.text = (2 * GlobalVar.speedFactor).ToString();
     }
 
     void ShowingCardsButtonClicked()
@@ -251,11 +251,11 @@ public class UIManager : MonoBehaviour
     {
 
         if (change < 0)
-            GolbalVar.pot = 0;
+            GlobalVar.pot = 0;
         else
-            GolbalVar.pot += change;
+            GlobalVar.pot += change;
 
-        coinPoolText.text = GolbalVar.pot.ToString();
+        coinPoolText.text = GlobalVar.pot.ToString();
     }*/
     //ÒÑÆúÓÃ
 
@@ -264,7 +264,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateCoinsPool()
     {
-        coinPoolText.text = GolbalVar.pot.ToString();
+        coinPoolText.text = GlobalVar.pot.ToString();
     }
 
     /// <summary>
@@ -272,7 +272,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateGameRounds()
     {
-        gamesCountText.text = "GAMES: " + GolbalVar.curRoundNum + "/" + GolbalVar.totalRoundNum;
+        gamesCountText.text = "GAMES: " + GlobalVar.curRoundNum + "/" + GlobalVar.totalRoundNum;
     }
 
     /// <summary>

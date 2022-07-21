@@ -10,8 +10,8 @@ public class Test_Add_a_Player : MonoBehaviour
     public void ButtonClicked()
     {
         TestAI_1 ai = new();
-        ai.OnInit(GolbalVar.roboName);
-        GolbalVar.roboName++;
+        ai.OnInit(GlobalVar.roboName);
+        GlobalVar.roboName++;
         Player p = new(ai);
         GameStat gs = new(p);
         ai.stats = gs;

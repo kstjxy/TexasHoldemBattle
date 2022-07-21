@@ -15,17 +15,17 @@ public class GameStat
     //游戏阶段
     public int Round 
     {
-        get { return GolbalVar.gameStatusCounter; }
+        get { return GlobalVar.gameStatusCounter; }
     }
     //庄家位
     public int Button
     {
-        get { return GolbalVar.curBtnSeat; }
+        get { return GlobalVar.curBtnSeat; }
     }
     //公共牌
     public List<Card> CommunityCards
     {
-        get { return GolbalVar.publicCards; }
+        get { return GlobalVar.publicCards; }
     }
     //所有还留在场上的玩家信息【座位号，现有金币，当局已下注金币】
     public List<int[]> PlayersInformation

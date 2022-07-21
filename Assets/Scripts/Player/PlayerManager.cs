@@ -73,7 +73,7 @@ public class PlayerManager
     {
         foreach (Player p in seatedPlayers)
         {
-            if (p.coin <= 2 * GolbalVar.minBetCoin)
+            if (p.coin <= 2 * GlobalVar.minBetCoin)
             {
                 if (!lostPlayers.Contains(p))
                 {
@@ -152,7 +152,7 @@ public class PlayerManager
     /// </summary>
     public void SortPlayers()
     {
-        for (int i = 0; i <= GolbalVar.curBtnSeat; i++)
+        for (int i = 0; i <= GlobalVar.curBtnSeat; i++)
         {
             Player p = activePlayers[0];
             activePlayers.Remove(p);
@@ -197,29 +197,29 @@ public class PlayerManager
                     //小盲注
                     if (p.role == Player.PlayerRole.smallBlind)
                     {
-                        p.betCoin = GolbalVar.minBetCoin;
+                        p.betCoin = GlobalVar.minBetCoin;
                         p.coin -= p.betCoin;
-                        GolbalVar.maxBetCoin = p.betCoin;
-                        GolbalVar.pot += p.betCoin;
+                        GlobalVar.maxBetCoin = p.betCoin;
+                        GlobalVar.pot += p.betCoin;
                         UIManager.instance.UpdateCoinsPool();
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        strbet = p.playerName + "\t选择【小盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
                     else if (p.role == Player.PlayerRole.bigBlind)
                     {
-                        p.betCoin = 2 * GolbalVar.minBetCoin;
+                        p.betCoin = 2 * GlobalVar.minBetCoin;
                         p.coin -= p.betCoin;
-                        GolbalVar.maxBetCoin = p.betCoin;
-                        GolbalVar.pot += p.betCoin;
+                        GlobalVar.maxBetCoin = p.betCoin;
+                        GlobalVar.pot += p.betCoin;
                         UIManager.instance.UpdateCoinsPool();
                         UIManager.instance.BetCoinsEffect(p, p.betCoin);
                         p.playerObject.UpdateBetCoinsCount();
                         p.playerObject.UpdateCoinsCount();
-                        strbet = p.playerName + "\t选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        strbet = p.playerName + "\t选择【大盲注】，剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -230,23 +230,23 @@ public class PlayerManager
             case 1://跟注
                 {
                     //剩余金额能否跟注
-                    if (p.coin + p.betCoin > GolbalVar.maxBetCoin) //够钱
+                    if (p.coin + p.betCoin > GlobalVar.maxBetCoin) //够钱
                     {
-                        if (p.betCoin == GolbalVar.maxBetCoin)  //已经是跟注了 即为过牌
+                        if (p.betCoin == GlobalVar.maxBetCoin)  //已经是跟注了 即为过牌
                         {
-                            strbet = p.playerName + "\t选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            strbet = p.playerName + "\t选择【过牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                         }
                         else //跟注
                         {
-                            int change = GolbalVar.maxBetCoin - p.betCoin;
+                            int change = GlobalVar.maxBetCoin - p.betCoin;
                             p.coin -= change;
-                            GolbalVar.pot += change;
-                            p.betCoin = GolbalVar.maxBetCoin;
+                            GlobalVar.pot += change;
+                            p.betCoin = GlobalVar.maxBetCoin;
                             UIManager.instance.UpdateCoinsPool();
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\t选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            strbet = p.playerName + "\t选择【跟注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
 
                         }
 
@@ -264,30 +264,30 @@ public class PlayerManager
             case 2://加注
                 {
                     //判断操作是否合法
-                    if (GolbalVar.curBetCount > GolbalVar.maxBetCount)
+                    if (GlobalVar.curBetCount > GlobalVar.maxBetCount)
                     {
-                        strbet = "本回合加注次数已达" + GolbalVar.maxBetCount + "次，" + p.playerName + "本次操作非法，默认为跟注";
+                        strbet = "本回合加注次数已达" + GlobalVar.maxBetCount + "次，" + p.playerName + "本次操作非法，默认为跟注";
                         p.state = 1;
                         BetAction(p);
                     }
                     else
                     {
                         //判断钱够不够
-                        if (p.coin + p.betCoin - GolbalVar.maxBetCoin - 2 * GolbalVar.minBetCoin > 0)
+                        if (p.coin + p.betCoin - GlobalVar.maxBetCoin - 2 * GlobalVar.minBetCoin > 0)
                         {
-                            int change = GolbalVar.maxBetCoin - p.betCoin + 2 * GolbalVar.minBetCoin;
+                            int change = GlobalVar.maxBetCoin - p.betCoin + 2 * GlobalVar.minBetCoin;
                             p.coin -= change;
                             p.betCoin += change;
-                            GolbalVar.pot += change;
-                            GolbalVar.maxBetCoin = p.betCoin;
+                            GlobalVar.pot += change;
+                            GlobalVar.maxBetCoin = p.betCoin;
                             UIManager.instance.UpdateCoinsPool();
                             UIManager.instance.BetCoinsEffect(p, change);
                             p.playerObject.UpdateBetCoinsCount();
                             p.playerObject.UpdateCoinsCount();
-                            strbet = p.playerName + "\t选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                            strbet = p.playerName + "\t选择【加注】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                             Debug.Log(strbet);
                             UIManager.instance.PrintLog(strbet);
-                            GolbalVar.curBetCount++;
+                            GlobalVar.curBetCount++;
                         }
                         //钱不够即为ALL IN
                         else
@@ -302,7 +302,7 @@ public class PlayerManager
             case 3://弃牌
                 {
                     //如果当前下注的钱已经是最大押注，无需弃牌
-                    if (p.betCoin == GolbalVar.maxBetCoin)
+                    if (p.betCoin == GlobalVar.maxBetCoin)
                     {
                         p.state = 1;
                         BetAction(p);
@@ -310,7 +310,7 @@ public class PlayerManager
                     else
                     {
                         p.isFold = true;
-                        strbet = p.playerName + "\t选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                        strbet = p.playerName + "\t选择【弃牌】，当前剩余金额为" + p.coin + "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
@@ -322,22 +322,22 @@ public class PlayerManager
                     int change = p.coin;
                     p.betCoin += change;
                     p.isAllIn = true;
-                    GolbalVar.pot += change;
+                    GlobalVar.pot += change;
                     p.coin = 0;
                     strbet = p.playerName + "\t选择【ALL IN】，当前剩余金额为" + p.coin;
-                    if (p.betCoin < GolbalVar.maxBetCoin)
+                    if (p.betCoin < GlobalVar.maxBetCoin)
                     {
                         strbet += "由于当前玩家的ALL IN下注金额" + p.betCoin + "小于当前最大押注金额，最大押注金额不变";
                     }
                     else
                     {
-                        GolbalVar.maxBetCoin = p.betCoin;
+                        GlobalVar.maxBetCoin = p.betCoin;
                     }
                     UIManager.instance.UpdateCoinsPool();
                     UIManager.instance.BetCoinsEffect(p, change);
                     p.playerObject.UpdateBetCoinsCount();
                     p.playerObject.UpdateCoinsCount();
-                    strbet += "，当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+                    strbet += "，当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
                     Debug.Log(strbet);
                     UIManager.instance.PrintLog(strbet);
 
@@ -408,7 +408,7 @@ public class PlayerManager
     {
         okPlayers.Clear();
         foreach (Player p in pList)
-            if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+            if (p.isAllIn == true || p.betCoin == GlobalVar.maxBetCoin || p.isFold == true)
                 okPlayers.Add(p);
         //必须强制下注一轮 用flag限制
         if (okPlayers.Count == pList.Count && flag)
@@ -421,14 +421,14 @@ public class PlayerManager
             playerIndex = 0;
             lastPlayer = 0;
             flag = false;
-            GolbalVar.roundComplete = true;
+            GlobalVar.roundComplete = true;
             GameManager.instance.ReadyForNextState();
             //1
             break;
         }
         if (playerIndex == pList.Count)
         {
-            strbet = "底池：" + GolbalVar.pot + "，最大下注金额：" + GolbalVar.maxBetCoin;
+            strbet = "底池：" + GlobalVar.pot + "，最大下注金额：" + GlobalVar.maxBetCoin;
             Debug.Log(strbet);
             UIManager.instance.PrintLog(strbet);
 
@@ -438,16 +438,16 @@ public class PlayerManager
         }
         if (CalcFoldNum(pList) == pList.Count - 1)
         {
-            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
             Debug.Log(strbet);
             UIManager.instance.PrintLog(strbet);
             //0
-            GolbalVar.gameStatusCounter = 5;
+            GlobalVar.gameStatusCounter = 5;
             avatar(pList[lastPlayer]);
             playerIndex = 0;
             lastPlayer = 0;
             flag = false;
-            GolbalVar.roundComplete = true;
+            GlobalVar.roundComplete = true;
             GameManager.instance.ReadyForNextState();
             break;
         }
@@ -476,7 +476,7 @@ public class PlayerManager
 
         if (CalcFoldNum() == pList.Count - 1)
         {
-            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GolbalVar.maxBetCoin + "，当前底池的金额为" + GolbalVar.pot;
+            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
             Debug.Log(strbet);
             UIManager.instance.PrintLog(strbet);
             lastPlayer = playerIndex;
@@ -495,11 +495,11 @@ public class PlayerManager
             playerIndex++;
         } 
 
-        yield return new WaitForSeconds(GolbalVar.speedFactor*2);
+        yield return new WaitForSeconds(GlobalVar.speedFactor*2);
 
         okPlayers.Clear();
         foreach (Player p in pList)
-            if (p.isAllIn == true || p.betCoin == GolbalVar.maxBetCoin || p.isFold == true)
+            if (p.isAllIn == true || p.betCoin == GlobalVar.maxBetCoin || p.isFold == true)
                 okPlayers.Add(p);
         //必须强制下注一轮 用flag限制
         if (okPlayers.Count == pList.Count && (flag || playerIndex == pList.Count))
@@ -511,7 +511,7 @@ public class PlayerManager
             //1
             break;
         }
-        yield return new WaitForSeconds(2*GolbalVar.speedFactor);
+        yield return new WaitForSeconds(2*GlobalVar.speedFactor);
     } while (true);
 
 }

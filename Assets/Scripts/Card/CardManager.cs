@@ -24,8 +24,8 @@ public class CardManager : MonoBehaviour
     public void InitialCardsList()
     {
         cards.Clear();
-        if (GolbalVar.publicCards == null)
-            GolbalVar.publicCards = new List<Card>();
+        if (GlobalVar.publicCards == null)
+            GlobalVar.publicCards = new List<Card>();
         for (int i = 2; i < 15; i++)
         {
             cards.Add(new Card(CardSuit.club, i));
@@ -55,7 +55,7 @@ public class CardManager : MonoBehaviour
     {
         for (int i = 0; i < num; i++)
         {
-            GolbalVar.publicCards.Add(AssignRandomCard());
+            GlobalVar.publicCards.Add(AssignRandomCard());
         }
     }
 
@@ -304,23 +304,23 @@ public class CardManager : MonoBehaviour
 
     public void FillUpTableCards()
     {
-        int num = 5 - GolbalVar.publicCards.Count;
+        int num = 5 - GlobalVar.publicCards.Count;
         if (num > 0)
         {
             AssignCardsToTable(num);
             for (int i = 0; i < num; i++)
             {
-                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+                UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[i], i);
             }
         }
     }
 
     public void Restart()
     {
-        if (GolbalVar.publicCards == null)
-            GolbalVar.publicCards = new List<Card>();
+        if (GlobalVar.publicCards == null)
+            GlobalVar.publicCards = new List<Card>();
         else
-            GolbalVar.publicCards.Clear();
+            GlobalVar.publicCards.Clear();
         InitialCardsList();
     }
 }

@@ -61,6 +61,6 @@ public class ManualInterventionManager : MonoBehaviour
     public void CallManualPanel()
     {
         this.GetComponent<Animator>().Play("Start");
-        followCostText.text = GolbalVar.curBetCount.ToString();
+        followCostText.text = GlobalVar.curBetCount.ToString();
     }
 }
