@@ -120,7 +120,9 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
+        UIManager.instance.ClearCommunityCard();
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GolbalVar.curRoundNum + "】轮");
+        UIManager.instance.UpdateGameRounds();
         PlayerManager.instance.NewRound();
         GolbalVar.curBtnSeat = (GolbalVar.curBtnSeat + 1) % PlayerManager.instance.activePlayers.Count;
         PlayerManager.instance.SetPlayersRole(GolbalVar.curBtnSeat);
@@ -431,7 +433,7 @@ public class GameManager : MonoBehaviour
                 {
                     UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
                 }
-                GameOver();
+                GolbalVar.gameStatusCounter = 6;
             } else
             {
                 GolbalVar.gameStatusCounter = 0;

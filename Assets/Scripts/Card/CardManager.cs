@@ -308,6 +308,10 @@ public class CardManager : MonoBehaviour
         if (num > 0)
         {
             AssignCardsToTable(num);
+            for (int i = 0; i < num; i++)
+            {
+                UIManager.instance.ShowCommunityCard(GolbalVar.publicCards[i], i);
+            }
         }
     }
 
