@@ -83,6 +83,10 @@ public class CardManager : MonoBehaviour
     /// <returns>牌力最大的/当局冠军玩家LIST</returns>
     public List<Player> FindWinner(List<Player> pList)
     {
+        if (pList.Count == 0)
+        {
+            return new List<Player>();
+        }
         List<Player> wList = new List<Player>();
         wList.Add(pList[0]);
         for (int i=1; i<pList.Count; i++)
