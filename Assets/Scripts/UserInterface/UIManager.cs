@@ -86,12 +86,9 @@ public class UIManager : MonoBehaviour
             cardsSetPanels[i].SetActive(false);
         }
         //清空桌面的公共牌
-        for (int i = 0; i < communityCards.Count; i++)
-        {
-            communityCards[i].sprite = Resources.Load<Sprite>("Cards/emptyPlace");
-        }
+        ClearCommunityCard();
         //清空LOG
-        logText.text = "LOG:";
+        ClearLog();
     }
     void Speed_OnSliderValueChanged(float value)
     {
@@ -117,6 +114,13 @@ public class UIManager : MonoBehaviour
         logText.text = logText.text + "\n" + log;
     }
 
+    /// <summary>
+    /// 清空日志
+    /// </summary>
+    public void ClearLog()
+    {
+        logText.text = "LOG:";
+    }
     /// <summary>
     /// 更新排行榜内容，接收一个已经排好序的playerList
     /// </summary>
@@ -153,6 +157,17 @@ public class UIManager : MonoBehaviour
             return;
         communityCards[cardPlace].sprite = card.GetSpriteSurface();
         StartCoroutine(FlopAnim(communityCards[cardPlace].GetComponent<RectTransform>()));
+    }
+    /// <summary>
+    /// 清空桌面上的公共牌
+    /// </summary>
+    public void ClearCommunityCard()
+    {
+        for (int i = 0; i < communityCards.Count; i++)
+        {
+            communityCards[i].sprite = Resources.Load<Sprite>("Cards/emptyPlace");
+            StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
+        }
     }
 
     public IEnumerator FlopAnim(RectTransform cardImage)
