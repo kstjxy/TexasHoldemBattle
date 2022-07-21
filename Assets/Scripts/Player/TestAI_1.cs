@@ -13,13 +13,9 @@ public class TestAI_1 : BaseAI
     {
         int ranNum = new System.Random().Next(0, 101);
         //Debug.Log("随机值为：" + ranNum);
-        //50% 跟注 或 过
-        if (ranNum <= 50) return Player.Action.CALL;
-        //25% 加注
-        if (ranNum <= 75) return Player.Action.RAISE;
-        //20% 弃牌
+        if (ranNum <= 75) return Player.Action.CALL;
+        if (ranNum <= 90) return Player.Action.RAISE;
         if (ranNum <= 95) return Player.Action.FOLD;
-        //5% ALL IN
         return Player.Action.ALL_IN;
     }
 
