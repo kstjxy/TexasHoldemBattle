@@ -80,6 +80,7 @@ public class PlayerManager
                     UIManager.instance.PrintLog("【" + p.playerName + "】金币数量不足，退出接下来的游戏回合");
                 }
                 p.OutOfGame();
+                p.playerObject.QuitTheGame_AvatarChange();
                 totalSeatNum--;
                 activePlayers.Remove(p);
                 lostPlayers.Add(p);
