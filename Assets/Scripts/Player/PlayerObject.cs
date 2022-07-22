@@ -84,6 +84,8 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void HightLightAction_AvatarChange()
     {
+        if (player.isFold == true) 
+            return;
         switch (player.role)
         {
             case Player.PlayerRole.button:
