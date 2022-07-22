@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public List<Player> passablePlayer = new List<Player>();
     public bool flag = false;
     public List<Player> finalPlayers = new List<Player>();
+    bool overFlag = true;
 
     public static GameState GameStatus()
     {
@@ -104,6 +105,8 @@ public class GameManager : MonoBehaviour
     {
         GlobalVar.gameStatusCounter = -2;
         GlobalVar.curRoundNum = 0;
+        GlobalVar.curBtnSeat = -1;
+        overFlag = true;
     }
 
     public void Init()
@@ -288,7 +291,14 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
+        if (overFlag)
+        {
+            UIManager.instance.PrintLog("全部游戏结束！");
+            if (PlayerManager.instance.activePlayers.Count == 1)
+                UIManager.instance.PrintLog("冠军已产生！恭喜" + PlayerManager.instance.activePlayers[0].playerName);
+            UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
+            overFlag = false;
+        }            
     }
 
     /// <summary>
@@ -510,7 +520,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 2*GlobalVar.speedFactor)
+        if (timer > 2*GlobalVar.speedFactor && overFlag)
         {
             timer = 0;
             GameUpdate();
