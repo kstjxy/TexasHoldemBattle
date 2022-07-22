@@ -335,7 +335,11 @@ public class UIManager : MonoBehaviour
             Debug.Log("×ùÎ»ºÅ´íÎó£¡´íÎóºÅÂë£º" + seat);
             return;
         }
-        List<Card> fc = p.finalCards;
+        List<Card> fc = new List<Card>();
+        for (int i = 0; i < p.finalCards.Count; i++)
+        {
+            fc.Add(new Card(p.finalCards[i].cardSuit, p.finalCards[i].Value));
+        }
         for (int i = 0; i < p.playerCardList.Count; i++)
         {
             for (int j = 0; j < fc.Count; j++)
