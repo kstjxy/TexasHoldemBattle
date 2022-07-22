@@ -226,7 +226,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < communityCards.Count; i++)
         {
             communityCards[i].sprite = emptyCard;
-            StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
+            //StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
         }
         for (int i = 0; i < playerObjects.Count; i++)
         {
@@ -234,8 +234,8 @@ public class UIManager : MonoBehaviour
             {
                 playerObjects[i].GetComponent<PlayerObject>().card1Image.sprite = emptyCard;
                 playerObjects[i].GetComponent<PlayerObject>().card2Image.sprite = emptyCard;
-                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
-                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                //StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                //StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
                 cardsSetPanels[i].SetActive(false);//cardSetPanel与playerObjects是对应的，因此可以放在同一个循环里（如果认为不太合理的话单独分出来也可以）
             }
         }
