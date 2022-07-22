@@ -103,6 +103,11 @@ public class GameManager : MonoBehaviour
         GlobalVar.gameStatusCounter = -2;
         GlobalVar.curRoundNum = 0;
         GlobalVar.curBtnSeat = -1;
+        playersInAction = false;
+        foreach (Player p in PlayerManager.instance.allPlayers)
+        {
+            p.betCoin = 0;
+        }
     }
 
     public void Init()
@@ -357,7 +362,9 @@ public class GameManager : MonoBehaviour
             UIManager.instance.PrintLog("新一轮下注开始");
         } else
         {
-            curPlayer.playerObject.BackToWaiting_AvatarChange();
+            if(!curPlayer.isFold)
+                curPlayer.playerObject.BackToWaiting_AvatarChange();
+            //curPlayer.playerObject.BackToWaiting_AvatarChange();
         }
 
         NextValidPlayer();
@@ -398,7 +405,8 @@ public class GameManager : MonoBehaviour
     public void ReadyForNextState()
     {
         playersInAction = false;
-        curPlayer.playerObject.BackToWaiting_AvatarChange();
+        if (!curPlayer.isFold)
+            curPlayer.playerObject.BackToWaiting_AvatarChange();
         curPlayerSeat = -1;
         if (GlobalVar.gameStatusCounter != 5)
         {
