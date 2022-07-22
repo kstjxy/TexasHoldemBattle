@@ -104,6 +104,10 @@ public class GameManager : MonoBehaviour
         GlobalVar.curRoundNum = 0;
         GlobalVar.curBtnSeat = -1;
         playersInAction = false;
+        foreach (Player p in winners)
+        {
+            p.playerObject.PlayerWinEnded();
+        }
 
     }
 
@@ -280,6 +284,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                curPlayer.playerObject.PlayerWinEnded();
                 PlayerManager.instance.activePlayers.Remove(curPlayer);
                 finalPlayers.Remove(curPlayer);
                 curPlayerSeat--;
@@ -361,7 +366,6 @@ public class GameManager : MonoBehaviour
         {
             if(!curPlayer.isFold)
                 curPlayer.playerObject.BackToWaiting_AvatarChange();
-            //curPlayer.playerObject.BackToWaiting_AvatarChange();
         }
 
         NextValidPlayer();
@@ -461,7 +465,7 @@ public class GameManager : MonoBehaviour
         List<Card> existed = new List<Card>();
         foreach (Card c in p.finalCards)
         {
-            if (!existed.Contains(c) && (GlobalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
+            if (!FindDuplicate(existed,c) && (GlobalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
             {
                 existed.Add(c);
             } else
@@ -470,6 +474,18 @@ public class GameManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public bool FindDuplicate(List<Card> cList, Card c)
+    {
+        foreach(Card c1 in cList)
+        {
+            if (CardManager.instance.IsEqual(c1, c))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public string PrintWinner(List<Player> pList)

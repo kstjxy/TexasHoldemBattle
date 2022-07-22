@@ -24,8 +24,7 @@ public class CardManager : MonoBehaviour
     public void InitialCardsList()
     {
         cards.Clear();
-        if (GlobalVar.publicCards == null)
-            GlobalVar.publicCards = new List<Card>();
+        GlobalVar.publicCards = new List<Card>();
         for (int i = 2; i < 15; i++)
         {
             cards.Add(new Card(CardSuit.club, i));
@@ -313,6 +312,11 @@ public class CardManager : MonoBehaviour
                 UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[i], i);
             }
         }
+    }
+
+    public bool IsEqual(Card a, Card b)
+    {
+        return (a.Value == b.Value && a.cardSuit == b.cardSuit); 
     }
 
     public void Restart()

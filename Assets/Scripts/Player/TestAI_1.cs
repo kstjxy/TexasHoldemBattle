@@ -12,7 +12,6 @@ public class TestAI_1 : BaseAI
     public override Player.Action BetAction()
     {
         int ranNum = new System.Random().Next(0, 101);
-        Debug.Log("Ëæ»úÖµÎª£º" + ranNum);
         if (ranNum <= 50) return Player.Action.CALL;
         if (ranNum <= 90) return Player.Action.RAISE;
         if (ranNum <= 98) return Player.Action.FOLD;
@@ -23,6 +22,7 @@ public class TestAI_1 : BaseAI
     {
         List<Card> result = new List<Card>();
         result.AddRange(stats.CardsInHands);
+        Debug.Log("===============================wanjiashoupai" + result.Count);
         int ranNum = new System.Random().Next(0, 3);
         result.AddRange(stats.CommunityCards.GetRange(ranNum, 3));
         return result;
