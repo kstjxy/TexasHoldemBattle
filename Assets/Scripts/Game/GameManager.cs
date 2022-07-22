@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
         GlobalVar.gameStatusCounter = -2;
         GlobalVar.curRoundNum = 0;
         GlobalVar.curBtnSeat = -1;
+        playersInAction = false;
     }
 
     public void Init()
