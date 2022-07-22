@@ -344,35 +344,21 @@ public class UIManager : MonoBehaviour
             Debug.Log("×ùÎ»ºÅ´íÎó£¡´íÎóºÅÂë£º" + seat);
             return;
         }
-        List<Card> fc = new List<Card>();
-        for (int i = 0; i < p.finalCards.Count; i++)
+        if (p.finalCards.Count<5)
         {
-            fc.Add(new Card(p.finalCards[i].cardSuit, p.finalCards[i].Value));
-        }
-        for (int i = 0; i < p.playerCardList.Count; i++)
-        {
-            for (int j = 0; j < fc.Count; j++)
-            {
-                if (p.playerCardList[i].Value == fc[j].Value && p.playerCardList[i].cardSuit == fc[j].cardSuit)
-                {
-                    fc.Remove(fc[j]);
-                    break;
-                }
-            }
-        }
-        if (fc.Count != 3)
-        {
-            Debug.Log("ÅÆÊý´íÎó£¡´íÎóÊýÁ¿£º" + fc.Count);
+            Debug.Log("×îÖÕÅÆ×éÊýÁ¿´íÎó£¡");
             return;
         }
         cardsSetPanels[seat].SetActive(true);
-        cardsSetPanels[seat].transform.GetChild(0).GetComponent<Image>().sprite = fc[0].GetSpriteSurface();
+        cardsSetPanels[seat].transform.GetChild(0).GetComponent<Image>().sprite = p.finalCards[0].GetSpriteSurface();
         StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(0).GetComponent<RectTransform>()));
-        cardsSetPanels[seat].transform.GetChild(1).GetComponent<Image>().sprite = fc[1].GetSpriteSurface();
+        cardsSetPanels[seat].transform.GetChild(1).GetComponent<Image>().sprite = p.finalCards[1].GetSpriteSurface();
         StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(1).GetComponent<RectTransform>()));
-        cardsSetPanels[seat].transform.GetChild(2).GetComponent<Image>().sprite = fc[2].GetSpriteSurface();
+        cardsSetPanels[seat].transform.GetChild(2).GetComponent<Image>().sprite = p.finalCards[2].GetSpriteSurface();
         StartCoroutine(FlopAnim(cardsSetPanels[seat].transform.GetChild(2).GetComponent<RectTransform>()));
-        p.playerObject.card1Image.sprite = p.playerCardList[0].GetSpriteSurface();
-        p.playerObject.card2Image.sprite = p.playerCardList[1].GetSpriteSurface();
+        p.playerObject.card1Image.sprite = p.finalCards[3].GetSpriteSurface();
+        StartCoroutine(FlopAnim(p.playerObject.card1Image.GetComponent<RectTransform>()));
+        p.playerObject.card2Image.sprite = p.finalCards[4].GetSpriteSurface();
+        StartCoroutine(FlopAnim(p.playerObject.card2Image.GetComponent<RectTransform>()));
     }
 }
