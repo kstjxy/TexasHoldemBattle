@@ -124,6 +124,14 @@ public class PlayerObject : MonoBehaviour
     }
 
     /// <summary>
+    /// 已经弃牌或者All_in，除了最终牌组搭建以外本局内不再有后续操作
+    /// </summary>
+    public void NoMoreActions_AvatarChange()
+    {
+        avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_noMoreActions");
+    }
+
+    /// <summary>
     /// 更改头像为：离开游戏！
     /// </summary>
     public void QuitTheGame_AvatarChange()
