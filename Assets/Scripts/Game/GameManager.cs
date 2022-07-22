@@ -86,9 +86,6 @@ public class GameManager : MonoBehaviour
             case 5:
                 Result();
                 break;
-            case 6:
-                GameOver();
-                break;
         }
     }
 
@@ -288,7 +285,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
+        UIManager.instance.ClearAllCards();
+        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是【" + GetRankedPlayers()[0].playerName + "】");
+        UIManager.instance.PrintLog("请按Restart按钮重新开始！");
     }
 
     /// <summary>
@@ -419,6 +418,7 @@ public class GameManager : MonoBehaviour
                     UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
                 }
                 GlobalVar.gameStatusCounter = 6;
+                GameOver();
             } else
             {
                 GlobalVar.gameStatusCounter = 0;
@@ -490,6 +490,7 @@ public class GameManager : MonoBehaviour
             {
                 p.coin += rewards;
             }
+            p.playerObject.UpdateBetCoinsCount();
         }
         GlobalVar.pot = 0;
         UIManager.instance.UpdateRankingList();
@@ -510,7 +511,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         timer += Time.deltaTime;
-        if (timer > 2*GlobalVar.speedFactor)
+        if (timer > GlobalVar.speedFactor)
         {
             timer = 0;
             GameUpdate();

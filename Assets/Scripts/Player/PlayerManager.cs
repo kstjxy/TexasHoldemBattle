@@ -114,13 +114,13 @@ public class PlayerManager
         if (activePlayers.Count >= 3)
         {
             activePlayers[btn].role = Player.PlayerRole.button;
-            activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.smallBlind;
-            activePlayers[(btn + 2) % totalSeatNum].role = Player.PlayerRole.bigBlind;
+            activePlayers[(btn + 1) % activePlayers.Count].role = Player.PlayerRole.smallBlind;
+            activePlayers[(btn + 2) % activePlayers.Count].role = Player.PlayerRole.bigBlind;
         }
         else
         {
-            activePlayers[(btn) % totalSeatNum].role = Player.PlayerRole.smallBlind;
-            activePlayers[(btn + 1) % totalSeatNum].role = Player.PlayerRole.bigBlind;
+            activePlayers[(btn) % activePlayers.Count].role = Player.PlayerRole.smallBlind;
+            activePlayers[(btn + 1) % activePlayers.Count].role = Player.PlayerRole.bigBlind;
         }
 
         foreach (Player p in activePlayers)
