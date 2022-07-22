@@ -40,6 +40,7 @@ public class UIManager : MonoBehaviour
 
     //特效对象池
     public Queue<GameObject> textEffectsPool = new Queue<GameObject>();
+    public List<GameObject> activeTextEffects = new List<GameObject>();
 
     private void Awake()
     {
@@ -95,6 +96,12 @@ public class UIManager : MonoBehaviour
         //清空LOG
         ClearLog();
 
+        for (int i = 0; i < activeTextEffects.Count; i++)
+        {
+            activeTextEffects[i].SetActive(false);
+            textEffectsPool.Enqueue(activeTextEffects[i]);
+        }
+        activeTextEffects.Clear();
     }
     /*
     public void StartButtonClicked()
@@ -321,6 +328,8 @@ public class UIManager : MonoBehaviour
         effect.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         effect.transform.localScale = Vector2.one;
         effect.SetActive(true);
+        effect.GetComponent<Animator>().Play("Start", 0, 0);
+        activeTextEffects.Add(effect);
     }
 
     /// <summary>

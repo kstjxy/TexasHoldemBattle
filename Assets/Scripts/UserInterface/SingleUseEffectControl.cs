@@ -8,5 +8,6 @@ public class SingleUseEffectControl : MonoBehaviour
     {
         this.gameObject.SetActive(false);
         UIManager.instance.textEffectsPool.Enqueue(this.gameObject);
+        UIManager.instance.activeTextEffects.Remove(this.gameObject);
     }
 }
