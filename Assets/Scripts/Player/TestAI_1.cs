@@ -22,7 +22,6 @@ public class TestAI_1 : BaseAI
     {
         List<Card> result = new List<Card>();
         result.AddRange(stats.CardsInHands);
-        Debug.Log("===============================wanjiashoupai" + result.Count);
         int ranNum = new System.Random().Next(0, 3);
         result.AddRange(stats.CommunityCards.GetRange(ranNum, 3));
         return result;
