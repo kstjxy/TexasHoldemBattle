@@ -311,6 +311,7 @@ public class PlayerManager
                     {
                         p.isFold = true;
                         strbet = p.playerName + "【弃牌】，剩余金额" + p.coin;
+                        p.playerObject.NoMoreActions_AvatarChange();
                         Debug.Log(strbet);
                         UIManager.instance.PrintLog(strbet);
                     }
