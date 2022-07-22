@@ -496,15 +496,19 @@ public class GameManager : MonoBehaviour
             if (winners.Contains(p))
             {
                 p.coin += rewards;
+                p.playerObject.UpdateCoinsCount();
+                p.playerObject.PlayerWin();
+            } else
+            {
+                p.playerObject.PlayerWinEnded();
             }
             p.playerObject.UpdateBetCoinsCount();
         }
         GlobalVar.pot = 0;
+        UIManager.instance.UpdateCoinsPool();
         UIManager.instance.UpdateRankingList();
         UIManager.instance.PrintLog("排行榜已更新");
     }
-
-
 
     public void Start()
     {
