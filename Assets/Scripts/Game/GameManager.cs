@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public List<Player> passablePlayer = new List<Player>();
     public bool flag = false;
     public List<Player> finalPlayers = new List<Player>();
+    bool overFlag = true;
 
     public static GameState GameStatus()
     {
@@ -101,6 +102,7 @@ public class GameManager : MonoBehaviour
     {
         GlobalVar.gameStatusCounter = -2;
         GlobalVar.curRoundNum = 0;
+        GlobalVar.curBtnSeat = -1;
     }
 
     public void Init()
@@ -287,7 +289,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.ClearAllCards();
         UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是【" + GetRankedPlayers()[0].playerName + "】");
-        UIManager.instance.PrintLog("请按Restart按钮重新开始！");
+        UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
     /// <summary>

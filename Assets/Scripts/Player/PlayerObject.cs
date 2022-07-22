@@ -139,4 +139,20 @@ public class PlayerObject : MonoBehaviour
         avatarImage.sprite = Resources.Load<Sprite>("Avatars/avatar_empty");
     }
 
+    /// <summary>
+    /// 胜利特效：面板变金色
+    /// </summary>
+    public void PlayerWin()
+    {
+        this.GetComponent<Image>().color = new Color(255f / 255, 204f / 255, 0);
+    }
+
+    /// <summary>
+    /// 结束胜利特效，变回黑色
+    /// </summary>
+    public void PlayerWinEnded()
+    {
+        this.GetComponent<Image>().color = new Color(0, 0, 0);
+    }
+
 }

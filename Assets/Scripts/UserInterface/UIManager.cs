@@ -80,8 +80,7 @@ public class UIManager : MonoBehaviour
     void Restart_ButtonClicked()
     {
         //进行一些清空进度回归初始化的操作
-        if (Time.timeScale <= 0)
-            return;
+        
         InitialPanelManager.instance.CallInitialPanel();
         GameManager.instance.Restart();
         CardManager.instance.Restart();
@@ -95,8 +94,36 @@ public class UIManager : MonoBehaviour
         ClearAllCards();
         //清空LOG
         ClearLog();
+
     }
-    void Speed_OnSliderValueChanged(float value)
+    /*
+    public void StartButtonClicked()
+    {
+        //根据用户的输入进行游戏全局的初始化：包括选择的AI玩家上座（实例化）、相关参数设置读取并提交给GameManager
+        if (PlayerManager.instance.SeatPlayers())
+        {
+            UIManager.instance.PrintLog("初始筹码数量：<color=#FFCAC9>" + InitialChips.text + "</color>");
+            UIManager.instance.PrintLog("最低小盲注数：<color=#FFCAC9>" + smallBlindInjection.text + "</color>");
+            UIManager.instance.PrintLog("游戏最大次数：<color=#C9FFDD>" + maximumGames.text + "</color>");
+            UIManager.instance.PrintLog("每轮加注限制：<color=#C9FFF9>" + raisisLimit.text + "</color>\n游戏开始！");
+
+            GlobalVar.initCoin = int.Parse(InitialChips.text);
+            GlobalVar.minBetCoin = int.Parse(smallBlindInjection.text);
+            GlobalVar.totalRoundNum = int.Parse(maximumGames.text);
+            GlobalVar.maxBetCount = int.Parse(raisisLimit.text);
+            GlobalVar.speedFactor = UIManager.instance.speedValueSlider.value;
+
+            for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
+            {
+                PlayerManager.instance.seatedPlayers[i].playerObject = UIManager.instance.SetPlayerOnSeat(PlayerManager.instance.seatedPlayers[i]);
+            }
+            GameManager.instance.Setting();
+            UIManager.instance.UpdateGameRounds();
+            panelAnimator.Play("GameStarted");//使用动画让Panel退出画面
+        }
+    }*/
+
+        void Speed_OnSliderValueChanged(float value)
     {
         GlobalVar.speedFactor = value;
         speedValueText.text = (2 * GlobalVar.speedFactor).ToString();
@@ -199,7 +226,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < communityCards.Count; i++)
         {
             communityCards[i].sprite = emptyCard;
-            StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
+            //StartCoroutine(FlopAnim(communityCards[i].GetComponent<RectTransform>()));
         }
         for (int i = 0; i < playerObjects.Count; i++)
         {
@@ -207,8 +234,8 @@ public class UIManager : MonoBehaviour
             {
                 playerObjects[i].GetComponent<PlayerObject>().card1Image.sprite = emptyCard;
                 playerObjects[i].GetComponent<PlayerObject>().card2Image.sprite = emptyCard;
-                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
-                StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                //StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
+                //StartCoroutine(FlopAnim(playerObjects[i].GetComponent<PlayerObject>().card1Image.GetComponent<RectTransform>()));
                 cardsSetPanels[i].SetActive(false);//cardSetPanel与playerObjects是对应的，因此可以放在同一个循环里（如果认为不太合理的话单独分出来也可以）
             }
         }
