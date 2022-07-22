@@ -32,7 +32,7 @@ public class PlayerObject : MonoBehaviour
     /// </summary>
     public void ShowCards()
     {
-        if (UIManager.instance.isShowingCards)
+        if (UIManager.instance.isShowingCards && player.playerCardList.Count>=2)
         {
             card1Image.sprite = player.playerCardList[0].GetSpriteSurface();
             card2Image.sprite = player.playerCardList[1].GetSpriteSurface();
