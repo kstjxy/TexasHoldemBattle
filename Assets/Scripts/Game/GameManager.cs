@@ -104,10 +104,7 @@ public class GameManager : MonoBehaviour
         GlobalVar.curRoundNum = 0;
         GlobalVar.curBtnSeat = -1;
         playersInAction = false;
-        foreach (Player p in PlayerManager.instance.allPlayers)
-        {
-            p.betCoin = 0;
-        }
+
     }
 
     public void Init()

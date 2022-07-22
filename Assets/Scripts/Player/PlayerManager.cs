@@ -73,7 +73,7 @@ public class PlayerManager
     {
         foreach (Player p in seatedPlayers)
         {
-            if (p.coin <= 2 * GlobalVar.minBetCoin)
+            if (p.coin < 2 * GlobalVar.minBetCoin)
             {
                 if (!lostPlayers.Contains(p))
                 {
@@ -354,6 +354,10 @@ public class PlayerManager
             //AI 的接口
             //当前为随机
             p.state = (int)p.ai.BetAction();
+
+            //Debug用
+            //if (p.role == Player.PlayerRole.smallBlind)
+            //    p.state = 3;
         }
         BetAction(p);
     }
