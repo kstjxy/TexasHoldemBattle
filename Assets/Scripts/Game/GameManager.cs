@@ -518,7 +518,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         timer += Time.deltaTime;
-        if (timer > GlobalVar.speedFactor)
+        if (timer > GlobalVar.speedFactor * 2)
         {
             timer = 0;
             GameUpdate();
