@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     public List<Player> passablePlayer = new List<Player>();
     public bool flag = false;
     public List<Player> finalPlayers = new List<Player>();
-    bool overFlag = true;
 
     public static GameState GameStatus()
     {
