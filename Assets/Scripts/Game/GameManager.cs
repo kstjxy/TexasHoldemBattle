@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XLua;
 
 
 public class GameManager : MonoBehaviour
@@ -34,6 +35,9 @@ public class GameManager : MonoBehaviour
     public List<Player> passablePlayer = new List<Player>();
     public bool flag = false;
     public List<Player> finalPlayers = new List<Player>();
+
+    public string[] aiFile;
+    public LuaEnv luaenv;
 
     public static GameState GameStatus()
     {
@@ -530,6 +534,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("游戏开始......");
         //       PlayerManager.instance.InitPlayers();
         GlobalVar.gameStatusCounter = -2;
+        
     }
 
     // Update is called once per frame
