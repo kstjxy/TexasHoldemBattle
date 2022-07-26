@@ -43,21 +43,29 @@ public class OpenFileDialog
 
 public class Test_Add_a_Player : MonoBehaviour
 {
+
+    //原版
     /// <summary>
     /// 纯测试使用
+    /// </summary>
+    //public void ButtonClicked()
+    //{
+    //    TestAI_1 ai = new();
+    //    ai.OnInit(GlobalVar.roboName);
+    //    GlobalVar.roboName++;
+    //    Player p = new(ai);
+    //    GameStat gs = new(p);
+    //    ai.stats = gs;
+    //    PlayerManager.instance.allPlayers.Add(p);
+    //    InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
+    //}
+
+    /// <summary>
+    /// 选择AI脚本
     /// </summary>
     public void ButtonClicked()
     {
         findLua(GameManager.instance.luaenv);
-        //findai(GameManager.instance.luaenv);
-        TestAI_1 ai = new();
-        ai.OnInit(GlobalVar.roboName);
-        GlobalVar.roboName++;
-        Player p = new(ai);
-        GameStat gs = new(p);
-        ai.stats = gs;
-        PlayerManager.instance.allPlayers.Add(p);
-        InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
     }
 
     private void findLua(LuaEnv luaenv)
@@ -115,40 +123,33 @@ public class Test_Add_a_Player : MonoBehaviour
 
         if (fileFullNames.Count > 0)
         {
-             foreach (string s in fileFullNames)
-             {
-                if (GameManager.instance.aiFile.Contains(s))
-                    continue;
-                GameManager.instance.aiFile.Add(s);
-             }
+            GameManager.instance.aiFile = new List<string>(fileFullNames);
+            foreach (string s in fileFullNames)
+            {
+                TestAI_1 ai = new();
+                ai.OnInit();
+                GlobalVar.roboName++;
+                Player p = new(ai);
+                GameStat gs = new(p);
+                ai.stats = gs;
+                PlayerManager.instance.allPlayers.Add(p);
+                InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
+            }
         }
         else
         {
             Debug.Log("没有选择任何AI脚本");
         }
     }
-    private void findai(LuaEnv luaenv)
+    private byte[] MyLoader(ref string filepath)
     {
-        string path = Application.streamingAssetsPath.Replace('/', '\\');//默认路径
-        
-        if (true)
-        {
-            string pointer = path;
-            print(pointer);
+        print(filepath);
+        //string s = "print(00910)";
+        print(Application.streamingAssetsPath);
+        string absPath = Application.streamingAssetsPath + '/' + filepath + ".lua.txt";
+        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(absPath));
 
-            foreach (string f in GameManager.instance.aiFile)
-            {
-                luaenv.DoString("require" + f);
-                TestAI_1 ai = new();
-                ai.OnInit(GlobalVar.roboName);
-                GlobalVar.roboName++;
-                Player p = new(ai);
-                GameStat gs = new(p);
-                ai.stats = gs;
-                PlayerManager.instance.allPlayers.Add(p);
-
-            }
-        }
+        //return System.Text.Encoding.UTF8.GetBytes("123456");
     }
-    
+
 }

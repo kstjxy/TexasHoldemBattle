@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestAI_1 : BaseAI
+public class TestAI_lua : BaseAI
 {
     public override void OnInit(string n)
     {
-        name = "Test_" + n;
+        name = n;
     }
 
     public override Player.Action BetAction(int action)
     {
-        int ranNum = new System.Random().Next(0, 101);
-        if (ranNum <= 50) return Player.Action.CALL;
-        if (ranNum <= 90) return Player.Action.RAISE;
-        if (ranNum <= 98) return Player.Action.FOLD;
-        return Player.Action.ALL_IN;
+        if (action == 1) return Player.Action.CALL;
+        if (action == 2) return Player.Action.RAISE;
+        if (action == 3) return Player.Action.FOLD;
+        if (action == 3) return Player.Action.ALL_IN;
+        string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
+        Debug.Log(bug);
+        UIManager.instance.PrintLog(bug);
+        return Player.Action.FOLD;
     }
 
     public override List<Card> FinalSelection()
