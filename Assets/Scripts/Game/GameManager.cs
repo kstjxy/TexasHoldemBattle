@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public bool flag = false;
     public List<Player> finalPlayers = new List<Player>();
 
-    public string[] aiFile;
+    public List<string> aiFile;
     public LuaEnv luaenv;
 
     public static GameState GameStatus()
