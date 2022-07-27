@@ -16,7 +16,7 @@ public class BaseAI
         this.file = file;
         env = new LuaEnv();
         env.AddLoader(MyLoader);
-        env.DoString("require 'test01'");
+        env.DoString("require 'file'");
         
         name = "hahaha";
     }
@@ -51,8 +51,7 @@ public class BaseAI
     Bet bet = null;
     public byte[] MyLoader(ref string filepath)
     {
-        Debug.Log(file);
-        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(file));
+        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
     }
 
 }
