@@ -50,11 +50,11 @@ public class BaseAI
         }
     }
 
-    public  List<Card> FinalSelection()
+    public  List<int[]> FinalSelection()
     {
         List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        cardNum = test.finalCards(stats);
+        //cardNum = test.finalCards(stats);
 
         foreach (int i in cardNum)
         {
@@ -63,7 +63,7 @@ public class BaseAI
             else
                 result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
         };
-        return result;
+        return new List<int[]>();
     }
 
     public byte[] MyLoader(ref string filepath)
