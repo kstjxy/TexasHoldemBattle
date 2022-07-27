@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
         foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
             p.coin = GlobalVar.initCoin;
+            p.ai.StartGame();
         }
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
@@ -145,6 +146,10 @@ public class GameManager : MonoBehaviour
         }
         UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
 
+        foreach (Player p in PlayerManager.instance.activePlayers)
+        {
+            p.ai.RoundStart();
+        }
         curPlayerSeat = -1;
         CardManager.instance.InitialCardsList();
         GlobalVar.gameStatusCounter++;

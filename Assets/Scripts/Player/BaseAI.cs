@@ -10,6 +10,7 @@ public class BaseAI
     public GameStat stats;
     public LuaEnv env;
     public string file;
+    public ITest test;
 
     public  void OnInit(string file)
     {
@@ -17,8 +18,20 @@ public class BaseAI
         env = new LuaEnv();
         env.AddLoader(MyLoader);
         env.DoString("require 'file'");
-        
-        name = "hahaha";
+        test = env.Global.Get<ITest>("M");
+        name = test.name;
+    }
+
+    public void StartGame()
+    {
+        test.startfunction(stats);
+        Debug.Log(name + "初始化成功！");
+    }
+
+    public void RoundStart()
+    {
+        test.round_start(stats);
+        Debug.Log(name + "新一轮已就绪！");
     }
 
     /*
@@ -43,15 +56,20 @@ public class BaseAI
         return result;
     }
     */
-
-    //调用lua脚本中的方法
-    delegate string Start();
-    Start start = null;
-    delegate string Bet();
-    Bet bet = null;
     public byte[] MyLoader(ref string filepath)
     {
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
+    }
+
+
+    [CSharpCallLua]
+    public interface ITest
+    {
+        string name { get;}
+        int myaction { get; set; }
+        void startfunction(GameStat stats);
+        void round_start(GameStat stats);
+        int action(GameStat stats);
     }
 
 }
