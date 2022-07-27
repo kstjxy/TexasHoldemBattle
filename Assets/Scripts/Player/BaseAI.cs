@@ -54,14 +54,14 @@ public class BaseAI
     {
         List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        //cardNum = test.finalCards(stats);
+        cardNum = test.finalCards(stats);
 
         foreach (int i in cardNum)
         {
             if (i < 2)
                 result.AddRange(stats.CardsInHands.GetRange(i, 1));
             else
-                result.AddRange(stats.CommunityCards.GetRange(i, 1));
+                result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
         };
         return result;
     }
