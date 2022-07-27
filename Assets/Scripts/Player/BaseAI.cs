@@ -34,17 +34,20 @@ public class BaseAI
         Debug.Log(name + "新一轮已就绪！");
     }
 
-    public  Player.Action BetAction()
+    //1:跟注；2：加注；3：弃牌；4：ALLIN
+    public int BetAction()
     {
         int act = test.action(stats);
-        if (act == 1) return Player.Action.CALL;
-        if (act == 2) return Player.Action.RAISE;
-        if (act == 3) return Player.Action.FOLD;
-        if (act == 3) return Player.Action.ALL_IN;
-        string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
-        Debug.Log(bug);
-        UIManager.instance.PrintLog(bug);
-        return Player.Action.FOLD;
+        if (act > 0 && act < 5)
+        {
+            return act;
+        } else
+        {
+            string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
+            Debug.Log(bug);
+            UIManager.instance.PrintLog(bug);
+            return 3; //如果操作错误就弃牌
+        }
     }
 
     public  List<Card> FinalSelection()
@@ -77,5 +80,6 @@ public class BaseAI
         void startfunction(GameStat stats);
         void round_start(GameStat stats);
         int action(GameStat stats);
+        List<List<int>> finalCards(GameStat stats);
     }
 }
