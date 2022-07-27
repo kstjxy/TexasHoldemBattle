@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour
                 playersInAction = false;
                 return;
             }
-            //curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            curPlayer.finalCards = curPlayer.ai.FinalSelection();
             if (IsValidSelection(curPlayer))
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
