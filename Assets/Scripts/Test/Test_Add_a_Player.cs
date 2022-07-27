@@ -125,8 +125,6 @@ public class Test_Add_a_Player : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
-                Debug.Log("====");
-                Debug.Log(s);
                 BaseAI ai = new BaseAI();
                 ai.OnInit(s);
                 Player p = new(ai);

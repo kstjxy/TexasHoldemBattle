@@ -14,7 +14,7 @@ public class BaseAI
     {
         env = new LuaEnv();
         env.AddLoader(MyLoader);
-        env.DoString("require 'test01.lua'");
+        env.DoString("require " + file);
         
         name = "hahaha";
     }
@@ -50,6 +50,8 @@ public class BaseAI
     public byte[] MyLoader(ref string filepath)
     {
         Debug.Log(filepath);
+        Debug.Log(Application.streamingAssetsPath);
+        //string absPath = Application.streamingAssetsPath
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filepath));
     }
 
