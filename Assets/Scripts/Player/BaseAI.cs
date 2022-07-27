@@ -10,6 +10,7 @@ public class BaseAI
     public GameStat stats;
     public LuaEnv env;
     public string file;
+    public ITest test;
 
     public  void OnInit(string file)
     {
@@ -17,31 +18,43 @@ public class BaseAI
         env = new LuaEnv();
         env.AddLoader(MyLoader);
         env.DoString("require 'file'");
-
-        //初始化
-        GetM = env.Global.Get<IM>("M");
-        name = GetM.startfunction(stats);
+        test = env.Global.Get<ITest>("M");
+        name = test.name;
     }
 
-    
-    public  Player.Action BetAction()
+    public void StartGame()
     {
-        int act = GetM.action(stats);
-        if (act == 1) return Player.Action.CALL;
-        if (act == 2) return Player.Action.RAISE;
-        if (act == 3) return Player.Action.FOLD;
-        if (act == 4) return Player.Action.ALL_IN;
-        string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
-        Debug.Log(bug);
-        UIManager.instance.PrintLog(bug);
-        return Player.Action.FOLD;
+        test.startfunction(stats);
+        Debug.Log(name + "初始化成功！");
+    }
+
+    public void RoundStart()
+    {
+        test.round_start(stats);
+        Debug.Log(name + "新一轮已就绪！");
+    }
+
+    //1:跟注；2：加注；3：弃牌；4：ALLIN
+    public int BetAction()
+    {
+        int act = test.action(stats);
+        if (act > 0 && act < 5)
+        {
+            return act;
+        } else
+        {
+            string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
+            Debug.Log(bug);
+            UIManager.instance.PrintLog(bug);
+            return 3; //如果操作错误就弃牌
+        }
     }
 
     public  List<Card> FinalSelection()
     {
         List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        cardNum = GetM.finalCards(stats);
+        cardNum = test.finalCards(stats);
 
         foreach (int i in cardNum)
         {
@@ -52,33 +65,23 @@ public class BaseAI
         };
         return result;
     }
-    
-
-    //调用lua脚本中的方法
-    //delegate string startfunction();    
-    //delegate void round_start();
-    //delegate int Action();
-    //delegate int finalCards();
-    //startfunction startfunction = null;
-    //round_start round_start = null;
-    //Action action1 = null;
-    //finalCards finalCards = null;
-
-    [CSharpCallLua]
-    public interface IM
-    {
-        string name { get; set; }
-        int myaction { get; set; }
-        string startfunction(GameStat stats);
-        void round_start(GameStat stats);
-        int action(GameStat stats);
-        List<int> finalCards(GameStat stats);
-    }
-    IM GetM;
 
     public byte[] MyLoader(ref string filepath)
     {
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
     }
 
+
+    [CSharpCallLua]
+    public interface ITest
+    {
+        string name { get;}
+        int myaction { get; set; }
+        void startfunction(GameStat stats);
+        void round_start(GameStat stats);
+        int action(GameStat stats);
+        //测试用 改完了删了就行
+        List<int> finalCards(GameStat stats);
+        //List<List<int>> finalCards(GameStat stats);
+    }
 }
