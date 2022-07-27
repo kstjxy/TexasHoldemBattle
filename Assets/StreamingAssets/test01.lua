@@ -1,28 +1,28 @@
-local M = {}
+M = {}
 
 M.name = 'test.01'
 M.myaction = -1
 
-function M: startfunction(gamerule)    --ÓÎÏ·×î¿ªÊ¼(³õÊ¼»¯£¬µÈ´ıÍæ¼ÒÏìÓ¦)  
-    print(M[name] + "³õÊ¼»¯³É¹¦£¡")
-    return M[name]
+function M: startfunction(gamerule)    --æ¸¸æˆæœ€å¼€å§‹(åˆå§‹åŒ–ï¼Œç­‰å¾…ç©å®¶å“åº”)  
+    print(M['name'] , "åˆå§‹åŒ–æˆåŠŸï¼")
+    return M['name']
 end
 
-function M: round_start(gamestat)    --Ã¿¡¾³¡¡¿¿ªÊ¼(½ö·µ»ØÃ¿¸öÍæ¼Ò¿ª¾ÖÊ±Çé¿ö)
-    print( M[name] + "¿ª¾Ö£¡") 
+function M: round_start(gamestat)    --æ¯ã€åœºã€‘å¼€å§‹(ä»…è¿”å›æ¯ä¸ªç©å®¶å¼€å±€æ—¶æƒ…å†µ)
+    print( M['name'] , "å¼€å±€ï¼") 
     return
 end
 
-function M: action(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: action(gamestat)    --æ¯ã€è½®ã€‘è°ƒç”¨åŠ¨ä½œ(è¿”å›è¯¦ç»†ä¿¡æ¯ï¼Œç­‰å¾…ç©å®¶æ“ä½œ)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     randNum = math.random(100)
-    if (ranNum <= 40) then
+    if (ranNum <= 50) then
         M.myaction = 1
         return M.myaction
-    elseif (ranNum <= 45) then
+    elseif (ranNum <= 90) then
         M.myaction = 2
         return M.myaction
-    elseif (ranNum <= 50) then
+    elseif (ranNum <= 98) then
         M.myaction = 3
         return M.myaction
     end
@@ -30,7 +30,7 @@ function M: action(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
     return M.myaction
 end
 
-function M: finalCards(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: finalCards(gamestat)    --æ¯ã€è½®ã€‘è°ƒç”¨åŠ¨ä½œ(è¿”å›è¯¦ç»†ä¿¡æ¯ï¼Œç­‰å¾…ç©å®¶æ“ä½œ)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     first = math.random(10000) % 3
     if (first == 0) then
@@ -51,5 +51,3 @@ function M: finalCards(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×
 
     return list
 end
-
-return M

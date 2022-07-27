@@ -1,5 +1,5 @@
 M = {
-    name = 'nono005',
+    name = 'follow006',
     myaction = -1;
 }
 
@@ -16,10 +16,10 @@ end
 function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     randNum = math.random(100)
-    if (ranNum <= 50) then
+    if (ranNum <= 90) then
         M.myaction = 1
         return M.myaction
-    elseif (ranNum <= 90) then
+    elseif (ranNum <= 95) then
         M.myaction = 2
         return M.myaction
     elseif (ranNum <= 98) then

@@ -1,5 +1,5 @@
 M = {
-    name = 'nono005',
+    name = 'what003',
     myaction = -1;
 }
 

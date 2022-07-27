@@ -1,15 +1,15 @@
-local M = {}
+M = {}
 
 M.name = 'test.01'
 M.myaction = -1
 
 function M: startfunction(gamerule)    --游戏最开始(初始化，等待玩家响应)  
-    print(M['name'] + "初始化成功！")
+    print(M['name'] , "初始化成功！")
     return M['name']
 end
 
 function M: round_start(gamestat)    --每【场】开始(仅返回每个玩家开局时情况)
-    print( M['name'] + "开局！") 
+    print( M['name'] , "开局！") 
     return
 end
 
