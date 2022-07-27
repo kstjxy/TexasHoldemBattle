@@ -126,12 +126,10 @@ public class Test_Add_a_Player : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
-                TestAI_1 ai = new();
-                ai.OnInit();
-                GlobalVar.roboName++;
+                BaseAI ai = new BaseAI();
+                ai.OnInit(s);
                 Player p = new(ai);
                 GameStat gs = new(p);
-                ai.stats = gs;
                 PlayerManager.instance.allPlayers.Add(p);
                 InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
             }
@@ -141,15 +139,6 @@ public class Test_Add_a_Player : MonoBehaviour
             Debug.Log("没有选择任何AI脚本");
         }
     }
-    private byte[] MyLoader(ref string filepath)
-    {
-        print(filepath);
-        //string s = "print(00910)";
-        print(Application.streamingAssetsPath);
-        string absPath = Application.streamingAssetsPath + '/' + filepath + ".lua.txt";
-        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(absPath));
-
-        //return System.Text.Encoding.UTF8.GetBytes("123456");
-    }
+    
 
 }

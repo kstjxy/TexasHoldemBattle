@@ -5482,6 +5482,7 @@ MonoBehaviour:
   passablePlayer: []
   flag: 0
   finalPlayers: []
+  aiFile: []
 --- !u!4 &849509219
 Transform:
   m_ObjectHideFlags: 0
@@ -12378,6 +12379,7 @@ MonoBehaviour:
   - {fileID: 239349514}
   isShowingCards: 1
   logSave: 
+  activeTextEffects: []
 --- !u!1 &1754428491
 GameObject:
   m_ObjectHideFlags: 0
