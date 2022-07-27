@@ -36,7 +36,7 @@ public class BaseAI
 
     public  Player.Action BetAction()
     {
-        int act = GetM.action(stats);
+        int act = test.action(stats);
         if (act == 1) return Player.Action.CALL;
         if (act == 2) return Player.Action.RAISE;
         if (act == 3) return Player.Action.FOLD;
@@ -51,7 +51,7 @@ public class BaseAI
     {
         List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        cardNum = GetM.finalCards(stats);
+        //cardNum = test.finalCards(stats);
 
         foreach (int i in cardNum)
         {
@@ -78,5 +78,4 @@ public class BaseAI
         void round_start(GameStat stats);
         int action(GameStat stats);
     }
-
 }
