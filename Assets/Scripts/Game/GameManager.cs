@@ -128,10 +128,6 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
-        //赢家翻回去
-        foreach (Player p in PlayerManager.instance.activePlayers)
-            if (winners.Contains(p))
-                p.playerObject.BackToWaiting_AvatarChange();
         UIManager.instance.ClearAllCards();
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
@@ -161,6 +157,10 @@ public class GameManager : MonoBehaviour
 
     public void Preflop()
     {
+        //赢家翻回去
+        foreach (Player p in PlayerManager.instance.activePlayers)
+            if (winners.Contains(p))
+                p.playerObject.PlayerWinEnded();
         if (!playersInAction)
         {
             if (curPlayerSeat == -1)
