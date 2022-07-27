@@ -34,13 +34,13 @@ public class BaseAI
         Debug.Log(name + "新一轮已就绪！");
     }
 
-    /*
     public  Player.Action BetAction()
     {
-        if (action == 1) return Player.Action.CALL;
-        if (action == 2) return Player.Action.RAISE;
-        if (action == 3) return Player.Action.FOLD;
-        if (action == 3) return Player.Action.ALL_IN;
+        int act = GetM.action(stats);
+        if (act == 1) return Player.Action.CALL;
+        if (act == 2) return Player.Action.RAISE;
+        if (act == 3) return Player.Action.FOLD;
+        if (act == 3) return Player.Action.ALL_IN;
         string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
         Debug.Log(bug);
         UIManager.instance.PrintLog(bug);
@@ -49,13 +49,20 @@ public class BaseAI
 
     public  List<Card> FinalSelection()
     {
+        List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        result.AddRange(stats.CardsInHands);
-        int ranNum = new System.Random().Next(0, 3);
-        result.AddRange(stats.CommunityCards.GetRange(ranNum, 3));
+        cardNum = GetM.finalCards(stats);
+
+        foreach (int i in cardNum)
+        {
+            if (i < 2)
+                result.AddRange(stats.CardsInHands.GetRange(i, 1));
+            else
+                result.AddRange(stats.CommunityCards.GetRange(i, 1));
+        };
         return result;
     }
-    */
+
     public byte[] MyLoader(ref string filepath)
     {
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));

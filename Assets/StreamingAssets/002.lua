@@ -1,19 +1,19 @@
-M = {}
+M = {
+    name = 'hihi002',
+    myaction = -1;
+}
 
-M.name = 'testLua 01'
-M.myaction = -1
+function M: startfunction(gamerule)    --游戏最开始(初始化，等待玩家响应)  
+    print(M['name'] , "初始化成功！")
+    return M['name']
+end
 
-function M: startfunction(gamestat)    --��Ϸ�ʼ(��ʼ�����ȴ������Ӧ)  
-    print(M.name , "��ʼ���ɹ���")
+function M: round_start(gamestat)    --每【场】开始(仅返回每个玩家开局时情况)
+    print( M['name'] , "开局！") 
     return
 end
 
-function M: round_start(gamestat)    --ÿ��������ʼ(������ÿ����ҿ���ʱ���)
-    print( M.name , "���֣�")
-    return
-end
-
-function M: action(gamestat)    --每【轮】调用动�?返回详细信息，等待玩家操�?
+function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     randNum = math.random(100)
     if (ranNum <= 50) then
@@ -30,7 +30,7 @@ function M: action(gamestat)    --每【轮】调用动�?返回详细信息，�
     return M.myaction
 end
 
-function M: finalCards(gamestat)    --每【轮】调用动�?返回详细信息，等待玩家操�?
+function M: finalCards(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     first = math.random(10000) % 3
     if (first == 0) then
