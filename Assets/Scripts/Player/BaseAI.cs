@@ -7,18 +7,19 @@ using XLua;
 public class BaseAI
 {
     public string name = "my Name";
-    public GameStat gameStat;
-    public int firstCardNum = -1;
-    public int secondCardNum = -1;
-    public int thirdCardNum = -1;
+    public GameStat stats;
     public LuaEnv env;
 
     public  void OnInit(string file)
     {
+        env = new LuaEnv();
+        env.AddLoader(MyLoader);
+        env.DoString("require 'test01.lua'");
         
         name = "hahaha";
     }
 
+    /*
     public  Player.Action BetAction()
     {
         if (action == 1) return Player.Action.CALL;
@@ -39,6 +40,8 @@ public class BaseAI
         result.AddRange(stats.CommunityCards.GetRange(ranNum, 3));
         return result;
     }
+    */
+
     //调用lua脚本中的方法
     delegate string Start();
     Start start = null;
@@ -46,6 +49,7 @@ public class BaseAI
     Bet bet = null;
     public byte[] MyLoader(ref string filepath)
     {
+        Debug.Log(filepath);
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filepath));
     }
 

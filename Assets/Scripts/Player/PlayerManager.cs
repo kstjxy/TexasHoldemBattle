@@ -353,7 +353,7 @@ public class PlayerManager
         {
             //AI 的接口
             //当前为随机
-            p.state = (int)p.ai.BetAction();
+            //p.state = (int)p.ai.BetAction();
 
             //Debug用
             //if (p.role == Player.PlayerRole.smallBlind)

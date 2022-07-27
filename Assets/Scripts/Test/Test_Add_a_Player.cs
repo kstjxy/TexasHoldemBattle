@@ -71,7 +71,7 @@ public class Test_Add_a_Player : MonoBehaviour
     private void findLua(LuaEnv luaenv)
     {
         //设置OpenFileDlg
-        string type = "lua.txt";
+        string type = "lua";
         OpenFileDlg openFileName = new OpenFileDlg();
         openFileName.filter = "AI脚本(*" + type + ")\0*." + type + "\0";
         openFileName.structSize = Marshal.SizeOf(openFileName);
@@ -103,7 +103,6 @@ public class Test_Add_a_Player : MonoBehaviour
                 pointer += file.Length * 2 + 2;
                 openFileName.file = (IntPtr)pointer;
                 file = Marshal.PtrToStringAuto(openFileName.file);
-                Debug.Log(file);
             }
 
             if (aiPath.Count == 1)
@@ -126,10 +125,13 @@ public class Test_Add_a_Player : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
+                Debug.Log("====");
+                Debug.Log(s);
                 BaseAI ai = new BaseAI();
                 ai.OnInit(s);
                 Player p = new(ai);
                 GameStat gs = new(p);
+                ai.stats = gs;
                 PlayerManager.instance.allPlayers.Add(p);
                 InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
             }
