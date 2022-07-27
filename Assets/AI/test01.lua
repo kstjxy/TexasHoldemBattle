@@ -34,16 +34,22 @@ function M: finalCards(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ÐÅÏ¢£¬µÈ´ýÍæ¼Ò²Ù×
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     first = math.random(10000) % 3
     if (first == 0) then
-        second = math.random(10000) % 4 
-        third = second + 1
+        second = math.random(10000) % 7
+        if (second == 0) then second = second+1 end
     else
         second = 2*first
-        
     end
-    third = second 
-    
-    M.myaction = 4
-    return M.myaction
+    list = {}
+    no = 0
+    for i=0,6,1 do
+        if (i == first)  then goto continue end
+        if (i == second) then goto continue end
+        list[no] = i
+        no = no + 1
+        ::continue::
+    end
+
+    return list
 end
 
 return M
