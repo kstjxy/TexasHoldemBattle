@@ -472,7 +472,7 @@ public class GameManager : MonoBehaviour
         List<Card> existed = new List<Card>();
         foreach (Card c in p.finalCards)
         {
-            if (!FindDuplicate(existed,c) && (GlobalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
+            if (!FindDuplicate(existed,c) && (FindDuplicate(GlobalVar.publicCards,c) || FindDuplicate(p.playerCardList, c)))
             {
                 existed.Add(c);
             } else

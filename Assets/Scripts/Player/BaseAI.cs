@@ -80,6 +80,6 @@ public class BaseAI
         void startfunction(GameStat stats);
         void round_start(GameStat stats);
         int action(GameStat stats);
-        List<List<int>> finalCards(GameStat stats);
+        List<int[]> finalCards(GameStat stats);
     }
 }
