@@ -352,8 +352,7 @@ public class PlayerManager
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
         {
             //AI 的接口
-            //当前为随机
-            //p.state = (int)p.ai.BetAction();
+            p.state = (int)p.ai.BetAction();
 
             //Debug用
             //if (p.role == Player.PlayerRole.smallBlind)

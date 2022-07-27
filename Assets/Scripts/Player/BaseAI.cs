@@ -40,7 +40,7 @@ public class BaseAI
         if (act == 1) return Player.Action.CALL;
         if (act == 2) return Player.Action.RAISE;
         if (act == 3) return Player.Action.FOLD;
-        if (act == 3) return Player.Action.ALL_IN;
+        if (act == 4) return Player.Action.ALL_IN;
         string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
         Debug.Log(bug);
         UIManager.instance.PrintLog(bug);
@@ -51,14 +51,14 @@ public class BaseAI
     {
         List<int> cardNum = new List<int>();        
         List<Card> result = new List<Card>();
-        //cardNum = test.finalCards(stats);
+        cardNum = test.finalCards(stats);
 
         foreach (int i in cardNum)
         {
             if (i < 2)
                 result.AddRange(stats.CardsInHands.GetRange(i, 1));
             else
-                result.AddRange(stats.CommunityCards.GetRange(i, 1));
+                result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
         };
         return result;
     }
@@ -77,5 +77,6 @@ public class BaseAI
         void startfunction(GameStat stats);
         void round_start(GameStat stats);
         int action(GameStat stats);
+        List<int> finalCards(GameStat stats);
     }
 }

@@ -15,7 +15,7 @@ end
 
 function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
-    randNum = math.random(100)
+    ranNum = math.random(100)
     if (ranNum <= 40) then
         M.myaction = 1
         return M.myaction
@@ -41,7 +41,7 @@ function M: finalCards(gamestat)    --每【轮】调用动作(返回详细信�
     end
     list = {}
     no = 0
-    for i=0,6,1 do
+    for i=-1,6,1 do
         if (i == first)  then goto continue end
         if (i == second) then goto continue end
         list[no] = i

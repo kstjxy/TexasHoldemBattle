@@ -128,6 +128,10 @@ public class GameManager : MonoBehaviour
 
     public void RoundInit()
     {
+        //赢家翻回去
+        foreach (Player p in PlayerManager.instance.activePlayers)
+            if (winners.Contains(p))
+                p.playerObject.BackToWaiting_AvatarChange();
         UIManager.instance.ClearAllCards();
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
@@ -281,7 +285,7 @@ public class GameManager : MonoBehaviour
                 playersInAction = false;
                 return;
             }
-            //curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            curPlayer.finalCards = curPlayer.ai.FinalSelection();
             if (IsValidSelection(curPlayer))
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
