@@ -17,6 +17,9 @@ public class InitialPanelManager : MonoBehaviour
     public InputField smallBlindInjection;
     public InputField maximumGames;
     public InputField raisisLimit;
+    public InputField ipAdress;
+    public InputField portNum;
+
 
     public static InitialPanelManager instance;
 
