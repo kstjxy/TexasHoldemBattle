@@ -1,19 +1,19 @@
 local M = {}
 
-M.name = 'test.01',
-M.myaction = -1;
+M.name = 'test.01'
+M.myaction = -1
 
-function M.start = function(gamerule)    --ÓÎÏ·×î¿ªÊ¼(³õÊ¼»¯£¬µÈ´ıÍæ¼ÒÏìÓ¦)  
-    print( M[name] + "³õÊ¼»¯³É¹¦£¡") 
+function M: startfunction(gamerule)    --ÓÎÏ·×î¿ªÊ¼(³õÊ¼»¯£¬µÈ´ıÍæ¼ÒÏìÓ¦)  
+    print(M[name] + "³õÊ¼»¯³É¹¦£¡")
     return M[name]
 end
 
-function M.round_start(gamestat)    --Ã¿¡¾³¡¡¿¿ªÊ¼(½ö·µ»ØÃ¿¸öÍæ¼Ò¿ª¾ÖÊ±Çé¿ö)
+function M: round_start(gamestat)    --Ã¿¡¾³¡¡¿¿ªÊ¼(½ö·µ»ØÃ¿¸öÍæ¼Ò¿ª¾ÖÊ±Çé¿ö)
     print( M[name] + "¿ª¾Ö£¡") 
     return
 end
 
-function M.action = function(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: action(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     randNum = math.random(100)
     if (ranNum <= 40) then
@@ -30,7 +30,7 @@ function M.action = function(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍ
     return M.myaction
 end
 
-function M.finalCards = function(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: finalCards(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     first = math.random(10000) % 3
     if (first == 0) then
@@ -38,9 +38,9 @@ function M.finalCards = function(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µ
         third = second + 1
     else
         second = 2*first
-        third = 
+        
     end
-    third = second +
+    third = second 
     
     M.myaction = 4
     return M.myaction

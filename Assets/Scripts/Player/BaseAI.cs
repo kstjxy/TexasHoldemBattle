@@ -9,12 +9,14 @@ public class BaseAI
     public string name = "my Name";
     public GameStat stats;
     public LuaEnv env;
+    public string file;
 
     public  void OnInit(string file)
     {
+        this.file = file;
         env = new LuaEnv();
         env.AddLoader(MyLoader);
-        env.DoString("require 'test01.lua'");
+        env.DoString("require 'test01'");
         
         name = "hahaha";
     }
@@ -49,8 +51,8 @@ public class BaseAI
     Bet bet = null;
     public byte[] MyLoader(ref string filepath)
     {
-        Debug.Log(filepath);
-        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(filepath));
+        Debug.Log(file);
+        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(file));
     }
 
 }
