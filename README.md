@@ -53,7 +53,7 @@ Card:牌的基本类，包括花色和大小
 
 CardManager: 用于管理所有卡牌，包括收发牌，和最终的牌力大小获胜条件判定
 
-BaseAI: 玩家所写的AI脚本的父类，为抽象类
+BaseAI: 玩家所写的Lua脚本与C#的接口，通过Interface将AI脚本模块映射到这里。
 
 Player: 玩家的基本类，记录手牌和当前的状态，接收AI脚本传回的出牌指令
 
@@ -65,7 +65,7 @@ UIManager: 管理所有UI elements和脚本的接口
 
 RecordManager: 用于记录LOG message可以保存在本地
 
-Test: 用户编写的机器人脚本文件夹
+streamingAssets: 用户编写的AI脚本文件夹
 
 # 使用方法
 在初始化界面点击ADD A TEST PLAYER按钮，并在弹出的文件夹中选择后缀为.Lua的AI游戏脚本。这时玩家初始化就会完成，头像会显示在列表中。
