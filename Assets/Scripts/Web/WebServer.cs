@@ -5,20 +5,29 @@ using System.Net.Sockets;
 using System.Net;
 using System;
 
-public class WebServer : MonoBehaviour
+public class WebServer
 {
     TcpListener server;
-    public static WebServer instance;
-    void Awake()
+    private static WebServer _instance;
+    public static WebServer instance
     {
-        instance = this;
+        get
+        {
+            if (_instance == null)
+                _instance = new WebServer();
+            return _instance;
+        }
     }
+    public int clientNum = 0;
+    public bool serverActive = false;
     public void StartServer(string ip,int port)
     {
         //加个合法性判断
         //
+        Debug.Log(ip + port);
         server = new TcpListener(IPAddress.Parse(ip), port);
         server.Start();
+        serverActive = true;
         Debug.Log("服务器已启动正在监听...");
     }
     
