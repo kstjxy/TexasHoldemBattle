@@ -475,7 +475,7 @@ public class GameManager : MonoBehaviour
         List<int[]> existed = new List<int[]>();
         foreach (int[] c in p.finalCards)
         {
-            if (!FindDuplicate(existed,c) && (FindDuplicate(CardManager.instance.GenListVals(GlobalVar.publicCards),c) || 
+            if (c.Length != 2 && !FindDuplicate(existed,c) && (FindDuplicate(CardManager.instance.GenListVals(GlobalVar.publicCards),c) || 
                 FindDuplicate(CardManager.instance.GenListVals(p.playerCardList), c)))
             {
                 existed.Add(c);

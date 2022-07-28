@@ -52,18 +52,7 @@ public class BaseAI
 
     public  List<int[]> FinalSelection()
     {
-        List<int> cardNum = new List<int>();        
-        List<Card> result = new List<Card>();
-        //cardNum = test.finalCards(stats);
-
-        foreach (int i in cardNum)
-        {
-            if (i < 2)
-                result.AddRange(stats.CardsInHands.GetRange(i, 1));
-            else
-                result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
-        };
-        return new List<int[]>();
+        return test.finalCards(stats);
     }
 
     public byte[] MyLoader(ref string filepath)
@@ -72,11 +61,11 @@ public class BaseAI
     }
 
 
+
     [CSharpCallLua]
     public interface ITest
     {
         string name { get;}
-        int myaction { get; set; }
         void startfunction(GameStat stats);
         void round_start(GameStat stats);
         int action(GameStat stats);

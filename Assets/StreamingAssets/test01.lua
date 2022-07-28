@@ -3,8 +3,9 @@ M = {}
 M.name = 'test.01'
 M.myaction = -1
 
-function M: startfunction(gamerule)    --游戏最开始(初始化，等待玩家响应)  
+function M: startfunction(gamestat)    --游戏最开始(初始化，等待玩家响应)  
     print(M['name'] , "初始化成功！")
+    print(gamestat)
     return M['name']
 end
 
