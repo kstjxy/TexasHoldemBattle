@@ -9,8 +9,8 @@ public class BaseAI
     public string name = "my Name";
     public GameStat stats;
     public LuaEnv env;
-    public string file;
-    public ITest test;
+    public string file; //AI文件路径
+    public ITest test; //Interface接口
 
     public  void OnInit(string file)
     {
