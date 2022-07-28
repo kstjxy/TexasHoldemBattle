@@ -39,12 +39,14 @@ public class Test_Add_a_Player : MonoBehaviour
         print(tx.text);
         if (tx.text == "Start Server")
         {
-            tx.text = "Server Started !";
+            
             GlobalVar.ipAdress = InitialPanelManager.instance.ipAdress.text;
             GlobalVar.portNum = int.Parse(InitialPanelManager.instance.portNum.text);
             GlobalVar.maxPlayerNum = int.Parse(InitialPanelManager.instance.MaxPlayerNum.text);
             if (!WebServer.instance.StartServer(GlobalVar.ipAdress, GlobalVar.portNum, GlobalVar.maxPlayerNum))
                 tx.text = "Start Server";
+            else
+                tx.text = "Server Started !";
         }
         else
         {

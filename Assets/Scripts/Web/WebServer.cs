@@ -21,10 +21,12 @@ public class WebServer
 
     Socket server = null;
     Thread listenThread = null;
+    static List<Client> clientList = new List<Client>();
 
-    int clientNum = 0;          //连接数
+
+    //int clientNum = 0;          //连接数
     bool serverActive = false;  //服务器是否开启
-    bool connected = false;     //是否有客户端连接
+    //bool connected = false;     //是否有客户端连接
 
     public bool StartServer(string ip,int port,int playerNum)
     {
@@ -55,18 +57,36 @@ public class WebServer
         Debug.Log("正在监听...\n最大可连接玩家数：" + playerNum);
         return true;
     }
+    public void BroadcastMessage(string message)//message就是服务器接收到的消息
+    {
+        var notConnectedList = new List<Client>();//存放所有断开连接的
+        foreach (var client in clientList)//遍历之前所有连接成功的 与客户端交互对象
+        {
+            //判断 与客户端交互对象 是否与服务断开连接
+            if (client.Connected)//处于连接状态
+            {
+                client.SendMessage(message);//与客户端交互对象 向该客户端发送该消息
+            }
+            else//处于断开状态
+            {
+                notConnectedList.Add(client);//断开了，就不需要向其发送消息了
+            }
+        }
+        foreach (var temp in notConnectedList)//将断开的 与客户端交互对象删掉
+        {
+            clientList.Remove(temp);
+        }
+    }
+
     Socket socketSend;
     void ListenConnect(object o)
     {
         Socket watch = o as Socket;
         while (true)
         {
-            try
-            {
-                socketSend = watch.Accept();
-
-
-            }
+            socketSend = watch.Accept();
+            Client client = new Client(socketSend);
+            clientList.Add(client);
         }
     }
     public bool CloseServer()
@@ -82,16 +102,4 @@ public class WebServer
         return true;
     }
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
