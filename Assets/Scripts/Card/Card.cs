@@ -8,7 +8,6 @@ public class Card
     public CardSuit cardSuit;
     //卡面大小 from 2 to 13(K) 14(A)
     private int value;
-    public int[] listVal;
     #region Get Set 限制
     public int Value
     {
@@ -37,8 +36,6 @@ public class Card
             this.value = 14;
         else
             this.value = vl;
-        int[] val = { (int)cardSuit, this.value};
-        listVal = val;
     }
 
     /// <summary>
@@ -103,11 +100,10 @@ public class Card
         return valueString;
     }
 }
-
 public enum CardSuit
 { 
-    club = 0,       //梅花
-    spade = 1,      //黑桃
-    diamon = 2,     //方块
-    heart = 3       //红心
+    club,       //梅花
+    spade,      //黑桃
+    diamon,     //方块
+    heart       //红心
 }

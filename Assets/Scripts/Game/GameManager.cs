@@ -288,7 +288,8 @@ public class GameManager : MonoBehaviour
             curPlayer.finalCards = curPlayer.ai.FinalSelection();
             if (IsValidSelection(curPlayer))
             {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n" + curPlayer.PrintFinalCards());
+                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
                 UIManager.instance.ShowFinalCardSet(curPlayer);
             }
             else
@@ -472,11 +473,10 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
-        List<int[]> existed = new List<int[]>();
-        foreach (int[] c in p.finalCards)
+        List<Card> existed = new List<Card>();
+        foreach (Card c in p.finalCards)
         {
-            if (c.Length != 2 && !FindDuplicate(existed,c) && (FindDuplicate(CardManager.instance.GenListVals(GlobalVar.publicCards),c) || 
-                FindDuplicate(CardManager.instance.GenListVals(p.playerCardList), c)))
+            if (!FindDuplicate(existed,c) && (FindDuplicate(GlobalVar.publicCards,c) || FindDuplicate(p.playerCardList, c)))
             {
                 existed.Add(c);
             } else
@@ -487,11 +487,11 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public bool FindDuplicate(List<int[]> cList, int[] c)
+    public bool FindDuplicate(List<Card> cList, Card c)
     {
-        foreach(int[] c1 in cList)
+        foreach(Card c1 in cList)
         {
-            if (c1[0] == c[0] && c1[1] == c[1])
+            if (CardManager.instance.IsEqual(c1, c))
             {
                 return true;
             }

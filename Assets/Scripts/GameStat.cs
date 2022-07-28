@@ -23,9 +23,9 @@ public class GameStat
         get { return GlobalVar.curBtnSeat; }
     }
     //公共牌
-    public List<int[]> CommunityCards
+    public List<Card> CommunityCards
     {
-        get { return CardManager.instance.GenListVals(GlobalVar.publicCards); }
+        get { return GlobalVar.publicCards; }
     }
     //所有还留在场上的玩家信息【座位号，现有金币，当局已下注金币】
     public List<int[]> PlayersInformation
@@ -59,9 +59,9 @@ public class GameStat
         get { return thisPlayerInformation.this_period; }
     }
     //自己的两张手牌
-    public List<int[]> CardsInHands
+    public List<Card> CardsInHands
     {
-        get { return CardManager.instance.GenListVals(thisPlayerInformation.playerCardList); }
+        get { return thisPlayerInformation.playerCardList; }
     }
     //剩余筹码
     public int CoinsLeft

@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +8,11 @@ public class Player
 {
     public enum PlayerRole
     {
-        button,         //åº„å®¶
-        bigBlind,       //å¤§ç›²
-        smallBlind,     //å°ç›²
-        normal,         //æ™®é€šç©å®¶
-        outOfGame       //ä¸åœ¨æ­¤è½®æ¸¸æˆä¸­
+        button,         //×¯¼Ò
+        bigBlind,       //´óÃ¤
+        smallBlind,     //Ğ¡Ã¤
+        normal,         //ÆÕÍ¨Íæ¼Ò
+        outOfGame       //²»ÔÚ´ËÂÖÓÎÏ·ÖĞ
     }
 
     public enum Action
@@ -26,19 +26,19 @@ public class Player
 
     public BaseAI ai;
     public string playerName;
-    public int seatNum = -1; //å¦‚æœä¸åœ¨æ­¤è½®æ¸¸æˆä¸­ï¼Œåˆ™ä¸º-1
+    public int seatNum = -1; //Èç¹û²»ÔÚ´ËÂÖÓÎÏ·ÖĞ£¬ÔòÎª-1
     public int coin = 0;
     public int betCoin = 0;
     public bool isInGame = false;
     public bool isFold = false;
     public bool isAllIn = false;
     public PlayerRole role = PlayerRole.outOfGame;
-    public List<Card> playerCardList = new List<Card>();//ä¸¤å¼ æ‰‹ç‰Œ
+    public List<Card> playerCardList = new List<Card>();//Á½ÕÅÊÖÅÆ
     public int state = 0; //no action
-    public List<int[]> finalCards = new List<int[]>();//æœ€ç»ˆç»„æˆçš„äº”å¼ ç‰Œç»„
+    public List<Card> finalCards = new List<Card>();//×îÖÕ×é³ÉµÄÎåÕÅÅÆ×é
 
-    public List<int[]> last_period = new List<int[]>();//ä¸Šä¸€è½®ä¸­ç©å®¶è‡ªå·±ä½ç½®ä¹‹åçš„ç©å®¶çš„è¡ŒåŠ¨è®°å½•ï¼ˆè®°å½•ä¸ºã€ç©å®¶åºå·(seatNum)ï¼Œæ“ä½œåºå·ã€‘ï¼Œæ³¨å†Œè¿›äº‹ä»¶æ¥ç»´æŠ¤è¿™ä¸¤ä¸ªåˆ—è¡¨ï¼‰       åœ¨è‡ªå·±çš„å›åˆç»“æŸåæ¸…ç©ºè¯¥åˆ—è¡¨ä»¥æ¥æ”¶æ¥ä¸‹æ¥çš„ä¿¡æ¯
-    public List<int[]> this_period = new List<int[]>();//è¿™ä¸€è½®ä¸­ä»åº„å®¶åˆ°ç©å®¶è‡ªå·±ä½ç½®çš„è¡ŒåŠ¨è®°å½•ï¼ˆåŒä¸Šï¼‰      åœ¨æœ¬è½®ç»“æŸåï¼ˆè¿™ä¸€è½®å³å°†å¼€å§‹æ—¶ï¼‰æ¸…ç©ºè¯¥åˆ—è¡¨ä»¥æ¥æ”¶æ¥ä¸‹æ¥çš„ä¿¡æ¯
+    public List<int[]> last_period = new List<int[]>();//ÉÏÒ»ÂÖÖĞÍæ¼Ò×Ô¼ºÎ»ÖÃÖ®ºóµÄÍæ¼ÒµÄĞĞ¶¯¼ÇÂ¼£¨¼ÇÂ¼Îª¡¾Íæ¼ÒĞòºÅ(seatNum)£¬²Ù×÷ĞòºÅ¡¿£¬×¢²á½øÊÂ¼şÀ´Î¬»¤ÕâÁ½¸öÁĞ±í£©       ÔÚ×Ô¼ºµÄ»ØºÏ½áÊøºóÇå¿Õ¸ÃÁĞ±íÒÔ½ÓÊÕ½ÓÏÂÀ´µÄĞÅÏ¢
+    public List<int[]> this_period = new List<int[]>();//ÕâÒ»ÂÖÖĞ´Ó×¯¼Òµ½Íæ¼Ò×Ô¼ºÎ»ÖÃµÄĞĞ¶¯¼ÇÂ¼£¨Í¬ÉÏ£©      ÔÚ±¾ÂÖ½áÊøºó£¨ÕâÒ»ÂÖ¼´½«¿ªÊ¼Ê±£©Çå¿Õ¸ÃÁĞ±íÒÔ½ÓÊÕ½ÓÏÂÀ´µÄĞÅÏ¢
 
     public PlayerObject playerObject;
 
@@ -47,15 +47,15 @@ public class Player
     {
         this.ai = ai;
         this.playerName = ai.name;
-        //åœ¨è¿›è¡Œåˆå§‹åŒ–çš„æ—¶å€™å°±è¦æ³¨å†Œè¿›äº‹ä»¶ä¸­å»ï¼æ¥ä¸‹æ¥åªè¦è°ƒç”¨RecordManagerä¸­çš„ActionRecordå°±å¯ä»¥è®©æ‰€æœ‰ç©å®¶æ¥æ”¶åˆ°ä¿¡æ¯ã€‚
+        //ÔÚ½øĞĞ³õÊ¼»¯µÄÊ±ºò¾ÍÒª×¢²á½øÊÂ¼şÖĞÈ¥£¡½ÓÏÂÀ´Ö»Òªµ÷ÓÃRecordManagerÖĞµÄActionRecord¾Í¿ÉÒÔÈÃËùÓĞÍæ¼Ò½ÓÊÕµ½ĞÅÏ¢¡£
         RecordManager.instance.ActionRecords += AddActionRecord;
     }
 
     /// <summary>
-    /// ç»™ç©å®¶çš„ä¸ªäººå¡æ± æ·»åŠ ä¸¤å¼ å¡ç‰Œ
+    /// ¸øÍæ¼ÒµÄ¸öÈË¿¨³ØÌí¼ÓÁ½ÕÅ¿¨ÅÆ
     /// </summary>
-    /// <param name="a">ç¬¬ä¸€å¼ ç‰Œ</param>
-    /// <param name="b">ç¬¬äºŒå¼ ç‰Œ</param>
+    /// <param name="a">µÚÒ»ÕÅÅÆ</param>
+    /// <param name="b">µÚ¶şÕÅÅÆ</param>
     public void AddPlayerCards(Card a, Card b)
     {
         playerCardList = new List<Card>();
@@ -64,7 +64,7 @@ public class Player
     }
 
     /// <summary>
-    /// å°†ç©å®¶ç§»å‡ºæ¸¸æˆ
+    /// ½«Íæ¼ÒÒÆ³öÓÎÏ·
     /// </summary>
     public void OutOfGame()
     {
@@ -75,7 +75,7 @@ public class Player
     }
 
     /// <summary>
-    /// æ–°ä¸€è½®æ¸¸æˆé‡ç½®ç©å®¶
+    /// ĞÂÒ»ÂÖÓÎÏ·ÖØÖÃÍæ¼Ò
     /// </summary>
     public void ResetNewRound()
     {
@@ -84,17 +84,17 @@ public class Player
         state = 0;
         betCoin = 0;
         playerCardList = new List<Card>();
-        finalCards = new List<int[]>();
+        finalCards = new List<Card>();
     }
 
     /// <summary>
-    /// æœ‰ç©å®¶è¡ŒåŠ¨äº†ï¼Œæ‰€æœ‰ç©å®¶å¼€å§‹å°è¯•è®°å½•æˆ–è€…å¯¹è®°å½•è¡¨è¿›è¡Œæ“ä½œ(å¿…é¡»æ”¾åœ¨ç©å®¶è¡ŒåŠ¨ç»“æŸä¹‹åï¼ï¼å†è°ƒç”¨)
+    /// ÓĞÍæ¼ÒĞĞ¶¯ÁË£¬ËùÓĞÍæ¼Ò¿ªÊ¼³¢ÊÔ¼ÇÂ¼»òÕß¶Ô¼ÇÂ¼±í½øĞĞ²Ù×÷(±ØĞë·ÅÔÚÍæ¼ÒĞĞ¶¯½áÊøÖ®ºó£¡£¡ÔÙµ÷ÓÃ)
     /// </summary>
-    /// <param name="playerSeatNum">åº§ä½å·</param>
-    /// <param name="actionNum">è¡ŒåŠ¨</param>
+    /// <param name="playerSeatNum">×ùÎ»ºÅ</param>
+    /// <param name="actionNum">ĞĞ¶¯</param>
     public void AddActionRecord(int playerSeatNum, int actionNum)
     {
-        //è·å–åœ¨è¡ŒåŠ¨é¡ºåºè¡¨ä¸­çš„æ’åºä»¥æ­£ç¡®è®°å½•ä¿¡æ¯
+        //»ñÈ¡ÔÚĞĞ¶¯Ë³Ğò±íÖĞµÄÅÅĞòÒÔÕıÈ·¼ÇÂ¼ĞÅÏ¢
         int thisPlayerIndex = -1;
         int actionPlayerIndex = -1;
         for (int i = 0; i < PlayerManager.instance.activePlayers.Count; i++)
@@ -112,76 +112,26 @@ public class Player
             return;
         }
 
-        //æ ¹æ®åœ¨è¡ŒåŠ¨é¡ºåºè¡¨ä¸­çš„æ’åºè¿›è¡Œåˆé€‚çš„ä¿¡æ¯è®°å½•
-        if (thisPlayerIndex == actionPlayerIndex)//å¦‚æœæ˜¯è‡ªå·±çš„è¡ŒåŠ¨ï¼Œä¸éœ€è¦è®°å½•ï¼Œå¹¶ä¸”æ¸…ç©ºlast_periodä¸ºæ¥ä¸‹æ¥æ¥æ”¶ä¿¡æ¯åšå‡†å¤‡
+        //¸ù¾İÔÚĞĞ¶¯Ë³Ğò±íÖĞµÄÅÅĞò½øĞĞºÏÊÊµÄĞÅÏ¢¼ÇÂ¼
+        if (thisPlayerIndex == actionPlayerIndex)//Èç¹ûÊÇ×Ô¼ºµÄĞĞ¶¯£¬²»ĞèÒª¼ÇÂ¼£¬²¢ÇÒÇå¿Õlast_periodÎª½ÓÏÂÀ´½ÓÊÕĞÅÏ¢×ö×¼±¸
         {
             last_period.Clear();
         }
-        else if (actionPlayerIndex < thisPlayerIndex)//æ˜¯è‡ªå·±ä¹‹å‰çš„ç©å®¶è¿›è¡Œè¡ŒåŠ¨ï¼ŒåŠ å…¥ this_period
+        else if (actionPlayerIndex < thisPlayerIndex)//ÊÇ×Ô¼ºÖ®Ç°µÄÍæ¼Ò½øĞĞĞĞ¶¯£¬¼ÓÈë this_period
         {
             //Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum+"    this");
             this.this_period.Add(new int[2] { playerSeatNum, actionNum });
         }
-        else//æ˜¯è‡ªå·±ä¹‹åçš„ç©å®¶è¿›è¡Œè¡ŒåŠ¨ï¼ŒåŠ å…¥ last_period
+        else//ÊÇ×Ô¼ºÖ®ºóµÄÍæ¼Ò½øĞĞĞĞ¶¯£¬¼ÓÈë last_period
         {
             //Debug.Log(this.playerName+"  PlayerNum: " + playerSeatNum + "   ActionNum: " + actionNum + "    last");
             this.last_period.Add(new int[2] { playerSeatNum, actionNum });
         }
 
-        //è¿™æ˜¯æœ€åä¸€ä½ç©å®¶åœ¨è¡ŒåŠ¨ï¼Œè¦æ¸…ç©º this_period 
+        //ÕâÊÇ×îºóÒ»Î»Íæ¼ÒÔÚĞĞ¶¯£¬ÒªÇå¿Õ this_period 
         if (actionPlayerIndex == PlayerManager.instance.activePlayers.Count - 1)
         {
             this_period.Clear();
         }
-    }
-
-    public string PrintFinalCards()
-    {
-        string result = "";
-        foreach (int[] c in finalCards)
-        {
-            string cardInfo = "ã€";
-            switch (c[0])
-            {
-                case 0:
-                    cardInfo = "â™£" + " " + GetValueString(c[1]);
-                    break;
-                case 1:
-                    cardInfo = "â™ " + " " + GetValueString(c[1]);
-                    break;
-                case 2:
-                    cardInfo = "<color=#FFA19F>â™¦" + " " + GetValueString(c[1]) + "</color>";
-                    break;
-                case 3:
-                    cardInfo = "<color=#FFA19F>â™¥" + " " + GetValueString(c[1]) + "</color>";
-                    break;
-            }
-            result = result+cardInfo+"ã€‘";
-        }
-        return result;
-    }
-
-    public string GetValueString(int value)
-    {
-        string valueString;
-        switch (value)
-        {
-            case 14:
-                valueString = "A";
-                break;
-            case 11:
-                valueString = "J";
-                break;
-            case 12:
-                valueString = "Q";
-                break;
-            case 13:
-                valueString = "K";
-                break;
-            default:
-                valueString = value.ToString();
-                break;
-        }
-        return valueString;
     }
 }

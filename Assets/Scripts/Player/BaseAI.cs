@@ -50,7 +50,7 @@ public class BaseAI
         }
     }
 
-    public  List<int[]> FinalSelection()
+    public  List<Card> FinalSelection()
     {
         return test.finalCards(stats);
     }
@@ -61,7 +61,6 @@ public class BaseAI
     }
 
 
-
     [CSharpCallLua]
     public interface ITest
     {
@@ -69,6 +68,6 @@ public class BaseAI
         void startfunction(GameStat stats);
         void round_start(GameStat stats);
         int action(GameStat stats);
-        List<int[]> finalCards(GameStat stats);
+        List<Card> finalCards(GameStat stats);
     }
 }

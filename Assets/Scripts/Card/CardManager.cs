@@ -90,13 +90,21 @@ public class CardManager : MonoBehaviour
         wList.Add(pList[0]);
         for (int i=1; i<pList.Count; i++)
         {
-            List<int[]> c1 = wList[0].finalCards;
-            List<int[]> c2 = pList[i].finalCards;
+            List<Card> c1 = wList[0].finalCards;
+            List<Card> c2 = pList[i].finalCards;
             c1.Sort((a,b)=>{
-                return a[1] - b[1];
+                if(a.Value != b.Value)
+                {
+                    return a.Value - b.Value;
+                }
+                return 0;
             });
             c2.Sort((a, b) => {
-                return a[1] - b[1];
+                if (a.Value != b.Value)
+                {
+                    return a.Value - b.Value;
+                }
+                return 0;
             });
             int result = CompareCards(c1,c2);
             if (result > 0)
@@ -118,7 +126,7 @@ public class CardManager : MonoBehaviour
     /// <param name="c1">第一组的五张牌</param>
     /// <param name="c2">第二组的五张牌</param>
     /// <returns>如果c1大则return -1, c2大则return 1, 如果相同则return 0</returns>
-    public int CompareCards(List<int[]> c1, List<int[]> c2)
+    public int CompareCards(List<Card> c1, List<Card> c2)
     {
         int result1 = MatchCase(c1);
         int result2 = MatchCase(c2);
@@ -154,11 +162,11 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="cList"></param>
     /// <returns></returns>
-    public bool IsStright(List<int[]> cList)
+    public bool IsStright(List<Card> cList)
     {
         for(int i=1; i<cList.Count; i++)
         {
-            if (cList[i][1] - cList[i-1][1] != 1)
+            if (cList[i].Value - cList[i-1].Value != 1)
             {
                 return false;
             }
@@ -171,13 +179,13 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="cList"></param>
     /// <returns></returns>
-    public int MaxSameNum(List<int[]> cList)
+    public int MaxSameNum(List<Card> cList)
     {
         int max = 1;
         int curMax = 1;
         for (int i=1; i<cList.Count; i++)
         {
-            if (cList[i][1] == cList[i-1][1])
+            if (cList[i].Value == cList[i-1].Value)
             {
                 curMax++;
                 if (curMax > max)
@@ -197,12 +205,12 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="cList"></param>
     /// <returns></returns>
-    public bool IsFlush(List<int[]> cList)
+    public bool IsFlush(List<Card> cList)
     {
-        int curS = cList[0][0];
+        CardSuit curS = cList[0].cardSuit;
         for(int i = 1; i<cList.Count; i++)
         {
-            if (curS != cList[i][0])
+            if (curS != cList[i].cardSuit)
             {
                 return false;
             }
@@ -215,12 +223,12 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="cList"></param>
     /// <returns></returns>
-    public int ValueChangeNum(List<int[]> cList)
+    public int ValueChangeNum(List<Card> cList)
     {
         int valueChange = 0;
         for (int i = 1; i < cList.Count; i++)
         {
-            if (cList[i][1] != cList[i - 1][1])
+            if (cList[i].Value != cList[i - 1].Value)
             {
                 valueChange++;
             }
@@ -233,12 +241,12 @@ public class CardManager : MonoBehaviour
     /// </summary>
     /// <param name="cList"></param>
     /// <returns></returns>
-    public int totalCardValue(List<int[]> cList)
+    public int totalCardValue(List<Card> cList)
     {
         int totalValue = 0;
-        foreach (int[] c in cList)
+        foreach (Card c in cList)
         {
-            totalValue += c[1];
+            totalValue += c.Value;
         }
         return totalValue;
     }
@@ -253,11 +261,11 @@ public class CardManager : MonoBehaviour
     //7：四条
     //8：同花顺
     //9：皇家同花顺
-    public int MatchCase(List<int[]> cList)
+    public int MatchCase(List<Card> cList)
     {
         if (IsStright(cList) && IsFlush(cList))
         {
-            if(cList[0][1] == 10)
+            if(cList[0].Value == 10)
             {
                 return 9;
             } else
@@ -293,16 +301,6 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public List<int[]> GenListVals(List<Card> cList)
-    {
-        List<int[]> result = new List<int[]>();
-        foreach (Card c in cList)
-        {
-            result.Add(c.listVal);
-        }
-        return result;
-    }
-
     public void FillUpTableCards()
     {
         int num = 5 - GlobalVar.publicCards.Count;
@@ -314,6 +312,11 @@ public class CardManager : MonoBehaviour
                 UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[i], i);
             }
         }
+    }
+
+    public bool IsEqual(Card a, Card b)
+    {
+        return (a.Value == b.Value && a.cardSuit == b.cardSuit); 
     }
 
     public void Restart()
