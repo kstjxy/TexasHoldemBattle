@@ -31,23 +31,30 @@ function M: action(gamestat)    --每【轮】调用动作(返回详细信息，
 end
 
 function M: finalCards(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
+    tb = {}
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
-    first = math.random(10000) % 3
-    if (first == 0) then
-        second = math.random(10000) % 7
-        if (second == 0) then second = second+1 end
-    else
-        second = 2*first
-    end
+    while #tb < 5 do 
+		local istrue = false
+		local num = math.random(0,6)
+		if #tb ~= nil then
+			for i = 1 ,#tb do
+				if tb[i] == num then
+					istrue = true
+				end
+			end
+		end
+		if istrue == false then
+			table.insert( tb, num )
+		end
+	end
     list = {}
-    no = 0
-    for i=-1,6,1 do
-        if (i == first)  then goto continue end
-        if (i == second) then goto continue end
-        list[no] = i
-        no = no + 1
-        ::continue::
+    for i,v in ipairs(tb) do
+        if (v<2) then
+            list[i] = gamestat.CardsInHands[v]
+        else
+            list[i] = gamestat.CommunityCards[v-2]
+        end
     end
-    return list
 
+    return list
 end

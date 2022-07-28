@@ -3,17 +3,17 @@ M = {}
 M.name = 'test.02'
 M.myaction = -1
 
-function M: startfunction(gamestat)    --ÓÎÏ·×î¿ªÊ¼(³õÊ¼»¯£¬µÈ´ıÍæ¼ÒÏìÓ¦)  
-    print(M['name'] , "³õÊ¼»¯³É¹¦£¡")
+function M: startfunction(gamestat)    --æ¸¸æˆæœ€å¼€å§‹(åˆå§‹åŒ–ï¼Œç­‰å¾…ç©å®¶å“åº”)  
+    print(M['name'] , "åˆå§‹åŒ–æˆåŠŸï¼")
     return M['name']
 end
 
-function M: round_start(gamestat)    --Ã¿¡¾³¡¡¿¿ªÊ¼(½ö·µ»ØÃ¿¸öÍæ¼Ò¿ª¾ÖÊ±Çé¿ö)
-    print( M['name'] , "¿ª¾Ö£¡") 
+function M: round_start(gamestat)    --æ¯ã€åœºã€‘å¼€å§‹(ä»…è¿”å›æ¯ä¸ªç©å®¶å¼€å±€æ—¶æƒ…å†µ)
+    print( M['name'] , "å¼€å±€ï¼") 
     return
 end
 
-function M: action(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: action(gamestat)    --æ¯ã€è½®ã€‘è°ƒç”¨åŠ¨ä½œ(è¿”å›è¯¦ç»†ä¿¡æ¯ï¼Œç­‰å¾…ç©å®¶æ“ä½œ)
     math.randomseed(tostring(os.time()):reverse():sub(1, 7))
     ranNum = math.random(100)
     if (ranNum <= 50) then
@@ -30,12 +30,31 @@ function M: action(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
     return M.myaction
 end
 
-function M: finalCards(gamestat)    --Ã¿¡¾ÂÖ¡¿µ÷ÓÃ¶¯×÷(·µ»ØÏêÏ¸ĞÅÏ¢£¬µÈ´ıÍæ¼Ò²Ù×÷)
+function M: finalCards(gamestat)    --æ¯ã€è½®ã€‘è°ƒç”¨åŠ¨ä½œ(è¿”å›è¯¦ç»†ä¿¡æ¯ï¼Œç­‰å¾…ç©å®¶æ“ä½œ)
+    tb = {}
+    math.randomseed(tostring(os.time()):reverse():sub(1, 7))
+    while #tb < 5 do 
+		local istrue = false
+		local num = math.random(0,6)
+		if #tb ~= nil then
+			for i = 1 ,#tb do
+				if tb[i] == num then
+					istrue = true
+				end
+			end
+		end
+		if istrue == false then
+			table.insert( tb, num )
+		end
+	end
     list = {}
-    list[1] = gamestat.CardsInHands[0]
-    list[2] = gamestat.CardsInHands[1]
-    list[3] = gamestat.CommunityCards[0]
-    list[4] = gamestat.CommunityCards[1]
-    list[5] = gamestat.CommunityCards[2]
+    for i,v in ipairs(tb) do
+        if (v<2) then
+            list[i] = gamestat.CardsInHands[v]
+        else
+            list[i] = gamestat.CommunityCards[v-2]
+        end
+    end
+
     return list
 end
