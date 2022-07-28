@@ -4,12 +4,15 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using XLua;
 
 
 
 public class Test_Add_a_Player : MonoBehaviour
 {
+    [Header("UI Components_InteractElements")]
+    public Button serverButton;
 
     //Ô­°æ
     /// <summary>
@@ -32,9 +35,23 @@ public class Test_Add_a_Player : MonoBehaviour
     /// </summary>
     public void ButtonClicked()
     {
-        GlobalVar.ipAdress = InitialPanelManager.instance.ipAdress.text;
-        GlobalVar.portNum = int.Parse(InitialPanelManager.instance.portNum.text);
-        WebServer.instance.StartServer(GlobalVar.ipAdress, GlobalVar.portNum);
+        Text tx = serverButton.GetComponentInChildren<Text>();
+        print(tx.text);
+        if (tx.text == "Start Server")
+        {
+            tx.text = "Server Started !";
+            GlobalVar.ipAdress = InitialPanelManager.instance.ipAdress.text;
+            GlobalVar.portNum = int.Parse(InitialPanelManager.instance.portNum.text);
+            GlobalVar.maxPlayerNum = int.Parse(InitialPanelManager.instance.MaxPlayerNum.text);
+            if (!WebServer.instance.StartServer(GlobalVar.ipAdress, GlobalVar.portNum, GlobalVar.maxPlayerNum))
+                tx.text = "Start Server";
+        }
+        else
+        {
+            WebServer.instance.CloseServer();
+            tx.text = "Start Server";
+        }
+            
     }
 
 }

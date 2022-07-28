@@ -19,7 +19,8 @@ public class GlobalVar
     public static bool roundComplete = true;    //当前轮次是否结束
 
     public static string ipAdress = "127.0.0.1";//IP地址
-    public static int portNum = 80;               //端口号
+    public static int portNum = 80;             //端口号
+    public static int maxPlayerNum = 10;        //服务器最大连接数
 
     public static float speedFactor = 1.0f; //游戏运行速度调整 由SLIDER控制
 
