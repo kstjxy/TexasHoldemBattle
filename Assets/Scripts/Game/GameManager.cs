@@ -559,12 +559,4 @@ public class GameManager : MonoBehaviour
             GameUpdate();
         }
     }
-
-    public void OnDestroy()
-    {
-        foreach (Player p in PlayerManager.instance.allPlayers)
-        {
-            p.ai.env.Dispose();
-        }
-    }
 }
