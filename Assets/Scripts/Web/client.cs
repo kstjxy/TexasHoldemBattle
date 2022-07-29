@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-public class Client : MonoBehaviour
+public class Client
 {
     private Socket clientSocket;//与客户端交互对象
     private Thread t;//线程

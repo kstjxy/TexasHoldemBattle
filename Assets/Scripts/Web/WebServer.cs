@@ -19,8 +19,8 @@ public class WebServer
         }
     }
 
-    Socket server = null;
-    Thread listenThread = null;
+    public Socket server = null;
+    public Thread listenThread = null;
     static List<Client> clientList = new List<Client>();
 
 
@@ -65,7 +65,7 @@ public class WebServer
             //判断 与客户端交互对象 是否与服务断开连接
             if (client.Connected)//处于连接状态
             {
-                client.SendMessage(message);//与客户端交互对象 向该客户端发送该消息
+                client.SendMess(message);//与客户端交互对象 向该客户端发送该消息
             }
             else//处于断开状态
             {
@@ -85,8 +85,13 @@ public class WebServer
         while (true)
         {
             socketSend = watch.Accept();
-            Client client = new Client(socketSend);
-            clientList.Add(client);
+            BaseAI ai = new BaseAI();
+            ai.OnInit(socketSend);
+            Player p = new(ai);
+            GameStat gs = new(p);
+            ai.stats = gs;
+            PlayerManager.instance.allPlayers.Add(p);
+            InitialPanelManager.instance.AddSelectablePlayerButton(p);
         }
     }
     public bool CloseServer()

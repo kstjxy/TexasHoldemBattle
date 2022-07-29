@@ -2,28 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using XLua;
+using System.Net.Sockets;
+using System.Net;
+using System;
 
 public class BaseAI
 {
     public string name = "my Name";
     public GameStat stats;
-    public LuaEnv env;
+    public Socket server = WebServer.instance.server;
     public string file;
+    string recivefrom;
+    string sendto;
     public ITest test;
 
-    public  void OnInit(string file)
+    public  void OnInit(Socket socketsend)
     {
-        this.file = file;
-        env = new LuaEnv();
-        env.AddLoader(MyLoader);
-        env.DoString("require 'file'");
-        test = env.Global.Get<ITest>("M");
-        name = test.name;
+        
+        
+        //name = test.name;
     }
 
     public void StartGame()
     {
+        sendto = "Game Start";
+        server.Send(sendto.)
         test.startfunction(stats);
         Debug.Log(name + "初始化成功！");
     }
