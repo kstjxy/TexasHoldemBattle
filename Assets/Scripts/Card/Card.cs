@@ -102,8 +102,8 @@ public class Card
 }
 public enum CardSuit
 { 
-    club,       //梅花
-    spade,      //黑桃
-    diamon,     //方块
-    heart       //红心
+    club = 0,       //梅花
+    spade = 1,      //黑桃
+    diamon = 2,     //方块
+    heart = 3       //红心
 }
