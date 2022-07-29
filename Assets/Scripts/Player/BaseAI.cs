@@ -11,23 +11,28 @@ public class BaseAI
 {
     public string name = "my Name";
     public GameStat stats;
-    public Socket server = WebServer.instance.server;
+    public Socket client;
     public string file;
     byte[] recivefrom = new byte[1024];
     string sendto;
 
     public  void OnInit(Socket socketsend)
     {
-        
-        
+        client = socketsend;
+        sendto = "Init";
+        client.Send(Encoding.UTF8.GetBytes(sendto));
+        client.Receive(recivefrom);
+        name = Encoding.UTF8.GetString(recivefrom);
+        Debug.Log(name + "已连接到服务器");
+        UIManager.instance.PrintLog(name + "已连接到服务器");
         //name = test.name;
     }
 
     public void StartGame()
     {
         sendto = "Game Start";
-        server.Send(Encoding.UTF8.GetBytes(sendto));
-        server.Receive(recivefrom);
+        client.Send(Encoding.UTF8.GetBytes(sendto));
+        client.Receive(recivefrom);
 
         Debug.Log(name + "初始化成功！");
     }
@@ -40,7 +45,7 @@ public class BaseAI
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        int act = 100;
+        int act=100;
         if (act > 0 && act < 5)
         {
             return act;
@@ -68,8 +73,4 @@ public class BaseAI
         return result;
     }
 
-    public byte[] MyLoader(ref string filepath)
-    {
-        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
-    }
 }
