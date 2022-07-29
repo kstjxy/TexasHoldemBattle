@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XLua;
+using System.Net.Sockets;
+using System.Net;
+using System;
 
 
 public class GameManager : MonoBehaviour
@@ -482,14 +485,6 @@ public class GameManager : MonoBehaviour
         {
             timer = 0;
             GameUpdate();
-        }
-    }
-
-    public void OnDestroy()
-    {
-        foreach (Player p in PlayerManager.instance.allPlayers)
-        {
-            p.ai.env.Dispose();
         }
     }
 }

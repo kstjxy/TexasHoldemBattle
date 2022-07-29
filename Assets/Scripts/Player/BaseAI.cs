@@ -2,42 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using XLua;
+using System.Net.Sockets;
+using System.Text;
+using System.Net;
+using System;
 
 public class BaseAI
 {
     public string name = "my Name";
     public GameStat stats;
-    public LuaEnv env;
-    public string file; //AI文件路径
-    public ITest test; //Interface接口
+    public Socket server = WebServer.instance.server;
+    public string file;
+    byte[] recivefrom = new byte[1024];
+    string sendto;
 
-    public  void OnInit(string file)
+    public  void OnInit(Socket socketsend)
     {
-        this.file = file;
-        env = new LuaEnv();
-        env.AddLoader(MyLoader);
-        env.DoString("require 'file'");
-        test = env.Global.Get<ITest>("M");
-        name = test.name;
+        
+        
+        //name = test.name;
     }
 
     public void StartGame()
     {
-        test.startfunction(stats);
+        sendto = "Game Start";
+        server.Send(Encoding.UTF8.GetBytes(sendto));
+        server.Receive(recivefrom);
+
         Debug.Log(name + "初始化成功！");
     }
 
     public void RoundStart()
     {
-        test.round_start(stats);
         Debug.Log(name + "新一轮已就绪！");
     }
 
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        int act = test.action(stats);
+        int act = 100;
         if (act > 0 && act < 5)
         {
             return act;
@@ -52,22 +55,21 @@ public class BaseAI
 
     public  List<Card> FinalSelection()
     {
-        return test.finalCards(stats);
+        List<int> cardNum = new List<int>();        
+        List<Card> result = new List<Card>();
+
+        foreach (int i in cardNum)
+        {
+            if (i < 2)
+                result.AddRange(stats.CardsInHands.GetRange(i, 1));
+            else
+                result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
+        };
+        return result;
     }
 
     public byte[] MyLoader(ref string filepath)
     {
         return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
-    }
-
-
-    [CSharpCallLua]
-    public interface ITest
-    {
-        string name { get;}
-        void startfunction(GameStat stats);
-        void round_start(GameStat stats);
-        int action(GameStat stats);
-        List<Card> finalCards(GameStat stats);
     }
 }
