@@ -287,7 +287,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
             curPlayer.finalCards = curPlayer.ai.FinalSelection();
-            if (IsValidSelection(curPlayer))
+            if (CardManager.instance.IsValidSelection(curPlayer))
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
                 "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
@@ -320,39 +320,6 @@ public class GameManager : MonoBehaviour
         UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
-    /// <summary>
-    /// 将玩家进行排名，相同数量coin拥有者名次相等
-    /// </summary>
-    /// <param name="pList">已经排序完毕的玩家list</param>
-    /// <returns>玩家的排名列表</returns>
-    public List<int> GetPlayerRank(List<Player> pList)
-    {
-        List<int> rankNum = new List<int>();
-        int curRank = 1;
-        int cumm = 0;
-        int prevCumm = 0;
-        rankNum.Add(curRank);
-        for (int i = 1; i < pList.Count; i++)
-        {
-            if (pList[i - 1].coin != pList[i].coin)
-            {
-                curRank++;
-                prevCumm = cumm;
-                cumm = 0;
-            }
-            else
-            {
-                cumm++;
-            }
-            if (prevCumm != 0)
-            {
-                curRank += prevCumm;
-                prevCumm = 0;
-            }
-            rankNum.Add(curRank);
-        }
-        return rankNum;
-    }
     public void UpdateCurPlayer()
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
@@ -458,38 +425,6 @@ public class GameManager : MonoBehaviour
                 return;
             }
         }
-    }
-
-    public bool IsValidSelection(Player p)
-    {
-        if (p.finalCards.Count != 5)
-        {
-            return false;
-        }
-        List<Card> existed = new List<Card>();
-        foreach (Card c in p.finalCards)
-        {
-            if (!FindDuplicate(existed,c) && (FindDuplicate(GlobalVar.publicCards,c) || FindDuplicate(p.playerCardList, c)))
-            {
-                existed.Add(c);
-            } else
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public bool FindDuplicate(List<Card> cList, Card c)
-    {
-        foreach(Card c1 in cList)
-        {
-            if (CardManager.instance.IsEqual(c1, c))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public string PrintWinner(List<Player> pList)

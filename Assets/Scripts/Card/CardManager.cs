@@ -319,6 +319,40 @@ public class CardManager : MonoBehaviour
         return (a.Value == b.Value && a.cardSuit == b.cardSuit); 
     }
 
+    public bool IsValidSelection(Player p)
+    {
+        if (p.finalCards.Count != 5)
+        {
+            return false;
+        }
+        List<Card> existed = new List<Card>();
+        foreach (Card c in p.finalCards)
+        {
+            if (!FindDuplicate(existed, c) && (FindDuplicate(GlobalVar.publicCards, c) || FindDuplicate(p.playerCardList, c)))
+            {
+                existed.Add(c);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool FindDuplicate(List<Card> cList, Card c)
+    {
+        foreach (Card c1 in cList)
+        {
+            if (CardManager.instance.IsEqual(c1, c))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void Restart()
     {
         if (GlobalVar.publicCards == null)
