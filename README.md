@@ -1,11 +1,9 @@
-# TexasHoldemBattle/德州扑克AI对战平台
+# TexasHoldemBattle/德州扑克AI对战平台 - 第二期工程报告
 基于UNITY开发的德州扑克AI对抗平台，用户可以编写AI程序控制机器人进行各种出牌操作，多人对战，在达到目标局数后获得最多筹码者获胜。
 
 德州扑克AI是一个非完全信息问题，也是AI实现的一个难点。德州扑克AI对抗平台作为AI对抗赛、AI课程的一个基础设施，参赛者可以编写AI程序，模拟对抗，以评估AI算法的能力。
 
-2022.7.22 第一阶段c#脚本版完成
-
-2022.7.28 第二阶段Lua模块接口完成
+此分支为第二期工程Lua接口版
 
 ![捕获](https://user-images.githubusercontent.com/50037765/180354891-e0d09b04-041a-4fe5-ad5a-1a2fe04fd882.PNG)
 ![捕获2](https://user-images.githubusercontent.com/50037765/180355966-0225751e-65a3-4c23-a4d5-c36233a4f7e5.PNG)
