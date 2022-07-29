@@ -129,6 +129,7 @@ public class GameManager : MonoBehaviour
     public void RoundInit()
     {
         UIManager.instance.ClearAllCards();
+        UIManager.instance.ClearAllCards();
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
         PlayerManager.instance.NewRound();
@@ -306,25 +307,17 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         UIManager.instance.ClearAllCards();
-        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是【" + GetRankedPlayers()[0].playerName + "】");
-        UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
-    }
-
-    /// <summary>
-    /// 将玩家通过coin的数值进行排序
-    /// </summary>
-    /// <returns>通过coin大小经过排序的玩家list</returns>
-    public List<Player> GetRankedPlayers()
-    {
-        List<Player> pList = new List<Player>();
-        foreach (Player p in PlayerManager.instance.seatedPlayers)
+        winners = PlayerManager.instance.GetFinalWinners();
+        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是"+PrintWinner(winners));
+        foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            pList.Add(p);
+            p.playerObject.PlayerWinEnded();
+            if (winners.Contains(p))
+            {
+                p.playerObject.PlayerWin();
+            }
         }
-        pList.Sort((a, b) => {
-            return b.coin - a.coin;
-        });
-        return pList;
+        UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
     /// <summary>

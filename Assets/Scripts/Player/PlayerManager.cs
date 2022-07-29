@@ -369,4 +369,39 @@ public class PlayerManager
         }
         return final;
     }
+
+    public List<Player> GetFinalWinners()
+    {
+        List<Player> result = new List<Player>();
+        List<Player> pList = GetRankedPlayers();
+        result.Add(pList[0]);
+        for (int i = 1; i < pList.Count; i++)
+        {
+            if (pList[i].coin == result[0].coin)
+            {
+                result.Add(pList[i]);
+            } else
+            {
+                break;
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 将玩家通过coin的数值进行排序
+    /// </summary>
+    /// <returns>通过coin大小经过排序的玩家list</returns>
+    public List<Player> GetRankedPlayers()
+    {
+        List<Player> pList = new List<Player>();
+        foreach (Player p in seatedPlayers)
+        {
+            pList.Add(p);
+        }
+        pList.Sort((a, b) => {
+            return b.coin - a.coin;
+        });
+        return pList;
+    }
 }

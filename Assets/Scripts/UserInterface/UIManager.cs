@@ -192,7 +192,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateRankingList()
     {
-        List<Player> playerList = GameManager.instance.GetRankedPlayers();
+        List<Player> playerList = PlayerManager.instance.GetRankedPlayers();
         List<int> rank = GameManager.instance.GetPlayerRank(playerList);
         if (rank.Count != playerList.Count || playerList.Count > 8)
         {
