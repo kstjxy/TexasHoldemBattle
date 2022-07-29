@@ -192,8 +192,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void UpdateRankingList()
     {
-        List<Player> playerList = GameManager.instance.GetRankedPlayers();
-        List<int> rank = GameManager.instance.GetPlayerRank(playerList);
+        List<Player> playerList = PlayerManager.instance.GetRankedPlayers();
+        List<int> rank = PlayerManager.instance.GetPlayerRank(playerList);
         if (rank.Count != playerList.Count || playerList.Count > 8)
         {
             Debug.Log("List items Count Error");

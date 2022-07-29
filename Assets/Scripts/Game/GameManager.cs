@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
             curPlayer.finalCards = curPlayer.ai.FinalSelection();
-            if (IsValidSelection(curPlayer))
+            if (CardManager.instance.IsValidSelection(curPlayer))
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
                 "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
@@ -294,60 +294,19 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         UIManager.instance.ClearAllCards();
-        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是【" + GetRankedPlayers()[0].playerName + "】");
+        winners = PlayerManager.instance.GetFinalWinner();
+        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是" + PrintWinner(winners));
+        foreach (Player p in PlayerManager.instance.activePlayers)
+        {
+            p.playerObject.PlayerWinEnded();
+            if (winners.Contains(p))
+            {
+                p.playerObject.PlayerWin();
+            }
+        }
         UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
-    /// <summary>
-    /// 将玩家通过coin的数值进行排序
-    /// </summary>
-    /// <returns>通过coin大小经过排序的玩家list</returns>
-    public List<Player> GetRankedPlayers()
-    {
-        List<Player> pList = new List<Player>();
-        foreach (Player p in PlayerManager.instance.seatedPlayers)
-        {
-            pList.Add(p);
-        }
-        pList.Sort((a, b) => {
-            return b.coin - a.coin;
-        });
-        return pList;
-    }
-
-    /// <summary>
-    /// 将玩家进行排名，相同数量coin拥有者名次相等
-    /// </summary>
-    /// <param name="pList">已经排序完毕的玩家list</param>
-    /// <returns>玩家的排名列表</returns>
-    public List<int> GetPlayerRank(List<Player> pList)
-    {
-        List<int> rankNum = new List<int>();
-        int curRank = 1;
-        int cumm = 0;
-        int prevCumm = 0;
-        rankNum.Add(curRank);
-        for (int i = 1; i < pList.Count; i++)
-        {
-            if (pList[i - 1].coin != pList[i].coin)
-            {
-                curRank++;
-                prevCumm = cumm;
-                cumm = 0;
-            }
-            else
-            {
-                cumm++;
-            }
-            if (prevCumm != 0)
-            {
-                curRank += prevCumm;
-                prevCumm = 0;
-            }
-            rankNum.Add(curRank);
-        }
-        return rankNum;
-    }
     public void UpdateCurPlayer()
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
@@ -453,38 +412,6 @@ public class GameManager : MonoBehaviour
                 return;
             }
         }
-    }
-
-    public bool IsValidSelection(Player p)
-    {
-        if (p.finalCards.Count != 5)
-        {
-            return false;
-        }
-        List<Card> existed = new List<Card>();
-        foreach (Card c in p.finalCards)
-        {
-            if (!FindDuplicate(existed,c) && (GlobalVar.publicCards.Contains(c) || p.playerCardList.Contains(c)))
-            {
-                existed.Add(c);
-            } else
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public bool FindDuplicate(List<Card> cList, Card c)
-    {
-        foreach(Card c1 in cList)
-        {
-            if (CardManager.instance.IsEqual(c1, c))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public string PrintWinner(List<Player> pList)

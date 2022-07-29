@@ -374,129 +374,75 @@ public class PlayerManager
         }
         return final;
     }
-}
 
-
-/*
-//返回值说明
-//-1    
-//0     仅剩一名玩家，游戏结束
-//1
- public IEnumerator PlayerBet()
- {
-    List<Player> pList = activePlayers;
-    string strbet;
-    do
+    /// <summary>
+    /// 将玩家通过coin的数值进行排序
+    /// </summary>
+    /// <returns>通过coin大小经过排序的玩家list</returns>
+    public List<Player> GetRankedPlayers()
     {
-        okPlayers.Clear();
-        foreach (Player p in pList)
-            if (p.isAllIn == true || p.betCoin == GlobalVar.maxBetCoin || p.isFold == true)
-                okPlayers.Add(p);
-        //必须强制下注一轮 用flag限制
-        if (okPlayers.Count == pList.Count && flag)
+        List<Player> pList = new List<Player>();
+        foreach (Player p in seatedPlayers)
         {
-            strbet = "本轮下注结束";
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-            nowPlayerIndex = 0;
-            avatar(pList[lastPlayer]);
-            playerIndex = 0;
-            lastPlayer = 0;
-            flag = false;
-            GlobalVar.roundComplete = true;
-            GameManager.instance.ReadyForNextState();
-            //1
-            break;
+            pList.Add(p);
         }
-        if (playerIndex == pList.Count)
-        {
-            strbet = "底池：" + GlobalVar.pot + "，最大下注金额：" + GlobalVar.maxBetCoin;
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
+        pList.Sort((a, b) => {
+            return b.coin - a.coin;
+        });
+        return pList;
+    }
 
-            playerIndex = 0;
-            flag = true;
-
-        }
-        if (CalcFoldNum(pList) == pList.Count - 1)
+    /// <summary>
+    /// 将玩家进行排名，相同数量coin拥有者名次相等
+    /// </summary>
+    /// <param name="pList">已经排序完毕的玩家list</param>
+    /// <returns>玩家的排名列表</returns>
+    public List<int> GetPlayerRank(List<Player> pList)
+    {
+        List<int> rankNum = new List<int>();
+        int curRank = 1;
+        int cumm = 0;
+        int prevCumm = 0;
+        rankNum.Add(curRank);
+        for (int i = 1; i < pList.Count; i++)
         {
-            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-            //0
-            GlobalVar.gameStatusCounter = 5;
-            avatar(pList[lastPlayer]);
-            playerIndex = 0;
-            lastPlayer = 0;
-            flag = false;
-            GlobalVar.roundComplete = true;
-            GameManager.instance.ReadyForNextState();
-            break;
-        }
-        if (playerIndex == 0)
-        {
-            Debug.Log("新一轮下注开始");
-            UIManager.instance.PrintLog("新一轮下注开始");
-        }
-
-        //preflop时大盲后一位开始
-        if (pList[playerIndex].state == 0)
-        {
-            if (pList[playerIndex].role == Player.PlayerRole.smallBlind || pList[playerIndex].role == Player.PlayerRole.bigBlind)
+            if (pList[i - 1].coin != pList[i].coin)
             {
-                pList[playerIndex].state = 1;
-                playerIndex++;
-                continue;
+                curRank++;
+                prevCumm = cumm;
+                cumm = 0;
+            }
+            else
+            {
+                cumm++;
+            }
+            if (prevCumm != 0)
+            {
+                curRank += prevCumm;
+                prevCumm = 0;
+            }
+            rankNum.Add(curRank);
+        }
+        return rankNum;
+    }
+
+    public List<Player> GetFinalWinner()
+    {
+        List<Player> result = new List<Player>();
+        List<Player> pList = GetRankedPlayers();
+        result.Add(pList[0]);
+        for (int i=1; i<pList.Count; i++)
+        {
+            if (result[0].coin == pList[i].coin)
+            {
+                result.Add(pList[i]);
+            }
+            else
+            {
+                break;
             }
         }
-
-        if (pList[playerIndex].isFold == true || pList[playerIndex].isAllIn == true)
-        {
-            avatar(pList[lastPlayer]);
-            pList[playerIndex].playerObject.HightLightAction_AvatarChange();
-        }
-
-        if (CalcFoldNum() == pList.Count - 1)
-        {
-            strbet = "除了" + pList[playerIndex].playerName + "，其余玩家均弃权。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot;
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-            lastPlayer = playerIndex;
-            playerIndex++;
-        }
-
-
-        else
-        {
-            avatar(pList[lastPlayer]);
-            pList[playerIndex].playerObject.HightLightAction_AvatarChange();
-            lastPlayer = playerIndex;
-
-            Bet(pList[playerIndex]);
-
-            playerIndex++;
-        } 
-
-        yield return new WaitForSeconds(GlobalVar.speedFactor*2);
-
-        okPlayers.Clear();
-        foreach (Player p in pList)
-            if (p.isAllIn == true || p.betCoin == GlobalVar.maxBetCoin || p.isFold == true)
-                okPlayers.Add(p);
-        //必须强制下注一轮 用flag限制
-        if (okPlayers.Count == pList.Count && (flag || playerIndex == pList.Count))
-        {
-            strbet = "本轮下注结束";
-            Debug.Log(strbet);
-            UIManager.instance.PrintLog(strbet);
-            nowPlayerIndex = 0;
-            //1
-            break;
-        }
-        yield return new WaitForSeconds(2*GlobalVar.speedFactor);
-    } while (true);
-
+        return result;
+    }
 }
-*/
-
 
