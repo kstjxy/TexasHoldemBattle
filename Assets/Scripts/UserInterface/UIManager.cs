@@ -38,6 +38,10 @@ public class UIManager : MonoBehaviour
     //单例模式
     public static UIManager instance;
 
+    //Loglst，用于多线程更新UI
+    public List<string> logList = new List<string>();
+    private int lenOfList = 0; 
+
     //特效对象池
     public Queue<GameObject> textEffectsPool = new Queue<GameObject>();
     public List<GameObject> activeTextEffects = new List<GameObject>();
@@ -178,6 +182,23 @@ public class UIManager : MonoBehaviour
         logText.text = logText.text + "\n" + log;
         log = Regex.Replace(log, @"(<.*?>|</color>)", "");
         logSave = logSave + "\n" + log;
+    }
+
+    /// <summary>
+    /// （用于多线程，线程安全）输出日志到下方的 LOG & DETAILS 中，自动检测logList是否有增加
+    /// </summary>
+    public void UpdateLog()
+    {
+        if (logList.Count == lenOfList) return ;
+        int oldlen = lenOfList;
+        int len = logList.Count;
+        for (int i = oldlen; i < len; i++)
+        {
+            logText.text = logText.text + "\n" + logList[i] ;
+            logSave = logSave + "\n" + logList[i];
+        }
+        lenOfList = len;
+        
     }
 
     /// <summary>

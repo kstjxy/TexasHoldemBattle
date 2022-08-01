@@ -23,6 +23,7 @@ public class InitialPanelManager : MonoBehaviour
 
 
     public static InitialPanelManager instance;
+    private int lenOfPlayers = 0;
 
     private void Awake()
     {
@@ -72,6 +73,25 @@ public class InitialPanelManager : MonoBehaviour
         GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/SelectButton_Prefab"), panelRect);
         go.GetComponent<PlayerSelectButton>().InitializeSelectButton(p);
     }
+
+    /// <summary>
+    /// (用于多线程，自动判断allPlayer是否有增加)读到的 Player 通过这个方法显示在初始Panel上提供用户选择
+    /// </summary>
+    public void UpdatePlayerButton( )
+    {
+        if (PlayerManager.instance.allPlayers.Count == lenOfPlayers) return ;
+        int old = lenOfPlayers;
+        int nowLen = PlayerManager.instance.allPlayers.Count;
+        lenOfPlayers = nowLen;
+        for (int i = old; i < nowLen; i++)
+        {
+            Player p = PlayerManager.instance.allPlayers[i];
+            panelRect.sizeDelta = new Vector2(panelRect.sizeDelta.x + 100, panelRect.sizeDelta.y);
+            GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/SelectButton_Prefab"), panelRect);
+            go.GetComponent<PlayerSelectButton>().InitializeSelectButton(p);
+        }
+    }
+
 
     /// <summary>
     /// 在Restart的时候调用，将初始设置窗口叫回来

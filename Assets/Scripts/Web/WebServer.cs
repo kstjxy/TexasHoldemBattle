@@ -57,27 +57,7 @@ public class WebServer
         Debug.Log("正在监听...\n最大可连接玩家数：" + playerNum);
         return true;
     }
-    public void BroadcastMessage(string message)//message就是服务器接收到的消息
-    {
-        var notConnectedList = new List<Client>();//存放所有断开连接的
-        foreach (var client in clientList)//遍历之前所有连接成功的 与客户端交互对象
-        {
-            //判断 与客户端交互对象 是否与服务断开连接
-            if (client.Connected)//处于连接状态
-            {
-                client.SendMess(message);//与客户端交互对象 向该客户端发送该消息
-            }
-            else//处于断开状态
-            {
-                notConnectedList.Add(client);//断开了，就不需要向其发送消息了
-            }
-        }
-        foreach (var temp in notConnectedList)//将断开的 与客户端交互对象删掉
-        {
-            clientList.Remove(temp);
-        }
-    }
-
+    
     Socket socketSend;
     void ListenConnect(object o)
     {
@@ -106,5 +86,25 @@ public class WebServer
         server.Dispose();
         return true;
     }
-    
+
+    public void BroadcastMessage(string message)//message就是服务器接收到的消息
+    {
+        var notConnectedList = new List<Client>();//存放所有断开连接的
+        foreach (var client in clientList)//遍历之前所有连接成功的 与客户端交互对象
+        {
+            //判断 与客户端交互对象 是否与服务断开连接
+            if (client.Connected)//处于连接状态
+            {
+                client.SendMess(message);//与客户端交互对象 向该客户端发送该消息
+            }
+            else//处于断开状态
+            {
+                notConnectedList.Add(client);//断开了，就不需要向其发送消息了
+            }
+        }
+        foreach (var temp in notConnectedList)//将断开的 与客户端交互对象删掉
+        {
+            clientList.Remove(temp);
+        }
+    }
 }
