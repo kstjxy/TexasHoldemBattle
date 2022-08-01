@@ -192,13 +192,13 @@ public class UIManager : MonoBehaviour
         if (logList.Count == lenOfList) return ;
         int oldlen = lenOfList;
         int len = logList.Count;
+        lenOfList = len;
         for (int i = oldlen; i < len; i++)
         {
             logText.text = logText.text + "\n" + logList[i] ;
             logSave = logSave + "\n" + logList[i];
         }
-        lenOfList = len;
-        
+                
     }
 
     /// <summary>
