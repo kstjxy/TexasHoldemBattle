@@ -71,7 +71,6 @@ public class WebServer
             GameStat gs = new(p);
             ai.stats = gs;
             PlayerManager.instance.allPlayers.Add(p);
-            InitialPanelManager.instance.AddSelectablePlayerButton(p);
         }
     }
     public bool CloseServer()

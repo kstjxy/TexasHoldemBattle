@@ -35,7 +35,7 @@ public class BaseAI
     {
         client = socketsend;
         SendAndReceive("OnInit");
-        name = reciveString;
+        name = reciveString.Substring(0, reciveString.IndexOf('\0'));
         client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
         Debug.Log(name + "已连接到服务器");
         PrintL(name + "已连接到服务器");
@@ -78,9 +78,13 @@ public class BaseAI
         List<Card> result = new List<Card>();
         SendAndReceive("FinalSelection");
         //合法判断，格式确定
-        foreach (char ch in reciveString)
+        //foreach(char ch in reciveString)
+        //{
+        //    cardNum.Add(ch - '0');
+        //}
+        for (int i = 0; i < 5; i++)
         {
-            cardNum.Add(ch - '0');
+            cardNum.Add(reciveString[i] - '0');
         }
         
         

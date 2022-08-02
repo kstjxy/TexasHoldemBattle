@@ -480,7 +480,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        UIManager.instance.UpdateLog();
+        //UIManager.instance.UpdateLog();
         InitialPanelManager.instance.UpdatePlayerButton();
         timer += Time.deltaTime;
         if (timer > GlobalVar.speedFactor * 2)
