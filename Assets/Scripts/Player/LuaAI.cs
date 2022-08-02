@@ -7,7 +7,7 @@ using System.Text;
 using System.Net;
 using System;
 
-public class BaseAI
+public class WebAI
 {
     public string name = "my Name";
     public GameStat stats;

@@ -64,7 +64,7 @@ public class WebServer
         while (true)
         {
             socketSend = watch.Accept();
-            BaseAI ai = new BaseAI();
+            WebAI ai = new WebAI();
             ai.OnInit(socketSend);
             Player p = new(ai);
             GameStat gs = new(p);

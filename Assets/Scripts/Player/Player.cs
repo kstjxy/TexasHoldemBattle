@@ -15,7 +15,7 @@ public class Player
         outOfGame       //不在此轮游戏中
     }
 
-    public BaseAI ai;
+    public WebAI ai;
     public string playerName;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1
     public int coin = 0;
@@ -34,7 +34,7 @@ public class Player
     public PlayerObject playerObject;
 
 
-    public Player(BaseAI ai)
+    public Player(WebAI ai)
     {
         this.ai = ai;
         this.playerName = ai.name;
@@ -42,6 +42,13 @@ public class Player
         RecordManager.instance.ActionRecords += AddActionRecord;
     }
 
+    public Player(LuaAI ai)
+    {
+        this.ai = ai;
+        this.playerName = ai.name;
+        //在进行初始化的时候就要注册进事件中去！接下来只要调用RecordManager中的ActionRecord就可以让所有玩家接收到信息。
+        RecordManager.instance.ActionRecords += AddActionRecord;
+    }
     /// <summary>
     /// 给玩家的个人卡池添加两张卡牌
     /// </summary>
