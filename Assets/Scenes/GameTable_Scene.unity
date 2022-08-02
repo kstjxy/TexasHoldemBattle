@@ -6348,6 +6348,7 @@ MonoBehaviour:
   curPlayerSeat: 0
   curPlayer:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -9164,7 +9165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 174, y: 36}
+  m_AnchoredPosition: {x: -116, y: 36}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1202825674
@@ -14208,7 +14209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -151, y: 36}
+  m_AnchoredPosition: {x: 174.00003, y: 36}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1842607622
@@ -14267,8 +14268,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Test_Add_a_Player, Assembly-CSharp
+      - m_Target: {fileID: 1842607622}
+        m_TargetAssemblyTypeName: AddLuaScripts, Assembly-CSharp
         m_MethodName: ButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -18058,6 +18059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -18587,6 +18589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -19659,6 +19662,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -19911,6 +19915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -21615,6 +21620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -22008,6 +22014,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -22462,6 +22469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0
@@ -22612,6 +22620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player:
     playerName: 
+    type: 0
     seatNum: 0
     coin: 0
     betCoin: 0

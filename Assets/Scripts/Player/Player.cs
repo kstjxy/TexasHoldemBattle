@@ -14,9 +14,16 @@ public class Player
         normal,         //普通玩家
         outOfGame       //不在此轮游戏中
     }
+    public enum aiType
+    {
+        LuaAI,         //Lua脚本
+        WebAI          //Web脚本
+    }
 
-    public WebAI ai;
+    public WebAI webAI;
+    public LuaAI luaAI;
     public string playerName;
+    public aiType type;
     public int seatNum = -1; //如果不在此轮游戏中，则为-1
     public int coin = 0;
     public int betCoin = 0;
@@ -36,18 +43,20 @@ public class Player
 
     public Player(WebAI ai)
     {
-        this.ai = ai;
+        this.webAI = ai;
         this.playerName = ai.name;
         //在进行初始化的时候就要注册进事件中去！接下来只要调用RecordManager中的ActionRecord就可以让所有玩家接收到信息。
         RecordManager.instance.ActionRecords += AddActionRecord;
+        this.type = aiType.WebAI;
     }
 
     public Player(LuaAI ai)
     {
-        this.ai = ai;
+        this.luaAI = ai;
         this.playerName = ai.name;
         //在进行初始化的时候就要注册进事件中去！接下来只要调用RecordManager中的ActionRecord就可以让所有玩家接收到信息。
         RecordManager.instance.ActionRecords += AddActionRecord;
+        this.type = aiType.LuaAI;
     }
     /// <summary>
     /// 给玩家的个人卡池添加两张卡牌

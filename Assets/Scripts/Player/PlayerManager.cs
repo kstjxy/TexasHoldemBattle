@@ -352,7 +352,10 @@ public class PlayerManager
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
         {
             //AI 的接口
-            p.state = p.ai.BetAction();
+            if (p.type == Player.aiType.WebAI)
+                p.state = p.webAI.BetAction();
+            else
+                p.state = p.luaAI.BetAction();
         }
         BetAction(p);
     }

@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     public List<Player> finalPlayers = new List<Player>();
 
     public List<string> aiFile;
-    public LuaEnv luaenv;
 
     public static GameState GameStatus()
     {
@@ -121,7 +120,10 @@ public class GameManager : MonoBehaviour
         foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
             p.coin = GlobalVar.initCoin;
-            p.ai.StartGame();
+            if (p.type == Player.aiType.WebAI)
+                p.webAI.StartGame();
+            else
+                p.luaAI.StartGame();
         }
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
@@ -152,7 +154,10 @@ public class GameManager : MonoBehaviour
 
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            p.ai.RoundStart();
+            if (p.type == Player.aiType.WebAI)
+                p.webAI.RoundStart();
+            else
+                p.luaAI.RoundStart();
         }
         curPlayerSeat = -1;
         CardManager.instance.InitialCardsList();
@@ -289,7 +294,10 @@ public class GameManager : MonoBehaviour
                 playersInAction = false;
                 return;
             }
-            curPlayer.finalCards = curPlayer.ai.FinalSelection();
+            if (curPlayer.type == Player.aiType.WebAI)
+                curPlayer.finalCards = curPlayer.webAI.FinalSelection();
+            else
+                curPlayer.finalCards = curPlayer.luaAI.FinalSelection();
             if (CardManager.instance.IsValidSelection(curPlayer))
             {
                 UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +

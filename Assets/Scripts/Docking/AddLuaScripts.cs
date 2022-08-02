@@ -31,10 +31,10 @@ public class AddLuaScripts : MonoBehaviour
     /// </summary>
     public void ButtonClicked()
     {
-        findLua(GameManager.instance.luaenv);
+        findLua();
     }
 
-    private void findLua(LuaEnv luaenv)
+    private void findLua()
     {
         //设置OpenFileDlg
         string type = "lua";
@@ -91,13 +91,12 @@ public class AddLuaScripts : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
-                WebAI ai = new WebAI();
+                LuaAI ai = new LuaAI();
                 ai.OnInit(s);
                 Player p = new(ai);
                 GameStat gs = new(p);
                 ai.stats = gs;
                 PlayerManager.instance.allPlayers.Add(p);
-                InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
             }
         }
         else
@@ -106,39 +105,39 @@ public class AddLuaScripts : MonoBehaviour
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-    public class OpenFileDlg
-    {
-        public int structSize = 0;
-        public IntPtr dlgOwner = IntPtr.Zero;
-        public IntPtr instance = IntPtr.Zero;
-        public String filter = null;
-        public String customFilter = null;
-        public int maxCustFilter = 0;
-        public int filterIndex = 0;
-        public IntPtr file;
-        public int maxFile = 0;
-        public String fileTitle = null;
-        public int maxFileTitle = 0;
-        public String initialDir = null;
-        public String title = null;
-        public int flags = 0;
-        public short fileOffset = 0;
-        public short fileExtension = 0;
-        public String defExt = null;
-        public IntPtr custData = IntPtr.Zero;
-        public IntPtr hook = IntPtr.Zero;
-        public String templateName = null;
-        public IntPtr reservedPtr = IntPtr.Zero;
-        public int reservedInt = 0;
-        public int flagsEx = 0;
-    }
+    
+}
 
-    public class OpenFileDialog
-    {
-        [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-        public static extern bool GetOpenFileName([In, Out] OpenFileDlg ofd);
-    }
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+public class OpenFileDlg
+{
+    public int structSize = 0;
+    public IntPtr dlgOwner = IntPtr.Zero;
+    public IntPtr instance = IntPtr.Zero;
+    public String filter = null;
+    public String customFilter = null;
+    public int maxCustFilter = 0;
+    public int filterIndex = 0;
+    public IntPtr file;
+    public int maxFile = 0;
+    public String fileTitle = null;
+    public int maxFileTitle = 0;
+    public String initialDir = null;
+    public String title = null;
+    public int flags = 0;
+    public short fileOffset = 0;
+    public short fileExtension = 0;
+    public String defExt = null;
+    public IntPtr custData = IntPtr.Zero;
+    public IntPtr hook = IntPtr.Zero;
+    public String templateName = null;
+    public IntPtr reservedPtr = IntPtr.Zero;
+    public int reservedInt = 0;
+    public int flagsEx = 0;
+}
 
-
+public class OpenFileDialog
+{
+    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
+    public static extern bool GetOpenFileName([In, Out] OpenFileDlg ofd);
 }

@@ -1,101 +1,75 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using System.Net.Sockets;
-using System.Text;
-using System.Net;
-using System;
+using XLua;
 
-public class WebAI
+public class LuaAI
 {
     public string name = "my Name";
     public GameStat stats;
-    public Socket client;
-    public string file;
-    byte[] recivefrom = new byte[1024];
-    byte[] sendByte = new byte[1024];
-    string reciveString;
-    string sendto;
+    public LuaEnv env;
+    public string file; //AI文件路径
+    public ITest test; //Interface接口
 
-    private void SendAndReceive(string s)
+    public void OnInit(string file)
     {
-        sendto = s;
-        sendByte = Encoding.UTF8.GetBytes(sendto);
-        client.Send(sendByte);
-        client.Receive(recivefrom);
-        reciveString = Encoding.UTF8.GetString(recivefrom);
-    }
-
-    private void PrintL(string s)
-    {
-        UIManager.instance.logList.Add(s);
-    }
-    public  void OnInit(Socket socketsend)
-    {
-        client = socketsend;
-        SendAndReceive("OnInit");
-        name = reciveString.Substring(0, reciveString.IndexOf('\0'));
-        client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
-        Debug.Log(name + "已连接到服务器");
-        PrintL(name + "已连接到服务器");
-        //name = test.name;
+        this.file = file;
+        env = new LuaEnv();
+        env.AddLoader(MyLoader);
+        env.DoString("require 'file'");
+        test = env.Global.Get<ITest>("M");
+        name = test.name;
     }
 
     public void StartGame()
     {
-        SendAndReceive("StartGame");
-        Debug.Log(name + "初始化成功！\n" + reciveString);
-        PrintL(name + "初始化成功！\n" + reciveString);
+        test.startfunction(stats);
+        Debug.Log(name + "初始化成功！");
     }
 
     public void RoundStart()
     {
-        SendAndReceive("RoundStart");
-        Debug.Log(reciveString + "新一轮已就绪！");
+        test.round_start(stats);
+        Debug.Log(name + "新一轮已就绪！");
     }
 
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        SendAndReceive("BetAction");
-        //合法性判断
-        if (reciveString[0] < '1' || reciveString[0] > '4')
+        int act = test.action(stats);
+        if (act > 0 && act < 5)
+        {
+            return act;
+        }
+        else
         {
             string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
             Debug.Log(bug);
-            PrintL(bug);
+            UIManager.instance.PrintLog(bug);
             return 3; //如果操作错误就弃牌
         }
-        
-        return reciveString[0] - '0';
-               
     }
 
-    public  List<Card> FinalSelection()
+    public List<Card> FinalSelection()
     {
-        List<int> cardNum = new List<int>();
-        List<Card> result = new List<Card>();
-        SendAndReceive("FinalSelection");
-        //合法判断，格式确定
-        //foreach(char ch in reciveString)
-        //{
-        //    cardNum.Add(ch - '0');
-        //}
-        for (int i = 0; i < 5; i++)
-        {
-            cardNum.Add(reciveString[i] - '0');
-        }
-        
-        
-        foreach (int i in cardNum)
-        {
-            if (i < 2)
-                result.AddRange(stats.CardsInHands.GetRange(i, 1));
-            else
-                result.AddRange(stats.CommunityCards.GetRange(i-2, 1));
-        };
-        return result;
+        return test.finalCards(stats);
     }
 
+    public byte[] MyLoader(ref string filepath)
+    {
+        return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(this.file));
+    }
+
+
+    [CSharpCallLua]
+    public interface ITest
+    {
+        string name { get; }
+        void startfunction(GameStat stats);
+        void round_start(GameStat stats);
+        int action(GameStat stats);
+        List<Card> finalCards(GameStat stats);
+    }
 }
