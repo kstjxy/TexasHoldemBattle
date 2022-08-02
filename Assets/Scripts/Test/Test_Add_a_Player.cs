@@ -108,13 +108,22 @@ public class Test_Add_a_Player : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
-                BaseAI ai = new BaseAI();
-                ai.OnInit(s);
-                Player p = new(ai);
-                GameStat gs = new(p);
-                ai.stats = gs;
-                PlayerManager.instance.allPlayers.Add(p);
-                InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
+                try
+                {
+                    BaseAI ai = new BaseAI();
+                    ai.OnInit(s);
+                    Player p = new(ai);
+                    GameStat gs = new(p);
+                    ai.stats = gs;
+                    PlayerManager.instance.allPlayers.Add(p);
+                    InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
+                }
+                catch (Exception e)
+                {
+                    // 引起异常的语句
+                    Debug.Log("提交的AI脚本有误，初始化失败，原因："+e.Message);
+                }
+                
             }
         }
         else

@@ -66,6 +66,15 @@ public class PlayerManager
         return true;
     }
 
+    public void RemovePlayer(Player p)
+    {
+        p.OutOfGame();
+        p.playerObject.QuitTheGame_AvatarChange();
+        totalSeatNum--;
+        activePlayers.Remove(p);
+        lostPlayers.Add(p);
+    }
+
     /// <summary>
     /// 每一轮新游戏开始前判定玩家的财富值修改ACTIVE PLAYERS
     /// </summary>
@@ -79,11 +88,7 @@ public class PlayerManager
                 {
                     UIManager.instance.PrintLog("【" + p.playerName + "】金币数量不足，退出接下来的游戏回合");
                 }
-                p.OutOfGame();
-                p.playerObject.QuitTheGame_AvatarChange();
-                totalSeatNum--;
-                activePlayers.Remove(p);
-                lostPlayers.Add(p);
+                RemovePlayer(p);
             }
             else
             {
@@ -352,7 +357,16 @@ public class PlayerManager
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
         {
             //AI 的接口
-            p.state = p.ai.BetAction();
+            try
+            {
+                p.state = p.ai.BetAction();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(p.playerName + "出牌失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                RemovePlayer(p);
+            }
         }
         BetAction(p);
     }

@@ -117,8 +117,18 @@ public class GameManager : MonoBehaviour
     {
         foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
-            p.coin = GlobalVar.initCoin;
-            p.ai.StartGame();
+            try
+            {
+                p.coin = GlobalVar.initCoin;
+                p.ai.StartGame();
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(p.playerName + "初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(p);
+            }
+
         }
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
@@ -149,7 +159,17 @@ public class GameManager : MonoBehaviour
 
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            p.ai.RoundStart();
+            try
+            {
+                p.ai.RoundStart();
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(p.playerName + "新一轮初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(p);
+            }
+            
         }
         curPlayerSeat = -1;
         CardManager.instance.InitialCardsList();
@@ -286,18 +306,29 @@ public class GameManager : MonoBehaviour
                 playersInAction = false;
                 return;
             }
-            curPlayer.finalCards = curPlayer.ai.FinalSelection();
-            if (CardManager.instance.IsValidSelection(curPlayer))
+            try
             {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
-                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
-                UIManager.instance.ShowFinalCardSet(curPlayer);
+                curPlayer.finalCards = curPlayer.ai.FinalSelection();
+                if (CardManager.instance.IsValidSelection(curPlayer))
+                {
+                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                    "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+                    UIManager.instance.ShowFinalCardSet(curPlayer);
+                }
+                else
+                {
+                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                    curPlayer.playerObject.PlayerWinEnded();
+                    PlayerManager.instance.activePlayers.Remove(curPlayer);
+                    finalPlayers.Remove(curPlayer);
+                    curPlayerSeat--;
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
-                curPlayer.playerObject.PlayerWinEnded();
-                PlayerManager.instance.activePlayers.Remove(curPlayer);
+                Debug.Log(curPlayer.playerName + "新一轮初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(curPlayer.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(curPlayer);
                 finalPlayers.Remove(curPlayer);
                 curPlayerSeat--;
             }
