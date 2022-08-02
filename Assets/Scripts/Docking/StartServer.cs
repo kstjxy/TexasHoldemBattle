@@ -8,10 +8,21 @@ using UnityEngine.UI;
 
 
 
-public class Test_Add_a_Player : MonoBehaviour
+public class StartServer : MonoBehaviour
 {
     [Header("UI Components_InteractElements")]
     public Button serverButton;
+
+    public static StartServer instance;
+
+    private void Awake()
+    {
+        //单例模式初始化
+        if (instance != null)
+            Destroy(this);
+        else
+            instance = this;
+    }
 
     //原版
     /// <summary>

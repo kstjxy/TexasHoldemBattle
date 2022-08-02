@@ -4,7 +4,7 @@ using XLua;
 using System.Net.Sockets;
 using System.Net;
 using System;
-
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -473,14 +473,27 @@ public class GameManager : MonoBehaviour
         Debug.Log("游戏开始......");
         //       PlayerManager.instance.InitPlayers();
         GlobalVar.gameStatusCounter = -2;
-        
+        GlobalVar.hostName = Dns.GetHostName();
+        Debug.Log("服务器主机名： " + GlobalVar.hostName);
+        GlobalVar.ips = Dns.GetHostAddresses(GlobalVar.hostName);
+        foreach(IPAddress ip in GlobalVar.ips)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)//ipv4
+            {
+                GlobalVar.ipAdress = ip.ToString();
+                break;
+            }
+        }
+        Debug.Log("服务器IPV4地址： " + GlobalVar.ipAdress);
+        //自动填入本机地址
+        InitialPanelManager.instance.ipAdress.text = GlobalVar.ipAdress;
     }
 
     // Update is called once per frame
 
     public void Update()
     {
-        //UIManager.instance.UpdateLog();
+        UIManager.instance.UpdateLog();
         InitialPanelManager.instance.UpdatePlayerButton();
         timer += Time.deltaTime;
         if (timer > GlobalVar.speedFactor * 2)

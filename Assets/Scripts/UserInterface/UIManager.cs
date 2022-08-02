@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
     //单例模式
     public static UIManager instance;
 
-    //Loglst，用于多线程更新UI
+    //Loglst 用于多线程更新UI
     public List<string> logList = new List<string>();
     private int lenOfList = 0; 
 
