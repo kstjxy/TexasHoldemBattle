@@ -25,6 +25,8 @@ public class WebAI
         client.Send(sendByte);
         client.Receive(recivefrom);
         reciveString = Encoding.UTF8.GetString(recivefrom);
+        reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
+        Array.Clear(recivefrom, 0, recivefrom.Length);
     }
 
     private void PrintL(string s)
@@ -35,7 +37,7 @@ public class WebAI
     {
         client = socketsend;
         SendAndReceive("OnInit");
-        name = reciveString.Substring(0, reciveString.IndexOf('\0'));
+        name = reciveString;
         client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
         Debug.Log(name + "已连接到服务器");
         PrintL(name + "已连接到服务器");
