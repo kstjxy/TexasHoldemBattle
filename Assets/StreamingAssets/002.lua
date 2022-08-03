@@ -18,11 +18,8 @@ function M: GetRand( ... )
 end
 
 function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
-    hash = CS.System.Guid.NewGuid().GetHashCode()
-    rand = CS.System.Random(hash);
-    print(rand)
-    randNum = rand%100 + 1
-     print(randNum)
+    ranNum = gamestat.NumRandom
+    print(ranNum)
     if (ranNum <= 50) then
         M.myaction = 1
         return M.myaction

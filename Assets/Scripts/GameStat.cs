@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameStat
@@ -72,5 +73,15 @@ public class GameStat
     public int CoinsBet
     {
         get { return thisPlayerInformation.betCoin; }
+    }
+    //返回一个随机数，给所给的参考脚本用
+    public int NumRandom
+    {
+        get 
+        {
+            System.Random ra = new System.Random(Guid.NewGuid().GetHashCode());
+            int a = ra.Next(1,100);
+            return a;
+        } 
     }
 }
