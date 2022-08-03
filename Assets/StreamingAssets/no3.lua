@@ -14,8 +14,7 @@ function M: round_start(gamestat)    --每【场】开始(仅返回每个玩家�
 end
 
 function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
-    math.randomseed(tostring(os.time()):reverse():sub(1, 7))
-    ranNum = math.random(100)
+    ranNum = gamestat.NumRandom
     if (ranNum <= 50) then
         M.myaction = 1
         return M.myaction

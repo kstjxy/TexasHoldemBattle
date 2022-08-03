@@ -39,6 +39,7 @@ public class LuaAI
     public int BetAction()
     {
         int act = test.action(stats);
+        Debug.Log(name + act);
         if (act > 0 && act < 5)
         {
             return act;

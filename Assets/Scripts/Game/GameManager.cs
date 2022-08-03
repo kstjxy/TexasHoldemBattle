@@ -165,15 +165,16 @@ public class GameManager : MonoBehaviour
     }
 
     public void Preflop()
-    {
-        //赢家翻回去
-        foreach (Player p in PlayerManager.instance.activePlayers)
-            if (winners.Contains(p))
-                p.playerObject.PlayerWinEnded();
+    {        
         if (!playersInAction)
         {
             if (curPlayerSeat == -1)
             {
+                //赢家翻回去
+                foreach (Player p in PlayerManager.instance.activePlayers)
+                    if (winners.Contains(p))
+                        p.playerObject.PlayerWinEnded();
+                GlobalVar.curBetCount = 0;
                 playersInAction = true;
                 UIManager.instance.PrintLog("当前为【前翻牌圈】");
                 CardManager.instance.AssignCardsToPlayers();
@@ -199,6 +200,7 @@ public class GameManager : MonoBehaviour
         {
             if (curPlayerSeat == -1)
             {
+                GlobalVar.curBetCount = 0;
                 playersInAction = true;
                 UIManager.instance.PrintLog("当前为【翻牌圈】");
                 CardManager.instance.AssignCardsToTable(3);
@@ -223,6 +225,7 @@ public class GameManager : MonoBehaviour
         {
             if (curPlayerSeat == -1)
             {
+                GlobalVar.curBetCount = 0;
                 playersInAction = true;
                 UIManager.instance.PrintLog("当前为【转牌圈】");
                 CardManager.instance.AssignCardsToTable(1);
@@ -244,6 +247,7 @@ public class GameManager : MonoBehaviour
         {
             if (curPlayerSeat == -1)
             {
+                GlobalVar.curBetCount = 0;
                 playersInAction = true;
                 UIManager.instance.PrintLog("当前为【河牌圈】");
                 CardManager.instance.AssignCardsToTable(1);

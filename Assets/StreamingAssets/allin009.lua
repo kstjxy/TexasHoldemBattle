@@ -15,7 +15,6 @@ end
 
 function M: action(gamestat)    --每【轮】调用动作(返回详细信息，等待玩家操作)
     ranNum = gamestat.NumRandom
-    print(ranNum)
     if (ranNum <= 40) then
         M.myaction = 1
         return M.myaction
