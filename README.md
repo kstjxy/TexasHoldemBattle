@@ -9,7 +9,9 @@
 
 此分支正在开发第三期WebSocket接口并且已有部分进展
 
-![捕获](https://user-images.githubusercontent.com/50037765/180354891-e0d09b04-041a-4fe5-ad5a-1a2fe04fd882.PNG)
+项目验收日志： https://4399.feishu.cn/docx/doxcnZjbH1n2UBNVLpMt9IQ9HCg
+
+![捕获](https://user-images.githubusercontent.com/50037765/182520005-ee4db28c-577c-4b02-934d-335ca9240ce5.PNG)
 ![捕获2](https://user-images.githubusercontent.com/50037765/180355966-0225751e-65a3-4c23-a4d5-c36233a4f7e5.PNG)
 ![捕获3](https://user-images.githubusercontent.com/50037765/180355985-0919eefc-0d27-4764-a880-50b03d0a39dc.PNG)
 
