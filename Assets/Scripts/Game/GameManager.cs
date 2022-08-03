@@ -119,11 +119,20 @@ public class GameManager : MonoBehaviour
     {
         foreach (Player p in PlayerManager.instance.seatedPlayers)
         {
-            p.coin = GlobalVar.initCoin;
-            if (p.type == Player.aiType.WebAI)
-                p.webAI.StartGame();
-            else
-                p.luaAI.StartGame();
+            try
+            {
+                p.coin = GlobalVar.initCoin;
+                if (p.type == Player.aiType.WebAI)
+                    p.webAI.StartGame();
+                else
+                    p.luaAI.StartGame();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(p.playerName + "初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(p);
+            }
         }
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
@@ -154,10 +163,19 @@ public class GameManager : MonoBehaviour
 
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
-            if (p.type == Player.aiType.WebAI)
-                p.webAI.RoundStart();
-            else
-                p.luaAI.RoundStart();
+            try
+            {
+                if (p.type == Player.aiType.WebAI)
+                    p.webAI.RoundStart();
+                else
+                    p.luaAI.RoundStart();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(p.playerName + "新一轮初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(p);
+            }
         }
         curPlayerSeat = -1;
         CardManager.instance.InitialCardsList();
@@ -298,21 +316,32 @@ public class GameManager : MonoBehaviour
                 playersInAction = false;
                 return;
             }
-            if (curPlayer.type == Player.aiType.WebAI)
-                curPlayer.finalCards = curPlayer.webAI.FinalSelection();
-            else
-                curPlayer.finalCards = curPlayer.luaAI.FinalSelection();
-            if (CardManager.instance.IsValidSelection(curPlayer))
+            try
             {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
-                "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
-                UIManager.instance.ShowFinalCardSet(curPlayer);
+                if (curPlayer.type == Player.aiType.WebAI)
+                    curPlayer.finalCards = curPlayer.webAI.FinalSelection();
+                else
+                    curPlayer.finalCards = curPlayer.luaAI.FinalSelection();
+                if (CardManager.instance.IsValidSelection(curPlayer))
+                {
+                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                    "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
+                    UIManager.instance.ShowFinalCardSet(curPlayer);
+                }
+                else
+                {
+                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                    curPlayer.playerObject.PlayerWinEnded();
+                    PlayerManager.instance.activePlayers.Remove(curPlayer);
+                    finalPlayers.Remove(curPlayer);
+                    curPlayerSeat--;
+                }
             }
-            else
+            catch (Exception e)
             {
-                UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
-                curPlayer.playerObject.PlayerWinEnded();
-                PlayerManager.instance.activePlayers.Remove(curPlayer);
+                Debug.Log(curPlayer.playerName + "新一轮初始化失败，原因：" + e.Message);
+                UIManager.instance.PrintLog(curPlayer.playerName + "AI脚本不符合规范，被移出游戏");
+                PlayerManager.instance.RemovePlayer(curPlayer);
                 finalPlayers.Remove(curPlayer);
                 curPlayerSeat--;
             }

@@ -42,19 +42,19 @@ public class WebServer
         {
             server.Bind(endPoint);
             Debug.Log("服务器已启动!");
+            serverActive = true;
+            server.Listen(playerNum);
+            listenThread = new Thread(ListenConnect);
+            listenThread.IsBackground = true;
+            listenThread.Start(server);
+            Debug.Log("正在监听...\n最大可连接玩家数：" + playerNum);
+            return true;
         }
         catch(Exception e)
         {
             Debug.Log("服务器启动失败，原因为：" + e.Message);
             return false;
         }
-        serverActive = true;
-        server.Listen(playerNum);
-        listenThread = new Thread(ListenConnect);
-        listenThread.IsBackground = true;
-        listenThread.Start(server);
-        Debug.Log("正在监听...\n最大可连接玩家数：" + playerNum);
-        return true;
     }
     
     Socket socketSend;
