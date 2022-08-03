@@ -63,13 +63,21 @@ public class WebServer
         Socket watch = o as Socket;
         while (true)
         {
-            socketSend = watch.Accept();
-            WebAI ai = new WebAI();
-            ai.OnInit(socketSend);
-            Player p = new(ai);
-            GameStat gs = new(p);
-            ai.stats = gs;
-            PlayerManager.instance.allPlayers.Add(p);
+            try
+            {
+                socketSend = watch.Accept();
+                WebAI ai = new WebAI();
+                ai.OnInit(socketSend);
+                Player p = new(ai);
+                GameStat gs = new(p);
+                ai.stats = gs;
+                PlayerManager.instance.allPlayers.Add(p);
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e);
+            }
+            
         }
     }
     public bool CloseServer()
@@ -79,9 +87,18 @@ public class WebServer
             Debug.Log("·þÎñÆ÷ÉÐÎ´¿ªÆô£¡");
             return false;
         }
-        serverActive = false;
-        server.Close();
-        server.Dispose();
-        return true;
+        try
+        {
+            Thread.Sleep(100);
+            serverActive = false;
+            server.Close();
+            server.Dispose();
+            return true;
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+        return false;
     }
 }
