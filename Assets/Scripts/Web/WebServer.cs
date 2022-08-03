@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System;
 using UnityEngine;
+using System.Text;
 
 public class WebServer 
 {
@@ -26,6 +27,7 @@ public class WebServer
     //int clientNum = 0;          //连接数
     bool serverActive = false;  //服务器是否开启
     //bool connected = false;     //是否有客户端连接
+    IPEndPoint endPoint;
 
     public bool StartServer(string ip,int port,int playerNum)
     {
@@ -36,7 +38,7 @@ public class WebServer
         
         server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         IPAddress address = IPAddress.Parse(ip);
-        IPEndPoint endPoint = new IPEndPoint(address, port);
+        endPoint = new IPEndPoint(address, port);
 
         try
         {
@@ -66,6 +68,8 @@ public class WebServer
             try
             {
                 socketSend = watch.Accept();
+                //协作式取消,停止线程
+                if (!serverActive) break;
                 WebAI ai = new WebAI();
                 ai.OnInit(socketSend);
                 Player p = new(ai);
@@ -89,10 +93,25 @@ public class WebServer
         }
         try
         {
-            Thread.Sleep(100);
+            //更改状态
             serverActive = false;
+            //关闭阻塞的watch.Accept();
+            Socket endSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            endSocket.Connect(endPoint);
+            endSocket.Send(Encoding.UTF8.GetBytes("End"));
+            endSocket.Close();
+            endSocket.Dispose();
+            foreach(Player p in PlayerManager.instance.allPlayers)
+            {
+                if (p.type == Player.aiType.WebAI)
+                {
+                    p.webAI.client.Close();
+                    p.webAI.client.Dispose();
+                }
+            }
             server.Close();
             server.Dispose();
+            Debug.Log("服务器已关闭!");
             return true;
         }
         catch(Exception e)

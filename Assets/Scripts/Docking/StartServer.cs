@@ -46,7 +46,6 @@ public class StartServer : MonoBehaviour
     public void ButtonClicked()
     {
         Text tx = serverButton.GetComponentInChildren<Text>();
-        print(tx.text);
         if (tx.text == "Start Server")
         {
             
@@ -61,6 +60,16 @@ public class StartServer : MonoBehaviour
         else
         {
             WebServer.instance.CloseServer();
+            for(int i=0;i<PlayerManager.instance.allPlayers.Count; i++)
+            {
+                Player p = PlayerManager.instance.allPlayers[i];
+                if (p.type == Player.aiType.WebAI)
+                {
+                    PlayerManager.instance.allPlayers.Remove(p);
+                    Destroy(InitialPanelManager.instance.panelRect.GetChild(i).gameObject);
+                }
+                    
+            }
             tx.text = "Start Server";
         }
             

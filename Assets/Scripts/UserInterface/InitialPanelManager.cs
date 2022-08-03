@@ -8,6 +8,8 @@ public class InitialPanelManager : MonoBehaviour
     [Header("Anim")]
     public Animator panelAnimator;
     public Text startErrorLog;
+    public Text LuaLog;
+    public Text WebLog;
 
     [Header("RectTransform")]
     public RectTransform panelRect;
@@ -77,9 +79,9 @@ public class InitialPanelManager : MonoBehaviour
     /// <summary>
     /// (用于多线程，自动判断allPlayer是否有增加)读到的 Player 通过这个方法显示在初始Panel上提供用户选择
     /// </summary>
-    public void UpdatePlayerButton( )
+    public void UpdatePlayerButton()
     {
-        if (PlayerManager.instance.allPlayers.Count == lenOfPlayers) return ;
+        if (PlayerManager.instance.allPlayers.Count == lenOfPlayers) return;
         int old = lenOfPlayers;
         int nowLen = PlayerManager.instance.allPlayers.Count;
         lenOfPlayers = nowLen;
@@ -111,6 +113,16 @@ public class InitialPanelManager : MonoBehaviour
         startErrorLog.text = log;
         startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
     }
+    public void CallLuaLog(string log)
+    {
+        startErrorLog.text = log;
+        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
+    }
+    public void CallWebLog(string log)
+    {
+        startErrorLog.text = log;
+        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
+    }
 
     /// <summary>
     /// 刷新所有Button的UI
@@ -123,4 +135,13 @@ public class InitialPanelManager : MonoBehaviour
         }
     }
 
+    public void ResetAllAvatar()
+    {
+        for (int i = 0; i < panelRect.childCount; i++)
+        {
+            panelRect.GetChild(i).GetComponent<PlayerSelectButton>().RefreshButtonUI();
+        }
+
+
+    }
 }
