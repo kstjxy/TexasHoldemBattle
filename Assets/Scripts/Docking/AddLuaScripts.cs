@@ -91,12 +91,20 @@ public class AddLuaScripts : MonoBehaviour
             GameManager.instance.aiFile = new List<string>(fileFullNames);
             foreach (string s in fileFullNames)
             {
-                LuaAI ai = new LuaAI();
-                ai.OnInit(s);
-                Player p = new(ai);
-                GameStat gs = new(p);
-                ai.stats = gs;
-                PlayerManager.instance.allPlayers.Add(p);
+                try
+                {
+                    LuaAI ai = new LuaAI();
+                    ai.OnInit(s);
+                    Player p = new(ai);
+                    GameStat gs = new(p);
+                    ai.stats = gs;
+                    PlayerManager.instance.allPlayers.Add(p);
+                }
+                catch (Exception e)
+                {
+                    // 引起异常的语句
+                    Debug.Log("提交的AI脚本有误，初始化失败，原因：" + e.Message);
+                }
             }
         }
         else
