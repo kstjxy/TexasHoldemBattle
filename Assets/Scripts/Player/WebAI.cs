@@ -125,8 +125,8 @@ public class WebAI : MonoBehaviour
         }
         catch(Exception e)
         {
-            Debug.Log(name + "πÿ±’ ß∞‹");
-            PrintL(name + "πÿ±’ ß∞‹");
+            Debug.Log(name + "πÿ±’ ß∞‹" + e.Message);
+            PrintL(name + "πÿ±’ ß∞‹" + e.Message);
         }
         
         
