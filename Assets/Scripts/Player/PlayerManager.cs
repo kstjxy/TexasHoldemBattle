@@ -430,6 +430,12 @@ public class PlayerManager
         totalSeatNum--;
         activePlayers.Remove(p);
         lostPlayers.Add(p);
+        if (allPlayers.Count < 2 || activePlayers.Count < 2)
+        {
+            UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
+            GlobalVar.gameStatusCounter = 6;
+            GameManager.instance.GameOver();
+        }
     }
 
     /// <summary>
