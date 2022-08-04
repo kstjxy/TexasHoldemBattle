@@ -302,7 +302,7 @@ public class GameManager : MonoBehaviour
                     winners = CardManager.instance.FindWinner(pair.Value);
                     if (winners.Count == 0)
                     {
-                        if (index == 1)
+                        if (index == 0)
                         {
                             UIManager.instance.PrintLog("因玩家选牌失误，主奖池没有冠军被废弃");
                         } else
@@ -312,7 +312,7 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        if (index == 1)
+                        if (index == 0)
                         {
                             UIManager.instance.PrintLog("主奖池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
                         }
@@ -499,17 +499,19 @@ public class GameManager : MonoBehaviour
         finalPlayers.Sort((a, b) => {
             return a.betCoin - b.betCoin;
         });
-        while (finalPlayers.Count != 0)
+        int startIndex = 0;
+        while (startIndex < finalPlayers.Count)
         {
-            int potAmt = finalPlayers[0].betCoin;
+            int potAmt = finalPlayers[startIndex].betCoin;
             List<Player> potPlayers = new List<Player>();
-            foreach (Player p in finalPlayers)
+            for (int i = startIndex; i< finalPlayers.Count; i++)
             {
+                Player p = finalPlayers[i];
                 p.betCoin -= potAmt;
                 potPlayers.Add(p);
                 if (p.betCoin == 0)
                 {
-                    finalPlayers.Remove(p);
+                    startIndex++;
                 }
             }
             pots.Add(potAmt, potPlayers);
