@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     public List<Player> finalPlayers = new List<Player>();
 
     public List<string> aiFile;
+    public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
+
 
     public static GameState GameStatus()
     {
@@ -293,15 +295,36 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                winners = CardManager.instance.FindWinner(finalPlayers); ;
-                if (winners.Count == 0)
+                HandlePots();
+                int index = 0;
+                foreach (var pair in pots)
                 {
-                    UIManager.instance.PrintLog("因玩家选牌失误，本轮没有冠军公共奖池被废弃");
-                } else
-                {
-                    UIManager.instance.PrintLog("所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+                    winners = CardManager.instance.FindWinner(pair.Value);
+                    if (winners.Count == 0)
+                    {
+                        if (index == 1)
+                        {
+                            UIManager.instance.PrintLog("因玩家选牌失误，主奖池没有冠军被废弃");
+                        } else
+                        {
+                            UIManager.instance.PrintLog("因玩家选牌失误，【"+index+"】号边池没有冠军被废弃");
+                        }
+                    }
+                    else
+                    {
+                        if (index == 1)
+                        {
+                            UIManager.instance.PrintLog("主奖池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+                        }
+                        else
+                        {
+                            UIManager.instance.PrintLog("【" + index + "】号边池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+                        }
+                    }
+                    UpdateCoins(index,pair.Key * pair.Value.Count);
+                    index++;
                 }
-                UpdateCoins();
+                ResetCoins();
                 ReadyForNextState();
             }
         }
@@ -471,6 +494,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void HandlePots()
+    {
+        finalPlayers.Sort((a, b) => {
+            return a.betCoin - b.betCoin;
+        });
+        while (finalPlayers.Count != 0)
+        {
+            int potAmt = finalPlayers[0].betCoin;
+            List<Player> potPlayers = new List<Player>();
+            foreach (Player p in finalPlayers)
+            {
+                p.betCoin -= potAmt;
+                potPlayers.Add(p);
+                if (p.betCoin == 0)
+                {
+                    finalPlayers.Remove(p);
+                }
+            }
+            pots.Add(potAmt, potPlayers);
+        }
+    }
+
     public string PrintWinner(List<Player> pList)
     {
         string str = "【" + pList[0].playerName;
@@ -481,26 +526,33 @@ public class GameManager : MonoBehaviour
         return str + "】";
     }
 
-    public void UpdateCoins()
+    public void UpdateCoins(int index, int curPot)
     {
         int rewards = 0;
-        if(winners.Count > 0)
+        if (winners.Count > 0)
         {
-            rewards = GlobalVar.pot / winners.Count;
-            UIManager.instance.PrintLog("本回合冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
+            rewards = curPot / winners.Count;
+            if (index == 0)
+            {
+                UIManager.instance.PrintLog("主奖池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
+            } else
+            {
+                UIManager.instance.PrintLog("【"+index+"】号边池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
+            }
         }
+        foreach (Player p in winners)
+        {
+            p.coin += rewards;
+        }
+    }
+        
+    public void ResetCoins()
+    {
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
             p.betCoin = 0;
-            if (winners.Contains(p))
-            {
-                p.coin += rewards;
-                p.playerObject.UpdateCoinsCount();
-                p.playerObject.PlayerWin();
-            } else
-            {
-                p.playerObject.PlayerWinEnded();
-            }
+            p.playerObject.UpdateCoinsCount();
+            p.playerObject.PlayerWinEnded();
             p.playerObject.UpdateBetCoinsCount();
         }
         GlobalVar.pot = 0;

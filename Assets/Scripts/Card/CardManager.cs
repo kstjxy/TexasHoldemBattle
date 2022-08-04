@@ -93,18 +93,10 @@ public class CardManager : MonoBehaviour
             List<Card> c1 = wList[0].finalCards;
             List<Card> c2 = pList[i].finalCards;
             c1.Sort((a,b)=>{
-                if(a.Value != b.Value)
-                {
-                    return a.Value - b.Value;
-                }
-                return 0;
+                return a.Value - b.Value;
             });
             c2.Sort((a, b) => {
-                if (a.Value != b.Value)
-                {
-                    return a.Value - b.Value;
-                }
-                return 0;
+                return a.Value - b.Value;
             });
             int result = CompareCards(c1,c2);
             if (result > 0)
