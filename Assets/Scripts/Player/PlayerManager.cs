@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Net.Sockets;
 
 public class PlayerManager
 {
@@ -354,6 +355,14 @@ public class PlayerManager
                     p.state = p.webAI.BetAction();
                 else
                     p.state = p.luaAI.BetAction();
+            }
+            catch (SocketException e)
+            {
+                string bug = "与客户端【" + p.playerName + "】沟通失败，可能为连接断开或超时（5S） " + e.Message;
+                Debug.Log(bug);
+                p.webAI.CloseSocket();
+                Debug.Log("关闭此客户端的连接");
+                RemovePlayer(p);
             }
             catch (Exception e)
             {

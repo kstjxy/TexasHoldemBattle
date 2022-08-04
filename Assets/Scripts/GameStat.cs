@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+[Serializable]
 public class GameStat
 {
     //该类只用于给AI提供数据读取的接口！
