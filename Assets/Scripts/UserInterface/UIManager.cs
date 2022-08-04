@@ -38,6 +38,10 @@ public class UIManager : MonoBehaviour
     //单例模式
     public static UIManager instance;
 
+    //Loglst 用于多线程更新UI
+    public List<string> logList = new List<string>();
+    private int lenOfList = 0; 
+
     //特效对象池
     public Queue<GameObject> textEffectsPool = new Queue<GameObject>();
     public List<GameObject> activeTextEffects = new List<GameObject>();
@@ -78,7 +82,7 @@ public class UIManager : MonoBehaviour
         pausePanelAnimator.Play("Continue", 0, 0);
     }
 
-    void Restart_ButtonClicked()
+    public void Restart_ButtonClicked()
     {
         //进行一些清空进度回归初始化的操作
         
@@ -181,6 +185,23 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// （用于多线程，线程安全）输出日志到下方的 LOG & DETAILS 中，自动检测logList是否有增加
+    /// </summary>
+    public void UpdateLog()
+    {
+        if (logList.Count == lenOfList) return ;
+        int oldlen = lenOfList;
+        int len = logList.Count;
+        lenOfList = len;
+        for (int i = oldlen; i < len; i++)
+        {
+            logText.text = logText.text + "\n" + logList[i] ;
+            logSave = logSave + "\n" + logList[i];
+        }
+                
+    }
+
+    /// <summary>
     /// 清空日志
     /// </summary>
     public void ClearLog()
@@ -278,22 +299,6 @@ public class UIManager : MonoBehaviour
         po.SetActive(true);
         return po.GetComponent<PlayerObject>();
     }
-
-    /// <summary>
-    /// 更新奖池
-    /// </summary>
-    /// <param name="change">奖池变动清情况，为负数则代表全部被玩家赢走</param>
-    /*public void UpdateCoinsPool(int change)
-    {
-
-        if (change < 0)
-            GlobalVar.pot = 0;
-        else
-            GlobalVar.pot += change;
-
-        coinPoolText.text = GlobalVar.pot.ToString();
-    }*/
-    //已弃用
 
     /// <summary>
     /// 更新奖池
