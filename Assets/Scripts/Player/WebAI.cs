@@ -7,12 +7,54 @@ using System.Text;
 using System;
 using System.Threading;
 
+
+[Serializable]
+public class Serialization<T>
+{
+    [SerializeField]
+    List<T> gamestats;
+    public List<T> ToList() { return gamestats; }
+
+    public Serialization(List<T> target)
+    {
+        this.gamestats = target;
+    }
+}
+
+
+[Serializable]
+public class Data
+{
+    //该类只用于给WebAI传输数据读取的接口！
+    //公共信息------------------------------------------------------------------------------
+    public int Round;                       //游戏阶段    
+    public int Button;                      //庄家位    
+    [SerializeField]
+    public List<Card> CommunityCards;       //公共牌   
+    [SerializeField]
+    public List<int[]> PlayersInformation;  //所有还留在场上的玩家信息【座位号，现有金币，当局已下注金币】
+
+    //个人信息------------------------------------------------------------------------------    
+    public int MyPosition;                  //自己的座位号
+    [SerializeField]
+    public List<int[]> Last_Period;         //上一轮从我位置之后的行动序列【座位号，行动序号】    
+    [SerializeField]
+    public List<int[]> This_Period;         //这一轮从庄家到我的行动序列 【座位号，行动序号】    
+    [SerializeField]
+    public List<Card> CardsInHands;         //自己的两张手牌
+    public int CoinsLeft;                   //剩余筹码
+    public int CoinsBet;                    //该局已下注的筹码
+
+}
+
+
 public class WebAI 
 {
     public string name = "my Name";
     public GameStat stats;
     public Socket client;
     public Player player;
+    private Data data = new Data();
     public string file;
     private byte[] recivefrom = new byte[2048];
     private byte[] sendByte = new byte[2048];
@@ -20,56 +62,54 @@ public class WebAI
     private string sendto;
     public bool waitFlag = false;
 
+    
+
     //多线程 会造成 玩家还没开始 流程继续 
     //多线程 + 状态阻塞
-    void ThreadSend()
-    {
-        waitFlag = true;
-        try
-        {
-            client.Send(sendByte);
-        }
-        catch (Exception e)
-        {
-            string bug = "向客户端【" + name + "】发送信息失败，可能为连接断开或超时（5S） " + e.Message;
-            Debug.Log(bug);
-            CloseSocket();
-            Debug.Log("关闭此客户端的连接");
-            PlayerManager.instance.RemovePlayer(player);
-        }
-        waitFlag = false;
-    }
-    void ThreadRecive()
-    {
-        waitFlag = true;
-        try
-        {
-            client.Receive(recivefrom);
-        }
-        catch (Exception e)
-        {
-            string bug = "从客户端【" + name + "】接收信息失败，可能为连接断开或超时（5S） " + e.Message;
-            Debug.Log(bug);
-            CloseSocket();
-            Debug.Log("关闭此客户端的连接");
-            PlayerManager.instance.RemovePlayer(player);
-        }
-        waitFlag = false;
+    //void ThreadSend()
+    //{
+    //    waitFlag = true;
+    //    try
+    //    {
+    //        client.Send(sendByte);
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        string bug = "向客户端【" + name + "】发送信息失败，可能为连接断开或超时（5S） " + e.Message;
+    //        Debug.Log(bug);
+    //        CloseSocket();
+    //        Debug.Log("关闭此客户端的连接");
+    //        PlayerManager.instance.RemovePlayer(player);
+    //    }
+    //    waitFlag = false;
+    //}
+    //void ThreadRecive()
+    //{
+    //    waitFlag = true;
+    //    try
+    //    {
+    //        client.Receive(recivefrom);
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        string bug = "从客户端【" + name + "】接收信息失败，可能为连接断开或超时（5S） " + e.Message;
+    //        Debug.Log(bug);
+    //        CloseSocket();
+    //        Debug.Log("关闭此客户端的连接");
+    //        PlayerManager.instance.RemovePlayer(player);
+    //    }
+    //    waitFlag = false;
         
-    }
+    //}
     private void SendFunc(string s)
     {
         sendto = s;
         sendByte = Encoding.UTF8.GetBytes(sendto);
-        Thread thread = new Thread(ThreadSend);
-        thread.IsBackground = true;
-        thread.Start();
+        client.Send(sendByte);
     }
     private void ReciveFunc()
     {
-        Thread thread = new Thread(ThreadRecive);
-        thread.IsBackground = true;
-        thread.Start();
+        client.Receive(recivefrom);
         reciveString = Encoding.UTF8.GetString(recivefrom);
         reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
         Array.Clear(recivefrom, 0, recivefrom.Length);
@@ -82,7 +122,23 @@ public class WebAI
 
     private void SendGameStat()
     {
-        string jsonStat = JsonUtility.ToJson(stats);
+        data.Round = stats.Round;
+        data.Button = stats.Button;
+        data.CommunityCards = new List<Card>();
+        data.CommunityCards = stats.CommunityCards;
+        data.PlayersInformation = new List<int[]>();
+        data.PlayersInformation = stats.PlayersInformation;
+        data.MyPosition = stats.MyPosition;
+        data.Last_Period = new List<int[]>();
+        data.Last_Period = stats.Last_Period;
+        data.CardsInHands = new List<Card>();
+        data.CardsInHands = stats.CardsInHands;
+        data.CoinsLeft = stats.CoinsLeft;
+        data.CoinsBet = stats.CoinsBet;
+        List<Data> dataList = new List<Data>();
+        dataList.Add(data);
+        string jsonStat = JsonUtility.ToJson(data);
+        Debug.Log(jsonStat);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
     }
@@ -97,8 +153,9 @@ public class WebAI
         //接受与发送的超时时间均设为5s
         client.SendTimeout = 5000;
         client.ReceiveTimeout = 5000;
-        SendFunc("服务器haihai");
+        
         SendAndReceive("OnInit");
+        SendFunc("服务器haihai");
         name = reciveString;
         Debug.Log(name + "已连接到服务器");
         PrintL(name + "已连接到服务器");
@@ -142,8 +199,9 @@ public class WebAI
     {
         List<int> cardNum = new List<int>();
         List<Card> result = new List<Card>();
-        SendAndReceive("FinalSelection");
+        SendFunc("FinalSelection");
         SendGameStat();
+        ReciveFunc();
         //合法判断，格式确定
         //foreach(char ch in reciveString)
         //{
