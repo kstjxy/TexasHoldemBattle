@@ -40,7 +40,9 @@ public class WebAI
     }
     private void SendGameStats()
     {
-        sendto = JsonUtility()
+        string jsonStat = JsonUtility.ToJson(stats);
+        sendByte = Encoding.UTF8.GetBytes(jsonStat);
+        client.Send(sendByte);
     }
 
     private void SendGameStat()
@@ -68,22 +70,25 @@ public class WebAI
     public void StartGame()
     {
         SendAndReceive("StartGame");
+        SendGameStats();
         Debug.Log(name + "初始化成功！\n" + reciveString);
-        UIManager.instance.PrintThread(name + "初始化成功！\n" + reciveString);
+        UIManager.instance.PrintThread(name + "初始化成功！\n" + reciveString);       
     }
 
     public void RoundStart()
     {
         SendAndReceive("RoundStart");
         SendGameStat();
+        Receive();
         Debug.Log(reciveString + "新一轮已就绪！");
     }
 
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        SendAndReceive("BetAction");
+        Send("BetAction");
         SendGameStat();
+        Receive();
         //合法性判断
         if (reciveString[0] < '1' || reciveString[0] > '4')
         {
@@ -92,7 +97,6 @@ public class WebAI
             UIManager.instance.PrintThread(bug);
             return 3; //如果操作错误就弃牌
         }
-
         return reciveString[0] - '0';
 
     }
@@ -101,8 +105,9 @@ public class WebAI
     {
         List<int> cardNum = new List<int>();
         List<Card> result = new List<Card>();
-        SendAndReceive("FinalSelection");
+        Send("FinalSelection");
         SendGameStat();
+        Receive();
         //合法判断，格式确定
         //foreach(char ch in reciveString)
         //{

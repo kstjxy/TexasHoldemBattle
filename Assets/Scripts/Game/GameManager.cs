@@ -43,7 +43,8 @@ public class GameManager : MonoBehaviour
     public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
     private Thread logicThread;
     private bool rankUpdateFlag = false;
-
+    private bool clearCardsFlag = false;
+    private bool gameRoundFlag = false;
 
     //作为参考，没有引用
     public static GameState GameStatus()
@@ -122,6 +123,17 @@ public class GameManager : MonoBehaviour
             UIManager.instance.UpdateRankingList();
             rankUpdateFlag = false;
         }
+        if (clearCardsFlag)
+        {
+            UIManager.instance.ClearAllCards();
+            rankUpdateFlag = false;
+        }
+        if (gameRoundFlag)
+        {
+            UIManager.instance.UpdateGameRounds();
+            gameRoundFlag = false;
+        }
+        
         if (PlayerManager.instance.UIUpdateString != "")
         {
             InitialPanelManager.instance.CallStartErrorLog(PlayerManager.instance.UIUpdateString);
@@ -191,10 +203,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void RoundInit()
     {
-        UIManager.instance.ClearAllCards();
-        UIManager.instance.ClearAllCards();
+        clearCardsFlag = true;
         UIManager.instance.PrintThread("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
-        UIManager.instance.UpdateGameRounds();
+        gameRoundFlag = true;       
         PlayerManager.instance.NewRound();
         GlobalVar.curBtnSeat = (GlobalVar.curBtnSeat + 1) % PlayerManager.instance.activePlayers.Count;
         PlayerManager.instance.SetPlayersRole(GlobalVar.curBtnSeat);

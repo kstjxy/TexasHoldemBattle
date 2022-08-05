@@ -22,7 +22,7 @@ public class WebServer
 
     public Socket server = null;
     public Thread listenThread = null;
-    public List<Socket> sockets;
+    public List<Socket> sockets = new List<Socket>();
     int oldLenSockets;
     int nowLenSockets;
 

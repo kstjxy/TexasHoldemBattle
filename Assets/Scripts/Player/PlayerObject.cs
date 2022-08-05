@@ -16,6 +16,14 @@ public class PlayerObject : MonoBehaviour
     public Image card1Image;
     public Image card2Image;
 
+    public enum state{
+        BackToWait,
+        HightLightAction,
+        NoMoreAction,
+        QuitTheGame
+    }
+    public state avatarState = state.BackToWait;
+
     /// <summary>
     /// 对PlayerObject进行初始化
     /// </summary>
