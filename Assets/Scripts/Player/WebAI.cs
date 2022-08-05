@@ -6,29 +6,41 @@ using System.Net.Sockets;
 using System.Text;
 using System;
 using System.Threading;
+using Unity;
 
 public class WebAI 
 {
     public string name = "my Name";
     public GameStat stats;
     public Socket client;
+    public Player player;
     public string file;
     private byte[] recivefrom = new byte[2048];
     private byte[] sendByte = new byte[2048];
     private string reciveString;
     private string sendto;
 
-    private IEnumerator SendAndReceive(string s)
+    private void Send(string s)
     {
         sendto = s;
         sendByte = Encoding.UTF8.GetBytes(sendto);
         client.Send(sendByte);
+    }
+    private void Receive()
+    {
         client.Receive(recivefrom);
-
         reciveString = Encoding.UTF8.GetString(recivefrom);
         reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
         Array.Clear(recivefrom, 0, recivefrom.Length);
-        yield return null;
+    }
+    private void SendAndReceive(string s)
+    {
+        Send(s);
+        Receive();
+    }
+    private void SendGameStats()
+    {
+        sendto = JsonUtility()
     }
 
     private void SendGameStat()
@@ -39,21 +51,17 @@ public class WebAI
 
     }
 
-    private void PrintL(string s)
-    {
-        UIManager.instance.logList.Add(s);
-    }
     public void OnInit(Socket socketsend)
     {
         client = socketsend;
         //接受与发送的超时时间均设为5s
         client.SendTimeout = 5000;
         client.ReceiveTimeout = 5000;
-        StartCoroutine(SendAndReceive("OnInit"));
+        SendAndReceive("OnInit");
         name = reciveString;
-        client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
+        Send("服务器haihai");
         Debug.Log(name + "已连接到服务器");
-        PrintL(name + "已连接到服务器");
+        UIManager.instance.PrintThread(name + "已连接到服务器");
         //name = test.name;
     }
 
@@ -61,7 +69,7 @@ public class WebAI
     {
         SendAndReceive("StartGame");
         Debug.Log(name + "初始化成功！\n" + reciveString);
-        PrintL(name + "初始化成功！\n" + reciveString);
+        UIManager.instance.PrintThread(name + "初始化成功！\n" + reciveString);
     }
 
     public void RoundStart()
@@ -81,7 +89,7 @@ public class WebAI
         {
             string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
             Debug.Log(bug);
-            PrintL(bug);
+            UIManager.instance.PrintThread(bug);
             return 3; //如果操作错误就弃牌
         }
 
@@ -108,10 +116,13 @@ public class WebAI
 
         foreach (int i in cardNum)
         {
-            if (i < 2)
-                result.AddRange(stats.CardsInHands.GetRange(i, 1));
+            int j = i;
+            if (i < 0 || i > 6)
+                j = 0;
+            if (j < 2)
+                result.AddRange(stats.CardsInHands.GetRange(j, 1));
             else
-                result.AddRange(stats.CommunityCards.GetRange(i - 2, 1));
+                result.AddRange(stats.CommunityCards.GetRange(j - 2, 1));
         };
         return result;
     }
@@ -121,12 +132,12 @@ public class WebAI
             client.Close();
             client.Dispose();
             Debug.Log(name + "已关闭连接");
-            PrintL(name + "已关闭连接");
+            UIManager.instance.PrintThread(name + "已关闭连接");
         }
         catch(Exception e)
         {
             Debug.Log(name + "关闭失败" + e.Message);
-            PrintL(name + "关闭失败" + e.Message);
+            UIManager.instance.PrintThread(name + "关闭失败" + e.Message);
         }
         
         

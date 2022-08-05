@@ -184,6 +184,11 @@ public class UIManager : MonoBehaviour
         logSave = logSave + "\n" + log;
     }
 
+    public void PrintThread(string s)
+    {
+        logList.Add(s);
+    }
+
     /// <summary>
     /// （用于多线程，线程安全）输出日志到下方的 LOG & DETAILS 中，自动检测logList是否有增加
     /// </summary>
@@ -207,6 +212,8 @@ public class UIManager : MonoBehaviour
     public void ClearLog()
     {
         logText.text = "LOG:";
+        logList = new List<string>();
+        lenOfList = 0;
     }
     /// <summary>
     /// 更新排行榜内容，接收一个已经排好序的playerList

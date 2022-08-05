@@ -24,6 +24,7 @@ public class PlayerManager
     public List<Player> lostPlayers = new List<Player>();
     public int totalSeatNum;    //当前回合一共入座的玩家数，包括已经FOLD的不包括已经破产的
     public int nowPlayerIndex;  //当前下注玩家序号
+    public string UIUpdateString = ""; //
 
     /// <summary>
     /// 判断选择玩家的数量是否符合规范并且赋予座位号
@@ -48,12 +49,13 @@ public class PlayerManager
             if (totalSeatNum < 2)
             {
                 Debug.Log("玩家人数未达到2人，请更改选择");
-                InitialPanelManager.instance.CallStartErrorLog("玩家人数不能小于2人！");
+                UIUpdateString = "玩家人数不能小于2人！";
+                
             }
             else
             {
                 Debug.Log("玩家人数超过上限8人，请更改选择");
-                InitialPanelManager.instance.CallStartErrorLog("玩家人数不能超过8人！");
+                UIUpdateString = "玩家人数不能超过8人！";
             }
             foreach (Player pl in seatedPlayers)
             {
@@ -78,7 +80,7 @@ public class PlayerManager
             {
                 if (!lostPlayers.Contains(p))
                 {
-                    UIManager.instance.PrintLog("【" + p.playerName + "】金币数量不足，退出接下来的游戏回合");
+                    UIManager.instance.PrintThread("【" + p.playerName + "】金币数量不足，退出接下来的游戏回合");
                 }
                 RemovePlayer(p);
             }
@@ -204,7 +206,7 @@ public class PlayerManager
                         p.playerObject.UpdateCoinsCount();
                         strbet = p.playerName + "【小盲注】剩余金额" + p.coin + "，最大押注" + GlobalVar.maxBetCoin + "，底池金额" + GlobalVar.pot;
                         Debug.Log(strbet);
-                        UIManager.instance.PrintLog(strbet);
+                        UIManager.instance.PrintThread(strbet);
                     }
                     else if (p.role == Player.PlayerRole.bigBlind)
                     {
@@ -218,7 +220,7 @@ public class PlayerManager
                         p.playerObject.UpdateCoinsCount();
                         strbet = p.playerName + "【大盲注】剩余金额" + p.coin + "，最大押注" + GlobalVar.maxBetCoin + "，底池金额" + GlobalVar.pot;
                         Debug.Log(strbet);
-                        UIManager.instance.PrintLog(strbet);
+                        UIManager.instance.PrintThread(strbet);
                     }
                     p.state = 1;
                     break;
@@ -248,7 +250,7 @@ public class PlayerManager
                         }
 
                         Debug.Log(strbet);
-                        UIManager.instance.PrintLog(strbet);
+                        UIManager.instance.PrintThread(strbet);
                     }
                     else //钱不够 还要跟注 此时为allin
                     {
@@ -283,7 +285,7 @@ public class PlayerManager
                             p.playerObject.UpdateCoinsCount();
                             strbet = p.playerName + "【加注】，剩余金额" + p.coin + "，最大押注" + GlobalVar.maxBetCoin + "，底池金额" + GlobalVar.pot;
                             Debug.Log(strbet);
-                            UIManager.instance.PrintLog(strbet);
+                            UIManager.instance.PrintThread(strbet);
                             GlobalVar.curBetCount++;
                         }
                         //钱不够即为ALL IN
@@ -310,7 +312,7 @@ public class PlayerManager
                         strbet = p.playerName + "【弃牌】，剩余金额" + p.coin;
                         p.playerObject.NoMoreActions_AvatarChange();
                         Debug.Log(strbet);
-                        UIManager.instance.PrintLog(strbet);
+                        UIManager.instance.PrintThread(strbet);
                     }
                     break;
                 }
@@ -337,7 +339,7 @@ public class PlayerManager
                     p.playerObject.UpdateCoinsCount();
                     strbet += "，最大押注为" + GlobalVar.maxBetCoin + "，底池金额" + GlobalVar.pot;
                     Debug.Log(strbet);
-                    UIManager.instance.PrintLog(strbet);
+                    UIManager.instance.PrintThread(strbet);
 
                     break;
                 }
@@ -367,7 +369,7 @@ public class PlayerManager
             catch (Exception e)
             {
                 Debug.Log(p.playerName + "出牌失败，原因：" + e.Message);
-                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                UIManager.instance.PrintThread(p.playerName + "AI脚本不符合规范，被移出游戏");
                 RemovePlayer(p);
             }
         }
@@ -429,10 +431,12 @@ public class PlayerManager
         p.playerObject.QuitTheGame_AvatarChange();
         totalSeatNum--;
         activePlayers.Remove(p);
+        if (GlobalVar.gameStatusCounter == -1)
+            seatedPlayers.Remove(p);
         lostPlayers.Add(p);
         if (allPlayers.Count < 2 || activePlayers.Count < 2)
         {
-            UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
+            UIManager.instance.PrintThread("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
             GlobalVar.gameStatusCounter = 6;
             GameManager.instance.GameOver();
         }

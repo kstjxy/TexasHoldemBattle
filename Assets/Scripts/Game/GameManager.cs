@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System;
 using UnityEngine.UI;
+using System.Threading;
 
 public class GameManager : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class GameManager : MonoBehaviour
 
     public List<string> aiFile;
     public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
+    private Thread logicThread;
+    private bool rankUpdateFlag = false;
+
 
     //作为参考，没有引用
     public static GameState GameStatus()
@@ -73,30 +77,58 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameUpdate()
     {
-        switch (GlobalVar.gameStatusCounter)
+        while (true)
         {
-            case -1:
-                Init();
-                break;
-            case 0:
-                RoundInit();
-                break;
-            case 1:
-                Preflop();
-                break;
-            case 2:
-                Flop();
-                break;
-            case 3:
-                Turn();
-                break;
-            case 4:
-                River();
-                break;
-            case 5:
-                Result();
-                break;
+            if (timer < GlobalVar.speedFactor * 2)
+                continue;
+            timer = 0;
+            switch (GlobalVar.gameStatusCounter)
+            {
+                case -1:
+                    Init();
+                    break;
+                case 0:
+                    RoundInit();
+                    break;
+                case 1:
+                    Preflop();
+                    break;
+                case 2:
+                    Flop();
+                    break;
+                case 3:
+                    Turn();
+                    break;
+                case 4:
+                    River();
+                    break;
+                case 5:
+                    Result();
+                    break;
+            }
         }
+    }
+
+    /// <summary>
+    /// 专门用于更新UI 每次运行update根据game state调用对应阶段的方法
+    /// </summary>
+    public void UIUpdate()
+    {
+        UIManager.instance.UpdateLog();
+        WebServer.instance.UpdatePlayers();
+        InitialPanelManager.instance.UpdatePlayerButton();
+        if (rankUpdateFlag)
+        {
+            UIManager.instance.UpdateRankingList();
+            rankUpdateFlag = false;
+        }
+        if (PlayerManager.instance.UIUpdateString != "")
+        {
+            InitialPanelManager.instance.CallStartErrorLog(PlayerManager.instance.UIUpdateString);
+            PlayerManager.instance.UIUpdateString = "";
+        }
+        
+
     }
 
     /// <summary>
@@ -144,12 +176,12 @@ public class GameManager : MonoBehaviour
             catch (Exception e)
             {
                 Debug.Log(p.playerName + "初始化失败，原因：" + e.Message);
-                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                UIManager.instance.PrintThread(p.playerName + "AI脚本不符合规范，被移出游戏");
                 PlayerManager.instance.RemovePlayer(p);
             }
         }
         PlayerManager.instance.lostPlayers = new List<Player>();
-        UIManager.instance.UpdateRankingList();
+        rankUpdateFlag = true;
         GlobalVar.curRoundNum++;
         GlobalVar.gameStatusCounter++;
     }
@@ -161,22 +193,22 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.ClearAllCards();
         UIManager.instance.ClearAllCards();
-        UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
+        UIManager.instance.PrintThread("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
         PlayerManager.instance.NewRound();
         GlobalVar.curBtnSeat = (GlobalVar.curBtnSeat + 1) % PlayerManager.instance.activePlayers.Count;
         PlayerManager.instance.SetPlayersRole(GlobalVar.curBtnSeat);
-        UIManager.instance.PrintLog("位置分配完毕！");
+        UIManager.instance.PrintThread("位置分配完毕！");
         if (PlayerManager.instance.activePlayers.Count >= 3)
         {
-            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
-            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
+            UIManager.instance.PrintThread("【" + PlayerManager.instance.activePlayers[PlayerManager.instance.activePlayers.Count - 1].playerName + "】为庄家位");
+            UIManager.instance.PrintThread("【" + PlayerManager.instance.activePlayers[0].playerName + "】为小盲位");
         }
         else
         {
-            UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[0].playerName + "】为庄家和小盲位");
+            UIManager.instance.PrintThread("【" + PlayerManager.instance.activePlayers[0].playerName + "】为庄家和小盲位");
         }
-        UIManager.instance.PrintLog("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
+        UIManager.instance.PrintThread("【" + PlayerManager.instance.activePlayers[1].playerName + "】为大盲位");
 
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
@@ -190,7 +222,7 @@ public class GameManager : MonoBehaviour
             catch (Exception e)
             {
                 Debug.Log(p.playerName + "新一轮初始化失败，原因：" + e.Message);
-                UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
+                UIManager.instance.PrintThread(p.playerName + "AI脚本不符合规范，被移出游戏");
                 PlayerManager.instance.RemovePlayer(p);
             }
         }
@@ -214,12 +246,12 @@ public class GameManager : MonoBehaviour
                         p.playerObject.PlayerWinEnded();
                 GlobalVar.curBetCount = 0;
                 playersInAction = true;
-                UIManager.instance.PrintLog("当前为【前翻牌圈】");
+                UIManager.instance.PrintThread("当前为【前翻牌圈】");
                 CardManager.instance.AssignCardsToPlayers();
-                UIManager.instance.PrintLog("每个在游戏中的玩家获得两张手牌");
+                UIManager.instance.PrintThread("每个在游戏中的玩家获得两张手牌");
                 foreach(Player p in PlayerManager.instance.activePlayers)
                 {
-                    UIManager.instance.PrintLog("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
+                    UIManager.instance.PrintThread("【" + p.playerName + "】的手牌为：【" + p.playerCardList[0].PrintCard() + "】【" + p.playerCardList[1].PrintCard() + "】");
                     p.state = 0;
                 }
                 flag = false;
@@ -243,13 +275,13 @@ public class GameManager : MonoBehaviour
             {
                 GlobalVar.curBetCount = 0;
                 playersInAction = true;
-                UIManager.instance.PrintLog("当前为【翻牌圈】");
+                UIManager.instance.PrintThread("当前为【翻牌圈】");
                 CardManager.instance.AssignCardsToTable(3);
                 for (int i = 0; i < 3; i++)
                 {
                     UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[i], i);
                 }
-                UIManager.instance.PrintLog("公共卡池发出前三张牌，分别为：\n【" + GlobalVar.publicCards[0].PrintCard() + "】【" +
+                UIManager.instance.PrintThread("公共卡池发出前三张牌，分别为：\n【" + GlobalVar.publicCards[0].PrintCard() + "】【" +
                     GlobalVar.publicCards[1].PrintCard() + "】【" + GlobalVar.publicCards[2].PrintCard() + "】");
                 flag = false;
             }
@@ -271,10 +303,10 @@ public class GameManager : MonoBehaviour
             {
                 GlobalVar.curBetCount = 0;
                 playersInAction = true;
-                UIManager.instance.PrintLog("当前为【转牌圈】");
+                UIManager.instance.PrintThread("当前为【转牌圈】");
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[3], 3);
-                UIManager.instance.PrintLog("公共卡池发出第四张牌，为【" + GlobalVar.publicCards[3].PrintCard() + "】");
+                UIManager.instance.PrintThread("公共卡池发出第四张牌，为【" + GlobalVar.publicCards[3].PrintCard() + "】");
                 flag = false;
             }
         }
@@ -295,10 +327,10 @@ public class GameManager : MonoBehaviour
             {
                 GlobalVar.curBetCount = 0;
                 playersInAction = true;
-                UIManager.instance.PrintLog("当前为【河牌圈】");
+                UIManager.instance.PrintThread("当前为【河牌圈】");
                 CardManager.instance.AssignCardsToTable(1);
                 UIManager.instance.ShowCommunityCard(GlobalVar.publicCards[4], 4);
-                UIManager.instance.PrintLog("公共卡池发出最后一张牌，为【" + GlobalVar.publicCards[4].PrintCard() + "】");
+                UIManager.instance.PrintThread("公共卡池发出最后一张牌，为【" + GlobalVar.publicCards[4].PrintCard() + "】");
                 flag = false;
             }
         }
@@ -318,7 +350,7 @@ public class GameManager : MonoBehaviour
             if (curPlayerSeat == -1)
             {
                 playersInAction = true;
-                UIManager.instance.PrintLog("本轮游戏结束！现在进入结算阶段");
+                UIManager.instance.PrintThread("本轮游戏结束！现在进入结算阶段");
                 finalPlayers = PlayerManager.instance.GetFinalPlayers();
                 CardManager.instance.FillUpTableCards();
             }
@@ -333,21 +365,21 @@ public class GameManager : MonoBehaviour
                     {
                         if (index == 0)
                         {
-                            UIManager.instance.PrintLog("因玩家选牌失误，主奖池没有冠军被废弃");
+                            UIManager.instance.PrintThread("因玩家选牌失误，主奖池没有冠军被废弃");
                         } else
                         {
-                            UIManager.instance.PrintLog("因玩家选牌失误，【"+index+"】号边池没有冠军被废弃");
+                            UIManager.instance.PrintThread("因玩家选牌失误，【"+index+"】号边池没有冠军被废弃");
                         }
                     }
                     else
                     {
                         if (index == 0)
                         {
-                            UIManager.instance.PrintLog("主奖池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+                            UIManager.instance.PrintThread("主奖池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
                         }
                         else
                         {
-                            UIManager.instance.PrintLog("【" + index + "】号边池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
+                            UIManager.instance.PrintThread("【" + index + "】号边池所有玩家最终手牌选择完毕！\n在场牌力最大玩家为：" + PrintWinner(winners));
                         }
                     }
                     UpdateCoins(index,pair.Key * pair.Value.Count);
@@ -376,13 +408,13 @@ public class GameManager : MonoBehaviour
                     curPlayer.finalCards = curPlayer.luaAI.FinalSelection();
                 if (CardManager.instance.IsValidSelection(curPlayer))
                 {
-                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
+                    UIManager.instance.PrintThread("玩家【" + curPlayer.playerName + "】最后选定的五张牌为：\n【" + curPlayer.finalCards[0].PrintCard() + "】【" + curPlayer.finalCards[1].PrintCard() +
                     "】【" + curPlayer.finalCards[2].PrintCard() + "】【" + curPlayer.finalCards[3].PrintCard() + "】【" + curPlayer.finalCards[4].PrintCard() + "】");
                     UIManager.instance.ShowFinalCardSet(curPlayer);
                 }
                 else
                 {
-                    UIManager.instance.PrintLog("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
+                    UIManager.instance.PrintThread("玩家【" + curPlayer.playerName + "】最后选定的牌不符合规范,无法参与冠军角逐");
                     curPlayer.playerObject.PlayerWinEnded();
                     PlayerManager.instance.activePlayers.Remove(curPlayer);
                     finalPlayers.Remove(curPlayer);
@@ -392,7 +424,7 @@ public class GameManager : MonoBehaviour
             catch (Exception e)
             {
                 Debug.Log(curPlayer.playerName + "新一轮初始化失败，原因：" + e.Message);
-                UIManager.instance.PrintLog(curPlayer.playerName + "AI脚本不符合规范，被移出游戏");
+                UIManager.instance.PrintThread(curPlayer.playerName + "AI脚本不符合规范，被移出游戏");
                 PlayerManager.instance.RemovePlayer(curPlayer);
                 finalPlayers.Remove(curPlayer);
                 curPlayerSeat--;
@@ -407,7 +439,7 @@ public class GameManager : MonoBehaviour
     {
         UIManager.instance.ClearAllCards();
         winners = PlayerManager.instance.GetFinalWinners();
-        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是"+PrintWinner(winners));
+        UIManager.instance.PrintThread("全部游戏结束！现在进入最终结算阶段\n最终冠军是"+PrintWinner(winners));
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
             p.playerObject.PlayerWinEnded();
@@ -416,7 +448,7 @@ public class GameManager : MonoBehaviour
                 p.playerObject.PlayerWin();
             }
         }
-        UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
+        UIManager.instance.PrintThread("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
 
@@ -427,7 +459,7 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
         {
-            UIManager.instance.PrintLog("场上仅剩一人未弃权，游戏直接结束。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot);
+            UIManager.instance.PrintThread("场上仅剩一人未弃权，游戏直接结束。\n当前最大押注为" + GlobalVar.maxBetCoin + "，当前底池的金额为" + GlobalVar.pot);
             ReadyForNextState();
             GlobalVar.gameStatusCounter = 5;
             return;
@@ -435,7 +467,7 @@ public class GameManager : MonoBehaviour
 
         if (curPlayerSeat == -1 && !flag)
         {
-            UIManager.instance.PrintLog("新一轮下注开始");
+            UIManager.instance.PrintThread("新一轮下注开始");
         } else
         {
             if(!curPlayer.isFold)
@@ -493,22 +525,22 @@ public class GameManager : MonoBehaviour
         curPlayerSeat = -1;
         if (GlobalVar.gameStatusCounter != 5)
         {
-            UIManager.instance.PrintLog("本轮下注结束！\n底池：" + GlobalVar.pot + "，最大下注金额：" + GlobalVar.maxBetCoin);
+            UIManager.instance.PrintThread("本轮下注结束！\n底池：" + GlobalVar.pot + "，最大下注金额：" + GlobalVar.maxBetCoin);
             GlobalVar.gameStatusCounter++;
         } else
         {
-            UIManager.instance.PrintLog("本回合游戏结束！马上进入下一轮游戏");
+            UIManager.instance.PrintThread("本回合游戏结束！马上进入下一轮游戏");
             PlayerManager.instance.NewRound();
             GlobalVar.curRoundNum++;
             if (GlobalVar.curRoundNum > GlobalVar.totalRoundNum || PlayerManager.instance.activePlayers.Count < 2)
             {
                 if (GlobalVar.curRoundNum > GlobalVar.totalRoundNum)
                 {
-                    UIManager.instance.PrintLog("完成设置的全部回合数，本局游戏结束！");
+                    UIManager.instance.PrintThread("完成设置的全部回合数，本局游戏结束！");
                 }
                 else
                 {
-                    UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
+                    UIManager.instance.PrintThread("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
                 }
                 GlobalVar.gameStatusCounter = 6;
                 GameOver();
@@ -532,7 +564,7 @@ public class GameManager : MonoBehaviour
                 return;
             } else if (PlayerManager.instance.activePlayers[curPlayerSeat].isFold == true || PlayerManager.instance.activePlayers[curPlayerSeat].isAllIn == true)
             {
-                UIManager.instance.PrintLog(PlayerManager.instance.activePlayers[curPlayerSeat].playerName + "已经弃牌/ALL IN，不做操作");
+                UIManager.instance.PrintThread(PlayerManager.instance.activePlayers[curPlayerSeat].playerName + "已经弃牌/ALL IN，不做操作");
                 curPlayerSeat++;
             } else
             {
@@ -596,10 +628,10 @@ public class GameManager : MonoBehaviour
             rewards = curPot / winners.Count;
             if (index == 0)
             {
-                UIManager.instance.PrintLog("主奖池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
+                UIManager.instance.PrintThread("主奖池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
             } else
             {
-                UIManager.instance.PrintLog("【"+index+"】号边池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
+                UIManager.instance.PrintThread("【"+index+"】号边池冠军有【" + winners.Count + "】人，每人得到奖金【" + rewards + "】");
             }
         }
         foreach (Player p in winners)
@@ -623,7 +655,7 @@ public class GameManager : MonoBehaviour
         GlobalVar.pot = 0;
         UIManager.instance.UpdateCoinsPool();
         UIManager.instance.UpdateRankingList();
-        UIManager.instance.PrintLog("排行榜已更新");
+        UIManager.instance.PrintThread("排行榜已更新");
     }
 
     /// <summary>
@@ -648,6 +680,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("服务器IPV4地址： " + GlobalVar.ipAdress);
         //自动填入本机地址
         InitialPanelManager.instance.ipAdress.text = GlobalVar.ipAdress;
+        //开启多线程负责游戏逻辑 与 UI更新分离
+        logicThread = new Thread(GameUpdate);
+        logicThread.IsBackground = true;
+        logicThread.Start();
     }
 
     // Update is called once per frame
@@ -657,13 +693,8 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        UIManager.instance.UpdateLog();
-        InitialPanelManager.instance.UpdatePlayerButton();
         timer += Time.deltaTime;
-        if (timer > GlobalVar.speedFactor * 2)
-        {
-            timer = 0;
-            GameUpdate();
-        }
+        
+        UIUpdate();
     }
 }
