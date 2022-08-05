@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     public List<Player> finalPlayers = new List<Player>();  //当前回合存活到最后算牌阶段的玩家
 
     public List<string> aiFile;
-    public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
+    public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>(); //本回合所有奖池信息；Key为此奖池每人加注金额，Value为在此奖池中的玩家列表
     private Thread logicThread;
     private bool rankUpdateFlag = false;
     private bool clearCardsFlag = false;
@@ -589,6 +589,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void HandlePots()
     {
+        pots = new Dictionary<int, List<Player>>();
         finalPlayers.Sort((a, b) => {
             return a.betCoin - b.betCoin;
         });
