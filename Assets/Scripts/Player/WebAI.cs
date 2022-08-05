@@ -18,13 +18,11 @@ public class WebAI
     private byte[] sendByte = new byte[2048];
     private string reciveString;
     private string sendto;
-    public bool waitFlag = false;
 
     //多线程 会造成 玩家还没开始 流程继续 
     //多线程 + 状态阻塞
     void ThreadSend()
     {
-        waitFlag = true;
         try
         {
             client.Send(sendByte);
@@ -37,11 +35,9 @@ public class WebAI
             Debug.Log("关闭此客户端的连接");
             PlayerManager.instance.RemovePlayer(player);
         }
-        waitFlag = false;
     }
     void ThreadRecive()
     {
-        waitFlag = true;
         try
         {
             client.Receive(recivefrom);
@@ -54,7 +50,6 @@ public class WebAI
             Debug.Log("关闭此客户端的连接");
             PlayerManager.instance.RemovePlayer(player);
         }
-        waitFlag = false;
         
     }
     private void SendFunc(string s)
