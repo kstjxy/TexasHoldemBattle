@@ -29,19 +29,19 @@ public class GameManager : MonoBehaviour
         gameover    //设定的所有局结束
     }
 
-    public static float timer = 0;
-    public int curPlayerSeat = -1;
-    public Player curPlayer = null;
-    public bool playersInAction = false;
-    public List<Player> winners = new List<Player>();
-    public List<Player> passablePlayer = new List<Player>();
-    public bool flag = false;
-    public List<Player> finalPlayers = new List<Player>();
+    public static float timer = 0;  //记录游戏离上次更新的时间，用于调节游戏速度
+    public int curPlayerSeat = -1;  //当前执行操作的玩家座位号
+    public Player curPlayer = null; //当前执行操作的玩家
+    public bool playersInAction = false;    //判断玩家是否正在执行操作
+    public List<Player> winners = new List<Player>();   //当前奖池中牌力最大的玩家列表
+    public List<Player> passablePlayer = new List<Player>();    //因为fold/allin被跳过操作的玩家列表
+    public bool flag = false;   //用于检测当前回合玩家操作是否可以结束
+    public List<Player> finalPlayers = new List<Player>();  //当前回合存活到最后算牌阶段的玩家
 
     public List<string> aiFile;
     public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
 
-
+    //作为参考，没有引用
     public static GameState GameStatus()
     {
         switch (GlobalVar.gameStatusCounter)
@@ -68,6 +68,9 @@ public class GameManager : MonoBehaviour
         throw new UnityException("GameStatus error");
     }
 
+    /// <summary>
+    /// 每次运行update根据game state调用对应阶段的方法
+    /// </summary>
     public void GameUpdate()
     {
         switch (GlobalVar.gameStatusCounter)
@@ -96,6 +99,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 结束setting阶段（点击start）时调用
+    /// </summary>
     public void Setting()
     {
         if (PlayerManager.instance.SeatPlayers())
@@ -104,6 +110,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 重新开始新一局/游戏中途重启比赛时重新初始化参数
+    /// </summary>
     public void Restart()
     {
         GlobalVar.gameStatusCounter = -2;
@@ -117,6 +126,9 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 新一局游戏开始时初始化参数
+    /// </summary>
     public void Init()
     {
         foreach (Player p in PlayerManager.instance.seatedPlayers)
@@ -142,6 +154,9 @@ public class GameManager : MonoBehaviour
         GlobalVar.gameStatusCounter++;
     }
 
+    /// <summary>
+    /// 每一轮回合结束后更新参数
+    /// </summary>
     public void RoundInit()
     {
         UIManager.instance.ClearAllCards();
@@ -184,6 +199,9 @@ public class GameManager : MonoBehaviour
         GlobalVar.gameStatusCounter++;
     }
 
+    /// <summary>
+    /// 前翻牌轮调用的方法
+    /// </summary>
     public void Preflop()
     {        
         if (!playersInAction)
@@ -214,6 +232,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 翻牌轮调用的方法
+    /// </summary>
     public void Flop()
     {
         if (!playersInAction)
@@ -239,6 +260,9 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// 转牌轮调用的方法
+    /// </summary>
     public void Turn()
     {
         if (!playersInAction)
@@ -260,7 +284,9 @@ public class GameManager : MonoBehaviour
         }
     }
      
-
+    /// <summary>
+    /// 河牌轮调用的方法
+    /// </summary>
     public void River()
     {
         if (!playersInAction)
@@ -282,6 +308,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 当前回合结束后调用的方法
+    /// </summary>
     public void Result()
     {
         if (!playersInAction)
@@ -371,6 +400,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 当局游戏回合全部结束后调用的方法
+    /// </summary>
     public void GameOver()
     {
         UIManager.instance.ClearAllCards();
@@ -387,6 +419,10 @@ public class GameManager : MonoBehaviour
         UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
     }
 
+
+    /// <summary>
+    /// 更新当前执行操作的玩家
+    /// </summary>
     public void UpdateCurPlayer()
     {
         if (PlayerManager.instance.CalcFoldNum() == PlayerManager.instance.activePlayers.Count - 1)
@@ -419,6 +455,10 @@ public class GameManager : MonoBehaviour
         PlayerManager.instance.Bet(curPlayer);
     }
 
+    /// <summary>
+    /// 判断当前阶段所有玩家是否都完成了全部操作
+    /// </summary>
+    /// <returns>如果全部玩家都操作完毕则return true</returns>
     public bool IsRoundCompleted()
     {
         passablePlayer.Clear();
@@ -441,6 +481,10 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// 判断游戏是否可以进入下一阶段，如果是则更新参数
+    /// </summary>
+    /// <returns>如果可以进入下一阶段则return true</returns>
     public void ReadyForNextState()
     {
         playersInAction = false;
@@ -475,6 +519,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 在当前玩家操作阶段跳到下一个可执行操作的玩家
+    /// </summary>
     public void NextValidPlayer()
     {
         curPlayerSeat++;
@@ -494,6 +541,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 在回合结算阶段处理奖池，如有玩家ALLIN则开开边池
+    /// </summary>
     public void HandlePots()
     {
         finalPlayers.Sort((a, b) => {
@@ -518,6 +568,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 在LOG里打印当前全部WINNER
+    /// </summary>
+    /// <param name="pList">需要打印出来的玩家名列表</param>
+    /// <returns>列表中所有玩家的姓名（带括号））</returns>
     public string PrintWinner(List<Player> pList)
     {
         string str = "【" + pList[0].playerName;
@@ -528,6 +583,11 @@ public class GameManager : MonoBehaviour
         return str + "】";
     }
 
+    /// <summary>
+    /// 更新当前奖池中玩家金币数
+    /// </summary>
+    /// <param name="index">当前奖池编号</param>
+    /// <param name="curPot">当前奖池中总奖金数</param>
     public void UpdateCoins(int index, int curPot)
     {
         int rewards = 0;
@@ -547,7 +607,10 @@ public class GameManager : MonoBehaviour
             p.coin += rewards;
         }
     }
-        
+    
+    /// <summary>
+    /// 更新完当前回合全部奖池后重置玩家、公共奖池参数
+    /// </summary>
     public void ResetCoins()
     {
         foreach (Player p in PlayerManager.instance.activePlayers)
@@ -563,6 +626,9 @@ public class GameManager : MonoBehaviour
         UIManager.instance.PrintLog("排行榜已更新");
     }
 
+    /// <summary>
+    /// 开始游戏自动调用
+    /// </summary>
     public void Start()
     {
         Debug.Log("游戏开始......");
@@ -585,11 +651,13 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
+    /// <summary>
+    /// 游戏更新方法，自动调用
+    /// </summary>
 
     public void Update()
     {
         UIManager.instance.UpdateLog();
-        WebServer.instance.UpdatePlayers();
         InitialPanelManager.instance.UpdatePlayerButton();
         timer += Time.deltaTime;
         if (timer > GlobalVar.speedFactor * 2)

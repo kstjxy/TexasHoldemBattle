@@ -429,8 +429,6 @@ public class PlayerManager
         p.playerObject.QuitTheGame_AvatarChange();
         totalSeatNum--;
         activePlayers.Remove(p);
-        if (GlobalVar.gameStatusCounter == -1)
-            seatedPlayers.Remove(p);
         lostPlayers.Add(p);
         if (allPlayers.Count < 2 || activePlayers.Count < 2)
         {

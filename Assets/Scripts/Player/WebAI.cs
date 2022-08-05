@@ -12,67 +12,23 @@ public class WebAI
     public string name = "my Name";
     public GameStat stats;
     public Socket client;
-    public Player player;
     public string file;
     private byte[] recivefrom = new byte[2048];
     private byte[] sendByte = new byte[2048];
     private string reciveString;
     private string sendto;
 
-    //多线程 会造成 玩家还没开始 流程继续 
-    //多线程 + 状态阻塞
-    void ThreadSend()
-    {
-        try
-        {
-            client.Send(sendByte);
-        }
-        catch (Exception e)
-        {
-            string bug = "向客户端【" + name + "】发送信息失败，可能为连接断开或超时（5S） " + e.Message;
-            Debug.Log(bug);
-            CloseSocket();
-            Debug.Log("关闭此客户端的连接");
-            PlayerManager.instance.RemovePlayer(player);
-        }
-    }
-    void ThreadRecive()
-    {
-        try
-        {
-            client.Receive(recivefrom);
-        }
-        catch (Exception e)
-        {
-            string bug = "从客户端【" + name + "】接收信息失败，可能为连接断开或超时（5S） " + e.Message;
-            Debug.Log(bug);
-            CloseSocket();
-            Debug.Log("关闭此客户端的连接");
-            PlayerManager.instance.RemovePlayer(player);
-        }
-        
-    }
-    private void SendFunc(string s)
+    private IEnumerator SendAndReceive(string s)
     {
         sendto = s;
         sendByte = Encoding.UTF8.GetBytes(sendto);
-        Thread thread = new Thread(ThreadSend);
-        thread.IsBackground = true;
-        thread.Start();
-    }
-    private void ReciveFunc()
-    {
-        Thread thread = new Thread(ThreadRecive);
-        thread.IsBackground = true;
-        thread.Start();
+        client.Send(sendByte);
+        client.Receive(recivefrom);
+
         reciveString = Encoding.UTF8.GetString(recivefrom);
         reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
         Array.Clear(recivefrom, 0, recivefrom.Length);
-    }
-    private void SendAndReceive(string s)
-    {
-        SendFunc(s);
-        ReciveFunc();
+        yield return null;
     }
 
     private void SendGameStat()
@@ -80,6 +36,7 @@ public class WebAI
         string jsonStat = JsonUtility.ToJson(stats);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
+
     }
 
     private void PrintL(string s)
@@ -92,9 +49,9 @@ public class WebAI
         //接受与发送的超时时间均设为5s
         client.SendTimeout = 5000;
         client.ReceiveTimeout = 5000;
-        SendFunc("服务器haihai");
-        SendAndReceive("OnInit");
+        StartCoroutine(SendAndReceive("OnInit"));
         name = reciveString;
+        client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
         Debug.Log(name + "已连接到服务器");
         PrintL(name + "已连接到服务器");
         //name = test.name;
@@ -117,9 +74,8 @@ public class WebAI
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        SendFunc("BetAction");
+        SendAndReceive("BetAction");
         SendGameStat();
-        ReciveFunc();
         //合法性判断
         if (reciveString[0] < '1' || reciveString[0] > '4')
         {
@@ -152,10 +108,7 @@ public class WebAI
 
         foreach (int i in cardNum)
         {
-            int j = i;
-            if (i < 0 || i > 6)
-                j = 0;
-            if (j < 2)
+            if (i < 2)
                 result.AddRange(stats.CardsInHands.GetRange(i, 1));
             else
                 result.AddRange(stats.CommunityCards.GetRange(i - 2, 1));
