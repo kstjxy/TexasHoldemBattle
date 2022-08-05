@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     public List<Player> finalPlayers = new List<Player>();
 
     public List<string> aiFile;
-    public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>();
+    public Dictionary<int, List<Player>> pots = new Dictionary<int, List<Player>>(); 
 
 
     public static GameState GameStatus()
@@ -496,6 +496,7 @@ public class GameManager : MonoBehaviour
 
     public void HandlePots()
     {
+        pots = new Dictionary<int, List<Player>>();
         finalPlayers.Sort((a, b) => {
             return a.betCoin - b.betCoin;
         });
