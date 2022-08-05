@@ -130,19 +130,6 @@ public class PlayerManager
         }
         SortPlayers();
     }
-    public bool ActivePlayers()
-    {
-        activePlayers = new List<Player>();
-        totalSeatNum = 0;
-        foreach (Player p in seatedPlayers)
-        {
-            if (!p.isFold)
-            {
-                activePlayers.Add(p);
-            }
-        }
-        return true;
-    }
 
     /// <summary>
     /// 通过PLAY ROLE来修改活跃玩家的行动顺序，小盲大盲在最前面，庄家在最后
@@ -156,17 +143,11 @@ public class PlayerManager
             activePlayers.Add(p);
         }
     }
-    public Player FindPlayer(int seatNum)
-    {
-        foreach (Player p in seatedPlayers)
-        {
-            if (p.seatNum == seatNum)
-            {
-                return p;
-            }
-        }
-        return null;
-    }
+
+    /// <summary>
+    /// 返回当前选择弃牌的玩家数量
+    /// </summary>
+    /// <returns>弃牌的玩家数</returns>
     public int CalcFoldNum()
     {
         int num = 0;
@@ -184,6 +165,10 @@ public class PlayerManager
     // 2 加注
     // 3 弃牌
     // 4 ALL IN
+    /// <summary>
+    /// 处理玩家出牌操作对应游戏逻辑的方法
+    /// </summary>
+    /// <param name="p">正在执行出牌操作的玩家</param>
     public void BetAction(Player p)
     {
         string strbet;
@@ -344,6 +329,10 @@ public class PlayerManager
         }
     }
 
+    /// <summary>
+    /// AI脚本接口，处理脚本返回的出牌操作
+    /// </summary>
+    /// <param name="p">执行出牌操作的玩家</param>
     public void Bet(Player p)
     {
         if (!(p.state == 0 && (p.role == Player.PlayerRole.smallBlind || p.role == Player.PlayerRole.bigBlind))) 
@@ -374,6 +363,10 @@ public class PlayerManager
         BetAction(p);
     }
 
+    /// <summary>
+    /// 返回最后进入算牌阶段的玩家列表
+    /// </summary>
+    /// <returns>没有弃牌准备算牌的玩家列表</returns>
     public List<Player> GetFinalPlayers()
     {
         List<Player> final = new List<Player>();
@@ -387,6 +380,10 @@ public class PlayerManager
         return final;
     }
 
+    /// <summary>
+    ///每一局游戏结束后返回金币数最大的玩家列表
+    /// </summary>
+    /// <returns>金币最多的玩家列表/最终赢家</returns>
     public List<Player> GetFinalWinners()
     {
         List<Player> result = new List<Player>();
@@ -423,6 +420,10 @@ public class PlayerManager
         return pList;
     }
 
+    /// <summary>
+    /// 将玩家从当前游戏（之后的全部回合）中移除
+    /// </summary>
+    /// <param name="p">要移出游戏的玩家</param>
     public void RemovePlayer(Player p)
     {
         p.OutOfGame();
