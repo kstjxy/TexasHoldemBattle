@@ -24,22 +24,6 @@ public class StartServer : MonoBehaviour
             instance = this;
     }
 
-    //原版
-    /// <summary>
-    /// 纯测试使用
-    /// </summary>
-    //public void ButtonClicked()
-    //{
-    //    TestAI_1 ai = new();
-    //    ai.OnInit(GlobalVar.roboName);
-    //    GlobalVar.roboName++;
-    //    Player p = new(ai);
-    //    GameStat gs = new(p);
-    //    ai.stats = gs;
-    //    PlayerManager.instance.allPlayers.Add(p);
-    //    InitialPanelManager.instance.AddSelectablePlayerButton(p);//这一句不应该写在这里！！
-    //}
-
     /// <summary>
     /// 启动服务器
     /// </summary>
@@ -60,13 +44,14 @@ public class StartServer : MonoBehaviour
         else
         {
             WebServer.instance.CloseServer();
+            int j = 0;
             for(int i=0;i<PlayerManager.instance.allPlayers.Count; i++)
             {
                 Player p = PlayerManager.instance.allPlayers[i];
                 if (p.type == Player.aiType.WebAI)
                 {
                     PlayerManager.instance.allPlayers.Remove(p);
-                    Destroy(InitialPanelManager.instance.panelRect.GetChild(i).gameObject);
+                    Destroy(InitialPanelManager.instance.panelRect.GetChild(i+j++).gameObject);
                 }
                     
             }

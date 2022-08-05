@@ -7,28 +7,77 @@ using System.Text;
 using System;
 using System.Threading;
 
-public class WebAI : MonoBehaviour
+public class WebAI 
 {
-    public new string name = "my Name";
+    public string name = "my Name";
     public GameStat stats;
     public Socket client;
+    public Player player;
     public string file;
     private byte[] recivefrom = new byte[2048];
     private byte[] sendByte = new byte[2048];
     private string reciveString;
     private string sendto;
+    public bool waitFlag = false;
 
-    private IEnumerator SendAndReceive(string s)
+    //多线程 会造成 玩家还没开始 流程继续 
+    //多线程 + 状态阻塞
+    void ThreadSend()
+    {
+        waitFlag = true;
+        try
+        {
+            client.Send(sendByte);
+        }
+        catch (Exception e)
+        {
+            string bug = "向客户端【" + name + "】发送信息失败，可能为连接断开或超时（5S） " + e.Message;
+            Debug.Log(bug);
+            CloseSocket();
+            Debug.Log("关闭此客户端的连接");
+            PlayerManager.instance.RemovePlayer(player);
+        }
+        waitFlag = false;
+    }
+    void ThreadRecive()
+    {
+        waitFlag = true;
+        try
+        {
+            client.Receive(recivefrom);
+        }
+        catch (Exception e)
+        {
+            string bug = "从客户端【" + name + "】接收信息失败，可能为连接断开或超时（5S） " + e.Message;
+            Debug.Log(bug);
+            CloseSocket();
+            Debug.Log("关闭此客户端的连接");
+            PlayerManager.instance.RemovePlayer(player);
+        }
+        waitFlag = false;
+        
+    }
+    private void SendFunc(string s)
     {
         sendto = s;
         sendByte = Encoding.UTF8.GetBytes(sendto);
-        client.Send(sendByte);
-        client.Receive(recivefrom);
-
+        Thread thread = new Thread(ThreadSend);
+        thread.IsBackground = true;
+        thread.Start();
+    }
+    private void ReciveFunc()
+    {
+        Thread thread = new Thread(ThreadRecive);
+        thread.IsBackground = true;
+        thread.Start();
         reciveString = Encoding.UTF8.GetString(recivefrom);
         reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
         Array.Clear(recivefrom, 0, recivefrom.Length);
-        yield return null;
+    }
+    private void SendAndReceive(string s)
+    {
+        SendFunc(s);
+        ReciveFunc();
     }
 
     private void SendGameStat()
@@ -36,7 +85,6 @@ public class WebAI : MonoBehaviour
         string jsonStat = JsonUtility.ToJson(stats);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
-
     }
 
     private void PrintL(string s)
@@ -49,9 +97,9 @@ public class WebAI : MonoBehaviour
         //接受与发送的超时时间均设为5s
         client.SendTimeout = 5000;
         client.ReceiveTimeout = 5000;
-        StartCoroutine(SendAndReceive("OnInit"));
+        SendFunc("服务器haihai");
+        SendAndReceive("OnInit");
         name = reciveString;
-        client.Send(Encoding.UTF8.GetBytes("服务器haihai"));
         Debug.Log(name + "已连接到服务器");
         PrintL(name + "已连接到服务器");
         //name = test.name;
@@ -74,8 +122,9 @@ public class WebAI : MonoBehaviour
     //1:跟注；2：加注；3：弃牌；4：ALLIN
     public int BetAction()
     {
-        SendAndReceive("BetAction");
+        SendFunc("BetAction");
         SendGameStat();
+        ReciveFunc();
         //合法性判断
         if (reciveString[0] < '1' || reciveString[0] > '4')
         {
@@ -108,7 +157,10 @@ public class WebAI : MonoBehaviour
 
         foreach (int i in cardNum)
         {
-            if (i < 2)
+            int j = i;
+            if (i < 0 || i > 6)
+                j = 0;
+            if (j < 2)
                 result.AddRange(stats.CardsInHands.GetRange(i, 1));
             else
                 result.AddRange(stats.CommunityCards.GetRange(i - 2, 1));

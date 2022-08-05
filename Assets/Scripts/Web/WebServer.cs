@@ -22,7 +22,9 @@ public class WebServer
 
     public Socket server = null;
     public Thread listenThread = null;
-
+    public List<Socket> sockets;
+    int oldLenSockets;
+    int nowLenSockets;
 
     //int clientNum = 0;          //连接数
     bool serverActive = false;  //服务器是否开启
@@ -45,6 +47,9 @@ public class WebServer
             server.Bind(endPoint);
             Debug.Log("服务器已启动!");
             serverActive = true;
+            sockets = new List<Socket>();
+            oldLenSockets = 0;
+            nowLenSockets = 0;
             server.Listen(playerNum);
             listenThread = new Thread(ListenConnect);
             listenThread.IsBackground = true;
@@ -57,12 +62,12 @@ public class WebServer
             Debug.Log("服务器启动失败，原因为：" + e.Message);
             return false;
         }
-    }
+    }    
     
-    Socket socketSend;
     void ListenConnect(object o)
     {
         Socket watch = o as Socket;
+        Socket socketSend;
         while (true)
         {
             try
@@ -70,12 +75,7 @@ public class WebServer
                 socketSend = watch.Accept();
                 //协作式取消,停止线程
                 if (!serverActive) break;
-                WebAI ai = new WebAI();
-                ai.OnInit(socketSend);
-                Player p = new(ai);
-                GameStat gs = new(p);
-                ai.stats = gs;
-                PlayerManager.instance.allPlayers.Add(p);
+                sockets.Add(socketSend);
             }
             catch(Exception e)
             {
@@ -84,6 +84,26 @@ public class WebServer
             
         }
     }
+
+    public void UpdatePlayers()
+    {
+        nowLenSockets = sockets.Count;
+        if (oldLenSockets == nowLenSockets) return;
+        
+        for (int i=oldLenSockets; i< nowLenSockets;i++)
+        {
+            WebAI ai = new WebAI();
+            ai.OnInit(sockets[i]);
+            Player p = new(ai);
+            GameStat gs = new(p);
+            ai.stats = gs;
+            ai.player = p;
+            PlayerManager.instance.allPlayers.Add(p);
+        }
+        oldLenSockets = nowLenSockets;
+
+    }
+
     public bool CloseServer()
     {
         if (!serverActive)
