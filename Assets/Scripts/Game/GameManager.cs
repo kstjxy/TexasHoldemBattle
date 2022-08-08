@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
         GlobalVar.curRoundNum++;
+        Debug.Log(GlobalVar.gameStatusCounter);
         GlobalVar.gameStatusCounter++;
     }
 

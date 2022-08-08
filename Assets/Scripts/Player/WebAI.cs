@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Text;
 using System;
+using LitJson;
 using System.Threading;
 
 
@@ -137,7 +138,7 @@ public class WebAI
         data.CoinsBet = stats.CoinsBet;
         List<Data> dataList = new List<Data>();
         dataList.Add(data);
-        string jsonStat = JsonUtility.ToJson(data);
+        string jsonStat = JsonMapper.ToJson(data);
         Debug.Log(jsonStat);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
