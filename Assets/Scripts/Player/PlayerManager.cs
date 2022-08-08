@@ -430,8 +430,7 @@ public class PlayerManager
         totalSeatNum--;
         activePlayers.Remove(p);
         p.isFold = true;
-        if (GlobalVar.gameStatusCounter == -1)
-            seatedPlayers.Remove(p);
+        //seatedPlayers.Remove(p);
         lostPlayers.Add(p);
         if (allPlayers.Count < 2 || activePlayers.Count < 2)
         {
