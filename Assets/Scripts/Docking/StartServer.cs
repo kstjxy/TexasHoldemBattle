@@ -50,8 +50,8 @@ public class StartServer : MonoBehaviour
                 Player p = PlayerManager.instance.allPlayers[i];
                 if (p.type == Player.aiType.WebAI)
                 {
-                    PlayerManager.instance.allPlayers.Remove(p);
-                    Destroy(InitialPanelManager.instance.panelRect.GetChild(i+j++).gameObject);
+                    PlayerManager.instance.allPlayers.Remove(p);                    
+                    Destroy(InitialPanelManager.instance.panelRect.GetChild(i--+j++).gameObject);                    
                 }
                     
             }

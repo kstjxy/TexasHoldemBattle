@@ -179,6 +179,8 @@ public class UIManager : MonoBehaviour
     /// <param name="log">要输出的文本内容（会自动在句首换行）</param>
     public void PrintLog(string log)
     {
+        if (logText.text.Length > 20000)
+            ClearLog();
         logText.text = logText.text + "\n" + log;
         log = Regex.Replace(log, @"(<.*?>|</color>)", "");
         logSave = logSave + "\n" + log;
@@ -190,6 +192,8 @@ public class UIManager : MonoBehaviour
     public void UpdateLog()
     {
         if (logList.Count == lenOfList) return ;
+        if (logText.text.Length > 20000)
+            ClearLog();
         int oldlen = lenOfList;
         int len = logList.Count;
         lenOfList = len;

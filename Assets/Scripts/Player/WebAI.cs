@@ -6,21 +6,6 @@ using System.Net.Sockets;
 using System.Text;
 using System;
 using LitJson;
-using System.Threading;
-
-
-[Serializable]
-public class Serialization<T>
-{
-    [SerializeField]
-    List<T> gamestats;
-    public List<T> ToList() { return gamestats; }
-
-    public Serialization(List<T> target)
-    {
-        this.gamestats = target;
-    }
-}
 
 
 [Serializable]
@@ -139,7 +124,7 @@ public class WebAI
         List<Data> dataList = new List<Data>();
         dataList.Add(data);
         string jsonStat = JsonMapper.ToJson(data);
-        Debug.Log(jsonStat);
+        //Debug.Log(jsonStat);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
     }
@@ -167,7 +152,7 @@ public class WebAI
     {
         SendAndReceive("StartGame");
         Debug.Log(name + "初始化成功！\n" + reciveString);
-        PrintL(name + "初始化成功！\n" + reciveString);
+        PrintL(name + "初始化成功");
     }
 
     public void RoundStart()
@@ -191,9 +176,7 @@ public class WebAI
             PrintL(bug);
             return 3; //如果操作错误就弃牌
         }
-
         return reciveString[0] - '0';
-
     }
 
     public List<Card> FinalSelection()
