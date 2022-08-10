@@ -6447,6 +6447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curPlayerSeat: 0
+  timeScaler: 2
   curPlayer:
     playerName: 
     type: 0
@@ -6457,7 +6458,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   playersInAction: 0
   winners: []
@@ -18273,7 +18276,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720367467988771}
   coinsText: {fileID: 5651720366638586173}
@@ -18803,7 +18808,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720367445820647}
   coinsText: {fileID: 5651720366664620793}
@@ -19876,7 +19883,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720366861579635}
   coinsText: {fileID: 5651720366164257645}
@@ -20129,7 +20138,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720366899529066}
   coinsText: {fileID: 5651720366137236340}
@@ -21834,7 +21845,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365986172261}
   coinsText: {fileID: 5651720367050462075}
@@ -22228,7 +22241,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365881355692}
   coinsText: {fileID: 5651720367146972082}
@@ -22683,7 +22698,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365788062200}
   coinsText: {fileID: 5651720367240331238}
@@ -22834,7 +22851,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365841033728}
   coinsText: {fileID: 5651720367192667166}

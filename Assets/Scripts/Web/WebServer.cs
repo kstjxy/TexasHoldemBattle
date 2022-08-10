@@ -33,9 +33,6 @@ public class WebServer
 
     public bool StartServer(string ip,int port,int playerNum)
     {
-        //加个合法性判断
-        //
-        
         Debug.Log(ip + port);
         
         server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -60,6 +57,7 @@ public class WebServer
         catch(Exception e)
         {
             Debug.Log("服务器启动失败，原因为：" + e.Message);
+            InitialPanelManager.instance.CallWebLog("服务器启动失败，原因为：" + e.Message);
             return false;
         }
     }    
