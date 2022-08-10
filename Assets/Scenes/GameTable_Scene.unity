@@ -6447,6 +6447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curPlayerSeat: 0
+  timeScaler: 2
   curPlayer:
     playerName: 
     type: 0
@@ -6457,7 +6458,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   playersInAction: 0
   winners: []
@@ -7425,6 +7428,7 @@ GameObject:
   - component: {fileID: 963770177}
   - component: {fileID: 963770176}
   - component: {fileID: 963770175}
+  - component: {fileID: 963770178}
   m_Layer: 5
   m_Name: WebLog_Text
   m_TagString: Untagged
@@ -7449,8 +7453,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 381, y: -376.9178}
-  m_SizeDelta: {x: 264.6014, y: 59.8652}
+  m_AnchoredPosition: {x: -155.15, y: -532}
+  m_SizeDelta: {x: 310.3, y: 81.72}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!95 &963770175
 Animator:
@@ -7488,14 +7492,14 @@ MonoBehaviour:
   m_Color: {r: 1, g: 0.43013564, b: 0.3254717, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 22
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 44
@@ -7514,6 +7518,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963770173}
   m_CullTransparentMesh: 1
+--- !u!114 &963770178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963770173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &979169050
 GameObject:
   m_ObjectHideFlags: 0
@@ -18273,7 +18292,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720367467988771}
   coinsText: {fileID: 5651720366638586173}
@@ -18803,7 +18824,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720367445820647}
   coinsText: {fileID: 5651720366664620793}
@@ -19876,7 +19899,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720366861579635}
   coinsText: {fileID: 5651720366164257645}
@@ -20129,7 +20154,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720366899529066}
   coinsText: {fileID: 5651720366137236340}
@@ -21834,7 +21861,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365986172261}
   coinsText: {fileID: 5651720367050462075}
@@ -22228,7 +22257,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365881355692}
   coinsText: {fileID: 5651720367146972082}
@@ -22683,7 +22714,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365788062200}
   coinsText: {fileID: 5651720367240331238}
@@ -22834,7 +22867,9 @@ MonoBehaviour:
     isFold: 0
     isAllIn: 0
     role: 0
+    playerCardList: []
     state: 0
+    finalCards: []
     playerObject: {fileID: 0}
   nameText: {fileID: 5651720365841033728}
   coinsText: {fileID: 5651720367192667166}

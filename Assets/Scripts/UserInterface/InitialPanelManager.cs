@@ -49,10 +49,53 @@ public class InitialPanelManager : MonoBehaviour
             UIManager.instance.PrintLog("游戏最大次数：<color=#C9FFDD>" + maximumGames.text + "</color>");
             UIManager.instance.PrintLog("每轮加注限制：<color=#C9FFF9>" + raisisLimit.text + "</color>\n游戏开始！");
 
-            GlobalVar.initCoin = int.Parse(InitialChips.text);
+            
+
+            if (smallBlindInjection.text == "")
+            {
+                CallStartErrorLog("最小下注筹码数不能为空！");
+                return;
+            }
             GlobalVar.minBetCoin = int.Parse(smallBlindInjection.text);
+            if (GlobalVar.minBetCoin <= 0)
+            {
+                CallStartErrorLog("最小下注筹码数必须为正数！");
+                return;
+            }
+            if (InitialChips.text == "")
+            {
+                CallStartErrorLog("初始筹码数不能为空！");
+                return;
+            }
+            GlobalVar.initCoin = int.Parse(InitialChips.text);
+            if (GlobalVar.initCoin < 2*GlobalVar.minBetCoin)
+            {
+                CallStartErrorLog("初始筹码数最少为最小下注筹码数的两倍！");
+                return;
+            }
+            if (maximumGames.text == "")
+            {
+                CallStartErrorLog("最大游戏局数不能为空！");
+                return;
+            }
             GlobalVar.totalRoundNum = int.Parse(maximumGames.text);
+            if (GlobalVar.totalRoundNum <= 0)
+            {
+                CallStartErrorLog("最大游戏局数必须为正数！");
+                return;
+            }
+           
+            if (raisisLimit.text == "")
+            {
+                CallStartErrorLog("最大加注次数不能为空！");
+                return;
+            }
             GlobalVar.maxBetCount = int.Parse(raisisLimit.text);
+            if (GlobalVar.maxBetCount <= 0)
+            {
+                CallStartErrorLog("最大加注次数必须为正数！");
+                return;
+            }
             GlobalVar.speedFactor = UIManager.instance.speedValueSlider.value;
 
             for (int i = 0; i < PlayerManager.instance.seatedPlayers.Count; i++)
@@ -110,8 +153,8 @@ public class InitialPanelManager : MonoBehaviour
     /// <param name="log"></param>
     public void CallStartErrorLog(string log)
     {
-        startErrorLog.text = log;
-        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
+        WebLog.text = log;
+        WebLog.GetComponent<Animator>().Play("showLog", 0, 0);
     }
     public void CallLuaLog(string log)
     {
@@ -120,8 +163,8 @@ public class InitialPanelManager : MonoBehaviour
     }
     public void CallWebLog(string log)
     {
-        startErrorLog.text = log;
-        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
+        WebLog.text = log;
+        WebLog.GetComponent<Animator>().Play("WebLog", 0, 0);
     }
 
     /// <summary>
