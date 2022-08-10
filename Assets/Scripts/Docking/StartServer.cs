@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 public class StartServer : MonoBehaviour
 {
@@ -55,6 +56,15 @@ public class StartServer : MonoBehaviour
             {
                 InitialPanelManager.instance.CallWebLog("IP地址不能为空,自动填入本机地址!");
                 //自动填入本机地址
+                GlobalVar.ips = Dns.GetHostAddresses(GlobalVar.hostName);
+                foreach (IPAddress ip in GlobalVar.ips)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)//ipv4
+                    {
+                        GlobalVar.ipAdress = ip.ToString();
+                        break;
+                    }
+                }
                 InitialPanelManager.instance.ipAdress.text = GlobalVar.ipAdress;
                 return;
             }
@@ -62,6 +72,15 @@ public class StartServer : MonoBehaviour
             {
                 InitialPanelManager.instance.CallWebLog("IP地址非法,自动填入本机地址!");
                 //自动填入本机地址
+                GlobalVar.ips = Dns.GetHostAddresses(GlobalVar.hostName);
+                foreach (IPAddress ip in GlobalVar.ips)
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork)//ipv4
+                    {
+                        GlobalVar.ipAdress = ip.ToString();
+                        break;
+                    }
+                }
                 InitialPanelManager.instance.ipAdress.text = GlobalVar.ipAdress;
                 return;
             }
@@ -113,7 +132,7 @@ public class StartServer : MonoBehaviour
                 InitialPanelManager.instance.CallWebLog("最大连接数必须为正数,自动填入10!");
                 //自动填入10
                 GlobalVar.maxPlayerNum = 10;
-                InitialPanelManager.instance.ipAdress.text = GlobalVar.ipAdress;
+                InitialPanelManager.instance.MaxPlayerNum.text = GlobalVar.maxPlayerNum.ToString();
                 return;
             }
             GlobalVar.maxPlayerNum = int.Parse(InitialPanelManager.instance.MaxPlayerNum.text);

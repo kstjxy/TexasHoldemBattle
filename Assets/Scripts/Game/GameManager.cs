@@ -151,6 +151,11 @@ public class GameManager : MonoBehaviour
         UIManager.instance.PrintLog("新一轮游戏开始！当前为第【" + GlobalVar.curRoundNum + "】轮");
         UIManager.instance.UpdateGameRounds();
         PlayerManager.instance.NewRound();
+        if (PlayerManager.instance.activePlayers.Count == 0)
+        {
+            GlobalVar.gameStatusCounter = 6;
+            GameOver();
+        }            
         GlobalVar.curBtnSeat = (GlobalVar.curBtnSeat + 1) % PlayerManager.instance.activePlayers.Count;
         PlayerManager.instance.SetPlayersRole(GlobalVar.curBtnSeat);
         UIManager.instance.PrintLog("位置分配完毕！");
