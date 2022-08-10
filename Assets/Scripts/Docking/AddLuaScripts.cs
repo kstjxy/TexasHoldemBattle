@@ -16,7 +16,10 @@ public class AddLuaScripts : MonoBehaviour
     {
         findLua();
     }
-
+    public long NextFile(long pointer, string file)
+    {
+        return pointer + file.Length * 2 + 2;
+    }
     private void findLua()
     {
         //设置OpenFileDlg
@@ -38,10 +41,10 @@ public class AddLuaScripts : MonoBehaviour
         openFileName.file = Marshal.StringToBSTR(fileNames);
         openFileName.maxFile = fileNames.Length;
 
+        List<string> aiPath = new List<string>();           //多选文件名
         List<string> fileFullNames = new List<string>();    //文件完整地址
         if (OpenFileDialog.GetOpenFileName(openFileName))
         {
-            List<string> aiPath = new List<string>();           //多选文件名
             long pointer = (long)openFileName.file;             //文件指针
             string file = Marshal.PtrToStringAuto(openFileName.file);
 
@@ -49,7 +52,7 @@ public class AddLuaScripts : MonoBehaviour
             {
                 aiPath.Add(file);
                 //指针迭代
-                pointer += file.Length * 2 + 2;
+                pointer = NextFile(pointer ,file);
                 openFileName.file = (IntPtr)pointer;
                 file = Marshal.PtrToStringAuto(openFileName.file);
             }
@@ -87,6 +90,8 @@ public class AddLuaScripts : MonoBehaviour
                 {
                     // 引起异常的语句
                     Debug.Log("提交的AI脚本有误，初始化失败，原因：" + e.Message);
+                    string[] fileDetail = s.Split('\\');
+                    InitialPanelManager.instance.CallLuaLog(fileDetail[fileDetail.Length-1] + "AI脚本有误：" + e.Message) ;
                 }
             }
         }

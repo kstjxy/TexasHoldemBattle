@@ -158,8 +158,8 @@ public class InitialPanelManager : MonoBehaviour
     }
     public void CallLuaLog(string log)
     {
-        startErrorLog.text = log;
-        startErrorLog.GetComponent<Animator>().Play("showLog", 0, 0);
+        WebLog.text = log;
+        WebLog.GetComponent<Animator>().Play("LuaLog", 0, 0);
     }
     public void CallWebLog(string log)
     {
