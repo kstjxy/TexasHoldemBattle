@@ -10,6 +10,7 @@ public class LuaAI
     public string name = "my Name";
     public GameStat stats;
     public LuaEnv env;
+    public Player player;
     public string file; //AI文件路径
     public ITest test; //Interface接口
 
@@ -19,7 +20,17 @@ public class LuaAI
         env = new LuaEnv();
         env.AddLoader(MyLoader);
         env.DoString("require 'file'");
-        test = env.Global.Get<ITest>("M");
+        try
+        {
+            test = env.Global.Get<ITest>("M");
+        }
+        catch(Exception e)
+        {
+            string[] fileDetail = file.Split('\\');
+            string bug = fileDetail[fileDetail.Length - 1] + "初始化失败";
+            Debug.Log(bug);
+        }
+        
         name = test.name;
     }
 
