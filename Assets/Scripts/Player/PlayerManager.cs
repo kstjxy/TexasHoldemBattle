@@ -360,8 +360,10 @@ public class PlayerManager
             {
                 string bug = "与客户端【" + p.playerName + "】沟通失败，可能为连接断开或超时（5S） " + e.Message;
                 Debug.Log(bug);
+                UIManager.instance.PrintLog(bug);
                 p.webAI.CloseSocket();
                 Debug.Log("关闭此客户端的连接");
+                UIManager.instance.PrintLog("关闭此客户端的连接");
                 RemovePlayer(p);
             }
             catch (Exception e)
@@ -430,12 +432,28 @@ public class PlayerManager
         totalSeatNum--;
         activePlayers.Remove(p);
         p.isFold = true;
-        //seatedPlayers.Remove(p);
+        seatedPlayers.Remove(p);
         lostPlayers.Add(p);
         if (allPlayers.Count < 2 || activePlayers.Count < 2)
         {
             UIManager.instance.PrintLog("场上剩余玩家数不足开始新游戏，本局游戏提前结束！");
             GlobalVar.gameStatusCounter = 6;
+            GameManager.instance.GameOver();
+        }
+    }
+    public void StatJudge()
+    {
+        for (int i = 0; i < seatedPlayers.Count; i++)
+        {
+            Player p = seatedPlayers[i];
+            if(p.role == Player.PlayerRole.outOfGame)
+            {
+                i--;
+                seatedPlayers.Remove(p);
+            }
+        }
+        if (seatedPlayers.Count < 2)
+        {
             GameManager.instance.GameOver();
         }
     }

@@ -86,17 +86,26 @@ public class WebServer
     public void UpdatePlayers()
     {
         nowLenSockets = sockets.Count;
-        if (oldLenSockets == nowLenSockets) return;
-        
+        if (oldLenSockets == nowLenSockets) return;        
         for (int i=oldLenSockets; i< nowLenSockets;i++)
         {
-            WebAI ai = new WebAI();
-            ai.OnInit(sockets[i]);
-            Player p = new(ai);
-            GameStat gs = new(p);
-            ai.stats = gs;
-            ai.player = p;
-            PlayerManager.instance.allPlayers.Add(p);
+            try
+            {
+                WebAI ai = new WebAI();
+                ai.OnInit(sockets[i]);
+                Player p = new(ai);
+                GameStat gs = new(p);
+                ai.stats = gs;
+                ai.player = p;
+                PlayerManager.instance.allPlayers.Add(p);
+            }
+            catch (Exception e)
+            {
+                // 引起异常的语句
+                Debug.Log("AI脚本有误，初始化失败，原因：" + e.Message);
+                InitialPanelManager.instance.CallWebLog("AI脚本有误：" + e.Message);
+            }
+
         }
         oldLenSockets = nowLenSockets;
 
