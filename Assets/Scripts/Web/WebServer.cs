@@ -143,7 +143,8 @@ public class WebServer
         }
         catch(Exception e)
         {
-            Debug.Log(e);
+            Debug.Log(e.Message);
+            InitialPanelManager.instance.CallWebLog("·þÎñÆ÷¹Ø±ÕÊ§°Ü" + e.Message);
         }
         return false;
     }
