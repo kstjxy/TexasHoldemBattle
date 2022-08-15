@@ -29,6 +29,6 @@ public class RecordManager : MonoBehaviour
         if (ActionRecords != null)
             ActionRecords(playerNum, actionNum);
         else
-            Debug.Log("NULL delegate");
+            Debug.Log("NULL delegate"); 
     }
 }
