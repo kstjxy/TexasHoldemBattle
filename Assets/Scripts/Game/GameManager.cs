@@ -94,6 +94,9 @@ public class GameManager : MonoBehaviour
             case 5:
                 Result();
                 break;
+            case 6:
+                GameOver();
+                break;
         }
     }
 
@@ -130,14 +133,16 @@ public class GameManager : MonoBehaviour
                     p.webAI.StartGame();
                 else
                     p.luaAI.StartGame();
+                p.role = Player.PlayerRole.normal;
             }
             catch (Exception e)
             {
                 Debug.Log(p.playerName + "初始化失败，原因：" + e.Message);
                 UIManager.instance.PrintLog(p.playerName + "AI脚本不符合规范，被移出游戏");
-                PlayerManager.instance.RemovePlayer(p);
+                p.OutOfGame();
             }
         }
+        PlayerManager.instance.StatJudge();
         PlayerManager.instance.lostPlayers = new List<Player>();
         UIManager.instance.UpdateRankingList();
         GlobalVar.curRoundNum++;
@@ -403,8 +408,13 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         UIManager.instance.ClearAllCards();
-        winners = PlayerManager.instance.GetFinalWinners();
-        UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是"+PrintWinner(winners));
+        if (PlayerManager.instance.seatedPlayers.Count == 0)
+            UIManager.instance.PrintLog("全部游戏结束！");
+        else
+        {
+            winners = PlayerManager.instance.GetFinalWinners();
+            UIManager.instance.PrintLog("全部游戏结束！现在进入最终结算阶段\n最终冠军是" + PrintWinner(winners));
+        }        
         foreach (Player p in PlayerManager.instance.activePlayers)
         {
             p.playerObject.PlayerWinEnded();
@@ -414,6 +424,7 @@ public class GameManager : MonoBehaviour
             }
         }
         UIManager.instance.PrintLog("可以按下【SAVE】保存本局游戏日志\n或按下【RESTART】开始新的游戏\n");
+        GlobalVar.gameStatusCounter = 7;
     }
 
     public void UpdateCurPlayer()

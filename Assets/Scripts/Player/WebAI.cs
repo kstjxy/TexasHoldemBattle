@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System;
 using LitJson;
-
+using System.Timers;
 
 [Serializable]
 public class Data
@@ -41,10 +41,11 @@ public class WebAI
     public Socket client;
     public Player player;
     private Data data = new Data();
-    public string file;
+    public string file;    
     private byte[] recivefrom = new byte[2048];
     private byte[] sendByte = new byte[2048];
     private string reciveString;
+    private string buff = "";
     private string sendto;
     public bool waitFlag = false;
 
@@ -89,16 +90,37 @@ public class WebAI
     //}
     private void SendFunc(string s)
     {
-        sendto = s;
+        sendto = s + "$$";
+        Debug.Log(s);
         sendByte = Encoding.UTF8.GetBytes(sendto);
         client.Send(sendByte);
     }
     private void ReciveFunc()
     {
-        client.Receive(recivefrom);
-        reciveString = Encoding.UTF8.GetString(recivefrom);
-        reciveString = reciveString.Substring(0, reciveString.IndexOf('\0'));
-        Array.Clear(recivefrom, 0, recivefrom.Length);
+        long startTime = DateTime.Now.Ticks;
+        while (true)
+        {   
+            if (DateTime.Now.Ticks - startTime > 50000000)
+            {
+                client.Close();
+                client.Dispose();
+                throw new Exception("接收信息超时！连接断开");
+            }
+            client.Receive(recivefrom);
+            reciveString = Encoding.UTF8.GetString(recivefrom);
+            buff += reciveString;
+            reciveString = "";
+            Array.Clear(recivefrom, 0, recivefrom.Length);
+            if (buff.Contains("$$"))
+            {
+                reciveString = buff.Substring(0, buff.IndexOf('$'));
+                buff = buff.Substring(buff.LastIndexOf('$')+1);
+                buff = buff.Substring(0, buff.IndexOf('\0'));
+                break;
+            }
+            Array.Clear(recivefrom, 0, recivefrom.Length);
+        }
+        
     }
     private void SendAndReceive(string s)
     {
@@ -117,13 +139,13 @@ public class WebAI
         data.MyPosition = stats.MyPosition;
         data.Last_Period = new List<int[]>();
         data.Last_Period = stats.Last_Period;
+        data.This_Period = new List<int[]>();
+        data.This_Period = stats.This_Period;
         data.CardsInHands = new List<Card>();
         data.CardsInHands = stats.CardsInHands;
         data.CoinsLeft = stats.CoinsLeft;
         data.CoinsBet = stats.CoinsBet;
-        List<Data> dataList = new List<Data>();
-        dataList.Add(data);
-        string jsonStat = JsonMapper.ToJson(data);
+        string jsonStat = JsonMapper.ToJson(data) + "$$";
         //Debug.Log(jsonStat);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
         client.Send(sendByte);
@@ -174,7 +196,7 @@ public class WebAI
             string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
             Debug.Log(bug);
             PrintL(bug);
-            return 3; //如果操作错误就弃牌
+            return 3; //如果操作错误就弃牌            
         }
         return reciveString[0] - '0';
     }
