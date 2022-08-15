@@ -139,12 +139,12 @@ public class WebAI
         data.MyPosition = stats.MyPosition;
         data.Last_Period = new List<int[]>();
         data.Last_Period = stats.Last_Period;
+        data.This_Period = new List<int[]>();
+        data.This_Period = stats.This_Period;
         data.CardsInHands = new List<Card>();
         data.CardsInHands = stats.CardsInHands;
         data.CoinsLeft = stats.CoinsLeft;
         data.CoinsBet = stats.CoinsBet;
-        List<Data> dataList = new List<Data>();
-        dataList.Add(data);
         string jsonStat = JsonMapper.ToJson(data) + "$$";
         //Debug.Log(jsonStat);
         sendByte = Encoding.UTF8.GetBytes(jsonStat);
@@ -196,7 +196,7 @@ public class WebAI
             string bug = "玩家【" + name + "】所作操作不合法！默认弃牌！";
             Debug.Log(bug);
             PrintL(bug);
-            return 3; //如果操作错误就弃牌
+            return 3; //如果操作错误就弃牌            
         }
         return reciveString[0] - '0';
     }
