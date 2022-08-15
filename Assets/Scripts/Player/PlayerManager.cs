@@ -346,7 +346,7 @@ public class PlayerManager
                     p.state = p.webAI.BetAction();
                 else
                     p.state = p.luaAI.BetAction();
-                p.AddActionRecord(p.seatNum, p.state);
+                RecordManager.instance.CallActionRecord(p.seatNum,p.state);
             }
             catch (SocketException e)
             {

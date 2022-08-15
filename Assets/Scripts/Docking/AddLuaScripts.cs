@@ -92,6 +92,7 @@ public class AddLuaScripts : MonoBehaviour
                     Debug.Log("提交的AI脚本有误，初始化失败，原因：" + e.Message);
                     string[] fileDetail = s.Split('\\');
                     InitialPanelManager.instance.CallLuaLog(fileDetail[fileDetail.Length-1] + "AI脚本有误：" + e.Message) ;
+                    UIManager.instance.PrintLog(fileDetail[fileDetail.Length - 1] + "AI脚本有误：" + e.Message);
                 }
             }
         }
