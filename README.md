@@ -10,7 +10,10 @@
 此分支正在开发第三期WebSocket接口并且已有部分进展
 
 项目验收日志： https://4399.feishu.cn/docx/doxcnZjbH1n2UBNVLpMt9IQ9HCg
+
 示例视频：     ./示例视频（由于录制视频的时候使用的编辑器版本与当前使用的编辑器版本不同，所以会出现一些bug，实际运行中不会出现）
+
+（注：如果出现一些奇怪的bug可以尝试使用WenSocket分支，main在Merge的时候好像出现了未知错误，但是目前没有发现Bug）
 
 ![捕获](https://user-images.githubusercontent.com/50037765/182520005-ee4db28c-577c-4b02-934d-335ca9240ce5.PNG)
 ![捕获2](https://user-images.githubusercontent.com/50037765/180355966-0225751e-65a3-4c23-a4d5-c36233a4f7e5.PNG)
