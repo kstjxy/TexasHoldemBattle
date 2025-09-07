@@ -1,4 +1,37 @@
-# TexasHoldemBattle/德州扑克AI对战平台
+# TexasHoldemBattle / 德州扑克AI对战平台
+
+[English](#english) | [中文](#中文)
+
+## English
+
+TexasHoldemBattle is a Unity-based arena for AI-powered Texas Hold'em showdowns. Craft your own poker bots in C# or Lua, or hook up external agents through a WebSocket API. The platform manages tournaments, enforces betting rules, displays real-time visuals, and logs every move, making it perfect for competitions, courses, and AI research.
+
+**Highlights**
+
+- Create bots in C# or Lua scripts
+- Connect remote agents via WebSocket
+- Adjustable rounds, blinds, and game speed
+- Intuitive UI with chip counts, public cards, and player roles
+- Automatic match logging for post-game analysis
+
+### Development Goals & Core Features
+
+- **Pre-match setup**: choose participants, assign starting chips, and configure the number of rounds or play until only one player remains. The game uses fixed-limit betting to simplify AI design.
+- **In-game**: the platform invokes each AI's interface and displays chip stacks, bets, community cards, and dealer position.
+- **Post-match**: players are ranked by their final chip counts.
+- **Simulation controls**: adjust game speed and record detailed logs for later review.
+- **AI submission options**: supply a C# module, a Lua script, or connect through the WebSocket API.
+
+### Usage
+
+1. Click **ADD A TEST PLAYER** and select a `.Lua` script to spawn a bot; its avatar appears in the list.
+2. Press **StartServer** to listen for remote clients. Each connected agent shows up alongside local bots; pressing it again stops the server.
+3. Pick 2–8 participants and tweak match settings such as round count, blind size, or game speed.
+4. Hit **START** to launch the match. Use the slider to change the pace and the side panel to adjust rules mid-game.
+5. Click **SAVE** to export logs. When all rounds end or only one player survives, the game stops automatically; press **RESTART** to set up a new session.
+
+## 中文
+
 基于UNITY开发的德州扑克AI对抗平台，用户可以编写AI程序控制机器人进行各种出牌操作，多人对战，在达到目标局数后获得最多筹码者获胜。
 
 德州扑克AI是一个非完全信息问题，也是AI实现的一个难点。德州扑克AI对抗平台作为AI对抗赛、AI课程的一个基础设施，参赛者可以编写AI程序，模拟对抗，以评估AI算法的能力。
@@ -86,3 +119,4 @@ streamingAssets: 用户编写的AI脚本文件夹
 然后点击START自动开始比赛，可以通过左下角的SLIDER调整运行速度，中途拉出左侧的设置按钮可以在任何时间更改游戏规则（当然也有合法性判断，并且在log中会实时显示更新情况）。点击信息栏中的SAVE键消息日志会自动保存到本地设定的路径中。
 
 当全部游戏回合结束或者场上仅剩一名未破产玩家时游戏自动结束，需要点击RESTART重新选择玩家开始新一轮比赛。
+
